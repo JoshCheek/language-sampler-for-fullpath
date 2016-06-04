@@ -15,13 +15,16 @@ type Invocation struct {
 }
 
 func main() {
-	args := os.Args[1:]
-	invocation := parseArgs(args)
+	invocation := parseArgs(os.Args)
+	doMain(invocation, os.Stdout)
+}
+
+func doMain(invocation Invocation, outstream io.Writer) {
 	if invocation.doHelp {
-		printHelp(os.Stdin)
+		printHelp(outstream)
 	} else {
 		pathsString := join(invocation.fullpaths, "\n")
-		fmt.Println(pathsString)
+		fmt.Fprintln(outstream, pathsString)
 		if invocation.doCopy {
 			copyToClipboard(pathsString)
 		}
@@ -29,12 +32,11 @@ func main() {
 }
 
 func parseArgs(args []string) Invocation {
-	data := Invocation{
-		fullpaths: mapToFullPaths(selectPaths(args)),
+	return Invocation{
+		fullpaths: mapToFullPaths(selectPaths(args[1:])),
 		doHelp:    doHelp(args),
 		doCopy:    doCopy(args),
 	}
-	return data
 }
 
 func printHelp(outstream io.Writer) {
