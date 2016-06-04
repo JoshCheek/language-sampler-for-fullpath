@@ -3,6 +3,21 @@ package main
 import "os"
 import "fmt"
 
+func main() {
+	args := os.Args[1:]
+	if doHelp(args) {
+		fmt.Println("this is the help screen")
+	} else {
+		fullpaths := mapToFullPaths(selectPaths(args))
+		pathsString := join(fullpaths, "\n")
+		fmt.Println(pathsString)
+		if doCopy(args) {
+			fmt.Println("copy")
+			copyToClipboard(pathsString)
+		}
+	}
+}
+
 func includes(haystack []string, needles ...string) bool {
 	for _, hay := range haystack {
 		for _, needle := range needles {
@@ -36,19 +51,4 @@ func join(fullpaths []string, delimiter string) string {
 
 func copyToClipboard(str string) {
 	// FIXME
-}
-
-func main() {
-	args := os.Args[1:]
-	if doHelp(args) {
-		fmt.Println("this is the help screen")
-	} else {
-		fullpaths := mapToFullPaths(selectPaths(args))
-		pathsString := join(fullpaths, "\n")
-		fmt.Println(pathsString)
-		if doCopy(args) {
-			fmt.Println("copy")
-			copyToClipboard(pathsString)
-		}
-	}
 }
