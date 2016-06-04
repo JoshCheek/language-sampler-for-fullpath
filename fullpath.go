@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"io"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -10,16 +11,26 @@ import (
 func main() {
 	args := os.Args[1:]
 	if doHelp(args) {
-		fmt.Println("this is the help screen")
+		printHelp(os.Stdin)
 	} else {
 		fullpaths := mapToFullPaths(selectPaths(args))
 		pathsString := join(fullpaths, "\n")
 		fmt.Println(pathsString)
 		if doCopy(args) {
-			fmt.Println("copy")
 			copyToClipboard(pathsString)
 		}
 	}
+}
+
+func printHelp(outstream io.Writer) {
+	fmt.Fprintln(outstream, "usage: fullpath *[relative-paths] [-c]")
+	fmt.Fprintln(outstream, "")
+	fmt.Fprintln(outstream, "  Prints the fullpath of the paths")
+	fmt.Fprintln(outstream, "  If no paths are given as args, it will read them from stdin")
+	fmt.Fprintln(outstream, "")
+	fmt.Fprintln(outstream, "  If there is only one path, the trailing newline is omitted")
+	fmt.Fprintln(outstream, "")
+	fmt.Fprintln(outstream, "  The -c flag will copy the results into your pasteboard")
 }
 
 func includes(haystack []string, needles ...string) bool {
