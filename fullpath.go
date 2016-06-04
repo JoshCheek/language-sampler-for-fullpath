@@ -8,18 +8,33 @@ import (
 	"path/filepath"
 )
 
+type Invocation struct {
+	fullpaths []string
+	doHelp    bool
+	doCopy    bool
+}
+
 func main() {
 	args := os.Args[1:]
-	if doHelp(args) {
+	invocation := parseArgs(args)
+	if invocation.doHelp {
 		printHelp(os.Stdin)
 	} else {
-		fullpaths := mapToFullPaths(selectPaths(args))
-		pathsString := join(fullpaths, "\n")
+		pathsString := join(invocation.fullpaths, "\n")
 		fmt.Println(pathsString)
-		if doCopy(args) {
+		if invocation.doCopy {
 			copyToClipboard(pathsString)
 		}
 	}
+}
+
+func parseArgs(args []string) Invocation {
+	data := Invocation{
+		fullpaths: mapToFullPaths(selectPaths(args)),
+		doHelp:    doHelp(args),
+		doCopy:    doCopy(args),
+	}
+	return data
 }
 
 func printHelp(outstream io.Writer) {
