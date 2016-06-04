@@ -41,8 +41,19 @@ func mapToFullPaths(relativePaths []string) []string {
 	return relativePaths // FIXME
 }
 
-func selectPaths(paths []string) []string {
-	return paths // FIXME
+func selectPaths(args []string) []string {
+	paths := []string{}
+	for _, maybePath := range args {
+		if !isFlag(maybePath) {
+			paths = append(paths, maybePath)
+		}
+	}
+	return paths
+}
+
+func isFlag(maybeFlag string) bool {
+	return maybeFlag == "-c" || maybeFlag == "--copy" ||
+		maybeFlag == "-h" || maybeFlag == "--help"
 }
 
 func join(fullpaths []string, delimiter string) string {
