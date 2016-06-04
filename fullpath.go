@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+	"path/filepath"
 )
 
 func main() {
@@ -41,7 +42,12 @@ func doCopy(args []string) bool {
 }
 
 func mapToFullPaths(relativePaths []string) []string {
-	return relativePaths // FIXME
+	paths := []string{}
+	for _, relPath := range relativePaths {
+		absPath, _ := filepath.Abs(relPath)
+		paths = append(paths, absPath)
+	}
+	return paths
 }
 
 func selectPaths(args []string) []string {
