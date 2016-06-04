@@ -3,17 +3,19 @@ package main
 import "os"
 import "fmt"
 
-func includes(haystack []string, needle string) bool {
+func includes(haystack []string, needles []string) bool {
 	for _, hay := range haystack {
-		if hay == needle {
-			return true
+		for _, needle := range needles {
+			if hay == needle {
+				return true
+			}
 		}
 	}
 	return false
 }
 
 func doHelp(args []string) bool {
-	return includes(args, "-h") || includes(args, "--help")
+	return includes(args, []string{"-h", "--help"})
 }
 
 func doCopy(args []string) bool {
