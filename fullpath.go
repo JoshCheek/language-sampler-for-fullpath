@@ -1,7 +1,10 @@
 package main
 
-import "os"
-import "fmt"
+import (
+	"fmt"
+	"os"
+	"os/exec"
+)
 
 func main() {
 	args := os.Args[1:]
@@ -68,5 +71,10 @@ func join(strs []string, delimiter string) string {
 }
 
 func copyToClipboard(str string) {
-	// FIXME
+	cmd := exec.Command("pbcopy")
+	stdin, _ := cmd.StdinPipe()
+	cmd.Start()
+	fmt.Fprint(stdin, str)
+	stdin.Close()
+	cmd.Wait()
 }
