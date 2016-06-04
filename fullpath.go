@@ -19,7 +19,7 @@ func doHelp(args []string) bool {
 }
 
 func doCopy(args []string) bool {
-	return false // FIXME
+	return includes(args, "-c", "--copy")
 }
 
 func mapToFullPaths(relativePaths []string) []string {
@@ -47,6 +47,7 @@ func main() {
 		pathsString := join(fullpaths, "\n")
 		fmt.Println(pathsString)
 		if doCopy(args) {
+			fmt.Println("copy")
 			copyToClipboard(pathsString)
 		}
 	}
