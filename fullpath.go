@@ -56,8 +56,15 @@ func isFlag(maybeFlag string) bool {
 		maybeFlag == "-h" || maybeFlag == "--help"
 }
 
-func join(fullpaths []string, delimiter string) string {
-	return delimiter // FIXME
+func join(strs []string, delimiter string) string {
+	joined := ""
+	for index, str := range strs {
+		if index != 0 {
+			joined += delimiter
+		}
+		joined += str
+	}
+	return joined
 }
 
 func copyToClipboard(str string) {
