@@ -2,7 +2,17 @@ import Enum # lets me do `map(...)` instead of `Enum.map(...)`
 
 defmodule Fullpath do
   def main(args) do
-    args |> get_paths |> expand_args(System.cwd) |> format |> IO.write
+    # We should do this, but it yells at me for having unused variables, so leaving them commented
+    # help? = find args, &"-h"==&1
+    # copy? = find args, &"-c"==&1
+    paths = get_paths args
+    if empty_list? paths do
+      paths = get_paths IO.stream(:stdio, :line)
+    end
+    formatted = (paths |> expand_args(System.cwd) |> format)
+    # here, we should copy them to the clipboard by piping through pbcopy,
+    # but I can't figure out how :(
+    IO.write formatted
   end
 
   def get_paths(potential_paths) do
@@ -35,6 +45,10 @@ defmodule Fullpath do
 
   def empty_string?(string) do
     0 == String.length(string)
+  end
+
+  def empty_list?(list) do
+    0 == length list
   end
 end
 
