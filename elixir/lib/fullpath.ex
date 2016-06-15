@@ -6,7 +6,7 @@ defmodule Fullpath do
   end
 
   def get_paths(potential_paths) do
-    potential_paths |> map(&chomp(&1)) |> filter(&!empty_string?(&1))
+    potential_paths |> map(&chomp(&1)) |> filter(&!empty_string?(&1)) |> filter(&!flag?(&1))
   end
 
   def expand_args(args, working_dir) do
@@ -23,6 +23,10 @@ defmodule Fullpath do
       toPrint = toPrint <> "\n"
     end
     toPrint
+  end
+
+  def flag?(string) do
+    String.starts_with? string, "-"
   end
 
   def chomp(string) do
