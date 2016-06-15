@@ -46,6 +46,11 @@ Feature: fullpath
     Then stdout is exactly "{{pwd}}/a"
     And the clipboard now contains "{{pwd}}/a"
 
+    Given I previously copied "not-a-long"
+    When I run "fullpath a-long --copy"
+    Then stdout is exactly "{{pwd}}/a-long"
+    And the clipboard now contains "{{pwd}}/a-long"
+
   Scenario: Ignores blank lines
     When I run "fullpath a ''"
     Then stdout is exactly "{{pwd}}/a"
