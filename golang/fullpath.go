@@ -24,7 +24,10 @@ func doMain(invocation Invocation, outstream io.Writer) {
 		printHelp(outstream)
 	} else {
 		pathsString := join(invocation.fullpaths, "\n")
-		fmt.Fprintln(outstream, pathsString)
+		if 1 < len(invocation.fullpaths) {
+			pathsString += "\n"
+		}
+		fmt.Fprint(outstream, pathsString)
 		if invocation.doCopy {
 			copyToClipboard(pathsString)
 		}
