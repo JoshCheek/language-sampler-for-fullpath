@@ -4,25 +4,38 @@ defmodule Fullpath do
   def main(args) do
     # We should do this, but it yells at me for having unused variables, so leaving it commented
     # help? = find args, &"-h"==&1
-    paths = get_paths args
-    if empty_list? paths do
-      paths = get_paths IO.stream(:stdio, :line)
+    if includes?(args, "-h") || includes?(args, "--help") do
+      IO.write help_screen
+    else
+      # TODO: refactor me
+      paths = get_paths args
+      if empty_list? paths do
+        paths = get_paths IO.stream(:stdio, :line)
+      end
+      formatted = (paths |> expand_args(System.cwd) |> format)
+
+      if includes?(args, "-c") || includes?(args, "--copy") do
+        copy_to_pasteboard(formatted)
+      end
+      IO.write formatted
     end
-    formatted = (paths |> expand_args(System.cwd) |> format)
-    if copy? args do
-      copy_to_pasteboard(formatted)
-    end
-    IO.write formatted
+  end
+
+  def help_screen do
+    "usage: fullpath *[relative-paths] [-c]\n" <>
+    "\n" <>
+    "  Prints the fullpath of the paths\n" <>
+    "  If no paths are given as args, it will read them from stdin\n" <>
+    "\n" <>
+    "  If there is only one path, the trailing newline is omitted\n" <>
+    "\n" <>
+    "  The -c flag will copy the results into your pasteboard\n"
   end
 
   def copy_to_pasteboard(string) do
     port = Port.open({:spawn, "pbcopy"}, [:stream, :binary, :exit_status, :use_stdio])
     Port.command port, string
     Port.close port
-  end
-
-  def copy?(args) do
-    includes?(args, "-c") || includes?(args, "--copy")
   end
 
   def includes?(haystack, needle) do
