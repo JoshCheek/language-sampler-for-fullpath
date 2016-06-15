@@ -7,6 +7,21 @@ It makes a good small but still useful program (I use it very frequently)
 to try out for a new language, so I'm going to try writing it in
 new languages as I try to learn them.
 
+Tests
+-----
+
+Build all implementations and run all tests:
+
+```
+$ rake
+```
+
+See which language tests you can run:
+
+```
+$ rake -T
+```
+
 Languages
 ---------
 
