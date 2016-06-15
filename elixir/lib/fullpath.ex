@@ -2,17 +2,31 @@ import Enum # lets me do `map(...)` instead of `Enum.map(...)`
 
 defmodule Fullpath do
   def main(args) do
-    # We should do this, but it yells at me for having unused variables, so leaving them commented
+    # We should do this, but it yells at me for having unused variables, so leaving it commented
     # help? = find args, &"-h"==&1
-    # copy? = find args, &"-c"==&1
     paths = get_paths args
     if empty_list? paths do
       paths = get_paths IO.stream(:stdio, :line)
     end
     formatted = (paths |> expand_args(System.cwd) |> format)
-    # here, we should copy them to the clipboard by piping through pbcopy,
-    # but I can't figure out how :(
+    if copy? args do
+      copy_to_pasteboard(formatted)
+    end
     IO.write formatted
+  end
+
+  def copy_to_pasteboard(string) do
+    port = Port.open({:spawn, "pbcopy"}, [:stream, :binary, :exit_status, :use_stdio])
+    Port.command port, string
+    Port.close port
+  end
+
+  def copy?(args) do
+    includes?(args, "-c") || includes?(args, "--copy")
+  end
+
+  def includes?(haystack, needle) do
+    find(haystack, &needle==&1)
   end
 
   def get_paths(potential_paths) do
