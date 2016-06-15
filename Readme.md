@@ -42,6 +42,9 @@ $ ruby/fullpath path1 path2
 
 ### Elixir
 
+[Video](https://vimeo.com/170785037) of me writing the code (my first 3 hours of Elixir,
+from no experience to getting `fullpath` written in it).
+
 Build:
 
 ```sh
