@@ -1,36 +1,36 @@
+import Enum # lets me do `map(...)` instead of `Enum.map(...)`
+
 defmodule Fullpath do
   def main(args) do
-    # paths = paths_from(args)
-    paths = normalize(args)
-    paths = remove_empty(paths)
-    paths = expand_args(paths, System.cwd())
-    print_paths paths
+    args |> get_paths |> expand_args(System.cwd) |> format |> IO.write
   end
 
-  def normalize(paths) do
-    Enum.map paths, fn(path) -> String.rstrip(path, ?\n) end
-  end
-
-  def remove_empty(args) do
-    Enum.filter args, fn(arg) -> arg != "" end
+  def get_paths(potential_paths) do
+    potential_paths |> map(&chomp(&1)) |> filter(&!empty_string?(&1))
   end
 
   def expand_args(args, working_dir) do
-    Enum.map args, fn(arg) -> expand(arg, working_dir) end
+    map args, fn(arg) -> expand(arg, working_dir) end
   end
 
   def expand(relative_path, working_dir) do
     Path.expand relative_path, working_dir
   end
 
-  def print_paths(paths) do
-    toPrint = Enum.join paths, "\n"
-    if 1 < length(paths) do
+  def format(paths) do
+    toPrint = join paths, "\n"
+    if 1 < length paths do
       toPrint = toPrint <> "\n"
     end
-    IO.write(toPrint)
-    # paths = Enum.map paths, fn(path) -> path + "\n" end
-    # Enum.each args, &IO.puts(&1)
+    toPrint
+  end
+
+  def chomp(string) do
+    String.rstrip(string, ?\n)
+  end
+
+  def empty_string?(string) do
+    0 == String.length(string)
   end
 end
 
