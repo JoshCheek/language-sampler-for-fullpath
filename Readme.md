@@ -21,9 +21,22 @@ $ go build -o golang/fullpath golang/fullpath.go
 Run with the interpreter:
 
 ```sh
-$ go run golang/fullpath.go
+$ go run golang/fullpath.go path1 path2
 ```
 
+### Ruby
+
+Run with the interpreter:
+
+```
+$ ruby ruby/fullpath path1 path2
+```
+
+Note that it is also a valid script, so you can omit the interpreter and just run with:
+
+```
+$ ruby/fullpath path1 path2
+```
 
 <a href="http://www.wtfpl.net/"><img src="http://www.wtfpl.net/wp-content/uploads/2012/12/wtfpl.svg" height="20" alt="WTFPL" /></a> License
 -------------------------------------------------------------------------------------------------------------------------------------------

@@ -1,0 +1,39 @@
+#!/usr/bin/env ruby
+# tests in test/fullpath.feature (https://github.com/JoshCheek/dotfiles/blob/master/test/fullpath.feature)
+
+def self.relative_dirs(argv, stdin)
+  return argv if argv.any? # if we have args, they are considered relative paths
+  return stdin.read.lines  # otherwise assume we're piping paths through the program
+end
+
+# pbcopy is only available on mac AFAIK
+def self.copy_to_clipboard(str)
+  require 'open3'
+  Open3.popen3("pbcopy") { |stdin, stdout, stderr, wait_thr|
+    stdin.write str
+  }
+end
+
+if ARGV.include?('-h') || ARGV.include?('--help')
+  puts "usage: fullpath *[relative-paths] [-c]"
+  puts
+  puts "  Prints the fullpath of the paths"
+  puts "  If no paths are given as args, it will read them from stdin"
+  puts
+  puts "  If there is only one path, the trailing newline is omitted"
+  puts
+  puts "  The -c flag will copy the results into your pasteboard"
+  exit
+end
+
+# arg processing
+should_copy   = ARGV.delete('-c') || ARGV.delete('--copy')
+
+# normalizing dirs
+absolute_dirs = relative_dirs(ARGV, $stdin).map(&:chomp).reject(&:empty?).map { |path| File.expand_path path }
+absolute_dirs.each { |dir| dir << "\n" } unless absolute_dirs.one?
+dir_string = absolute_dirs.join("")
+
+# output
+print dir_string
+copy_to_clipboard dir_string if should_copy
