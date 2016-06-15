@@ -24,6 +24,7 @@ Run with the interpreter:
 $ go run golang/fullpath.go path1 path2
 ```
 
+
 ### Ruby
 
 Run with the interpreter:
@@ -37,6 +38,19 @@ Note that it is also a valid script, so you can omit the interpreter and just ru
 ```
 $ ruby/fullpath path1 path2
 ```
+
+
+### Elixir
+
+Build:
+
+```sh
+$ cd elixir
+$ mix escript.build
+```
+
+Interpret: IDK -.^
+
 
 <a href="http://www.wtfpl.net/"><img src="http://www.wtfpl.net/wp-content/uploads/2012/12/wtfpl.svg" height="20" alt="WTFPL" /></a> License
 -------------------------------------------------------------------------------------------------------------------------------------------
