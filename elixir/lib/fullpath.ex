@@ -6,9 +6,7 @@ defmodule Fullpath do
       IO.write help_screen
     else
       paths = get_paths args, IO, System.cwd
-      if copy?(args) do
-        copy_to_pasteboard(format paths)
-      end
+      if copy?(args), do: copy_to_pasteboard format paths
       IO.write format paths
     end
   end
@@ -22,14 +20,16 @@ defmodule Fullpath do
   end
 
   def help_screen do
-    "usage: fullpath *[relative-paths] [-c]\n" <>
-    "\n" <>
-    "  Prints the fullpath of the paths\n" <>
-    "  If no paths are given as args, it will read them from stdin\n" <>
-    "\n" <>
-    "  If there is only one path, the trailing newline is omitted\n" <>
-    "\n" <>
-    "  The -c flag will copy the results into your pasteboard\n"
+    """
+    usage: fullpath *[relative-paths] [-c]
+
+      Prints the fullpath of the paths
+      If no paths are given as args, it will read them from stdin
+
+      If there is only one path, the trailing newline is omitted
+
+      The -c flag will copy the results into your pasteboard
+    """
   end
 
   def get_paths(args, io, cwd) do
@@ -51,7 +51,7 @@ defmodule Fullpath do
   end
 
   def to_paths(potential_paths) do
-    potential_paths |> map(&chomp(&1)) |> filter(&!empty_string?(&1)) |> filter(&!flag?(&1))
+    potential_paths |> map(&chomp/1) |> filter(&!empty_string?(&1)) |> filter(&!flag?(&1))
   end
 
   def expand_args(args, working_dir) do
