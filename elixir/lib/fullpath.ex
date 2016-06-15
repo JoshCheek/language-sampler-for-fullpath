@@ -6,19 +6,19 @@ defmodule Fullpath do
   end
 
   def remove_empty(args) do
-    Enum.filter(args, fn(arg) -> arg != "" end)
+    Enum.filter args, fn(arg) -> arg != "" end
   end
 
   def expand_args(args, working_dir) do
-    Enum.map(args, fn(arg) -> expand(arg, working_dir) end)
+    Enum.map args, fn(arg) -> expand(arg, working_dir) end
   end
 
   def expand(relative_path, working_dir) do
-    Path.expand(relative_path, working_dir)
+    Path.expand relative_path, working_dir
   end
 end
 
-Fullpath.main(["abc", "", "ghi"])
+Fullpath.main System.argv()
 
 # Maybe useful?
 # IO.inspect(args)
