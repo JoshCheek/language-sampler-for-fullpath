@@ -86,5 +86,3 @@ defmodule Fullpath do
     0 == length list
   end
 end
-
-Fullpath.main System.argv()
