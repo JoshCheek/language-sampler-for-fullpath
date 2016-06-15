@@ -7,6 +7,23 @@ It makes a good small but still useful program (I use it very frequently)
 to try out for a new language, so I'm going to try writing it in
 new languages as I try to learn them.
 
+Languages
+---------
+
+### Go
+
+Build:
+
+```sh
+$ go build -o golang/fullpath golang/fullpath.go
+```
+
+Run with the interpreter:
+
+```sh
+$ go run golang/fullpath.go
+```
+
 
 <a href="http://www.wtfpl.net/"><img src="http://www.wtfpl.net/wp-content/uploads/2012/12/wtfpl.svg" height="20" alt="WTFPL" /></a> License
 -------------------------------------------------------------------------------------------------------------------------------------------
