@@ -40,17 +40,6 @@ Feature: fullpath
 
     """
 
-  Scenario: -c and --copy flags copy the output to the clipboard as well as printing it
-    Given I previously copied "not-a"
-    When I run "fullpath a -c"
-    Then stdout is exactly "{{pwd}}/a"
-    And the clipboard now contains "{{pwd}}/a"
-
-    Given I previously copied "not-a-long"
-    When I run "fullpath a-long --copy"
-    Then stdout is exactly "{{pwd}}/a-long"
-    And the clipboard now contains "{{pwd}}/a-long"
-
   Scenario: Ignores blank lines
     When I run "fullpath a ''"
     Then stdout is exactly "{{pwd}}/a"
@@ -68,5 +57,44 @@ Feature: fullpath
     """
     {{pwd}}/a
     {{pwd}}/b
+
+    """
+
+  Scenario: -c and --copy flags copy the output to the clipboard as well as printing it
+    Given I previously copied "not-a"
+    When I run "fullpath a -c"
+    Then stdout is exactly "{{pwd}}/a"
+    And the clipboard now contains "{{pwd}}/a"
+
+    Given I previously copied "not-a-long"
+    When I run "fullpath a-long --copy"
+    Then stdout is exactly "{{pwd}}/a-long"
+    And the clipboard now contains "{{pwd}}/a-long"
+
+  Scenario: -h and --help flags display the help screen
+    When I run "fullpath -h"
+    Then stdout is exactly:
+    """
+    usage: fullpath *[relative-paths] [-c]
+
+      Prints the fullpath of the paths
+      If no paths are given as args, it will read them from stdin
+
+      If there is only one path, the trailing newline is omitted
+
+      The -c flag will copy the results into your pasteboard
+
+    """
+    When I run "fullpath --help"
+    Then stdout is exactly:
+    """
+    usage: fullpath *[relative-paths] [-c]
+
+      Prints the fullpath of the paths
+      If no paths are given as args, it will read them from stdin
+
+      If there is only one path, the trailing newline is omitted
+
+      The -c flag will copy the results into your pasteboard
 
     """
