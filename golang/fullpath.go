@@ -75,8 +75,10 @@ func doCopy(args []string) bool {
 func mapToFullPaths(relativePaths []string) []string {
 	paths := []string{}
 	for _, relPath := range relativePaths {
-		absPath, _ := filepath.Abs(relPath)
-		paths = append(paths, absPath)
+		if relPath != "" {
+			absPath, _ := filepath.Abs(relPath)
+			paths = append(paths, absPath)
+		}
 	}
 	return paths
 }
