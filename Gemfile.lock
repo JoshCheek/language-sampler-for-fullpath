@@ -21,6 +21,7 @@ GEM
     minitest (5.9.0)
     multi_json (1.12.1)
     multi_test (0.1.2)
+    rake (11.1.2)
     rspec (3.4.0)
       rspec-core (~> 3.4.0)
       rspec-expectations (~> 3.4.0)
@@ -42,6 +43,7 @@ DEPENDENCIES
   cucumber
   haiti
   minitest
+  rake
 
 BUNDLED WITH
    1.11.2
