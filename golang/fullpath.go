@@ -36,16 +36,11 @@ func doMain(invocation Invocation, outstream io.Writer) {
 	}
 }
 
-func parseArgs(args []string, instream io.Reader) Invocation {
-	argvFullPaths := mapToFullPaths(selectPaths(args[1:]))
-	fullpaths := argvFullPaths
-	if 0 == len(argvFullPaths) {
-		fullpaths = mapToFullPaths(readlines(instream))
-	}
+func parseArgs(argv []string, instream io.Reader) Invocation {
 	return Invocation{
-		fullpaths: fullpaths,
-		doHelp:    doHelp(args),
-		doCopy:    doCopy(args),
+		fullpaths: fullpaths(rejectFlags(argv[1:]), instream),
+		doHelp:    doHelp(argv),
+		doCopy:    doCopy(argv),
 	}
 }
 
@@ -79,6 +74,14 @@ func doCopy(args []string) bool {
 	return includes(args, "-c", "--copy")
 }
 
+func fullpaths(relativePaths []string, instream io.Reader) []string {
+	paths := mapToFullPaths(relativePaths)
+	if 0 == len(paths) {
+		paths = mapToFullPaths(readlines(instream))
+	}
+	return paths
+}
+
 func mapToFullPaths(relativePaths []string) []string {
 	paths := []string{}
 	for _, relPath := range relativePaths {
@@ -103,14 +106,14 @@ func readlines(stream io.Reader) []string {
 	return lines
 }
 
-func selectPaths(args []string) []string {
-	paths := []string{}
+func rejectFlags(args []string) []string {
+	selected := []string{}
 	for _, maybePath := range args {
 		if !isFlag(maybePath) {
-			paths = append(paths, maybePath)
+			selected = append(selected, maybePath)
 		}
 	}
-	return paths
+	return selected
 }
 
 func isFlag(maybeFlag string) bool {
