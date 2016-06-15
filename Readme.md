@@ -49,7 +49,13 @@ $ cd elixir
 $ mix escript.build
 ```
 
-Interpret: IDK -.^
+Interpret (stupidly it has to cd into the directory for mix to work correctly, tried futzing around with
+[these](https://github.com/elixir-lang/elixir/blob/master/lib/mix/lib/mix.ex#L162-L168)
+options, but couldn't get it t.t
+
+```sh
+$ elixir/runner a b c
+```
 
 
 <a href="http://www.wtfpl.net/"><img src="http://www.wtfpl.net/wp-content/uploads/2012/12/wtfpl.svg" height="20" alt="WTFPL" /></a> License
