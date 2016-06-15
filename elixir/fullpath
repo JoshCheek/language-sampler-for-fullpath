@@ -1,0 +1,3 @@
+#!/usr/bin/env ruby
+path = File.expand_path 'lib/fullpath.ex', __dir__
+exec 'elixir', path, *ARGV
