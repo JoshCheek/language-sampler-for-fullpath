@@ -2,23 +2,23 @@ import Enum # lets me do `map(...)` instead of `Enum.map(...)`
 
 defmodule Fullpath do
   def main(args) do
-    # We should do this, but it yells at me for having unused variables, so leaving it commented
-    # help? = find args, &"-h"==&1
-    if includes?(args, "-h") || includes?(args, "--help") do
+    if help? args do
       IO.write help_screen
     else
-      # TODO: refactor me
-      paths = get_paths args
-      if empty_list? paths do
-        paths = get_paths IO.stream(:stdio, :line)
+      paths = get_paths args, IO, System.cwd
+      if copy?(args) do
+        copy_to_pasteboard(format paths)
       end
-      formatted = (paths |> expand_args(System.cwd) |> format)
-
-      if includes?(args, "-c") || includes?(args, "--copy") do
-        copy_to_pasteboard(formatted)
-      end
-      IO.write formatted
+      IO.write format paths
     end
+  end
+
+  def help?(args) do
+    includes?(args, "-h") || includes?(args, "--help")
+  end
+
+  def copy?(args) do
+    includes?(args, "-c") || includes?(args, "--copy")
   end
 
   def help_screen do
@@ -32,6 +32,14 @@ defmodule Fullpath do
     "  The -c flag will copy the results into your pasteboard\n"
   end
 
+  def get_paths(args, io, cwd) do
+    paths = to_paths args
+    if empty_list? paths do
+      paths = to_paths io.stream(:stdio, :line)
+    end
+    paths |> expand_args(cwd)
+  end
+
   def copy_to_pasteboard(string) do
     port = Port.open({:spawn, "pbcopy"}, [:stream, :binary, :exit_status, :use_stdio])
     Port.command port, string
@@ -42,7 +50,7 @@ defmodule Fullpath do
     find(haystack, &needle==&1)
   end
 
-  def get_paths(potential_paths) do
+  def to_paths(potential_paths) do
     potential_paths |> map(&chomp(&1)) |> filter(&!empty_string?(&1)) |> filter(&!flag?(&1))
   end
 
@@ -80,8 +88,3 @@ defmodule Fullpath do
 end
 
 Fullpath.main System.argv()
-
-# Maybe useful?
-# IO.inspect(args)
-# List.first(args)
-# IO.puts("Hello, world")
