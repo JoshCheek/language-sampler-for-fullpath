@@ -1,11 +1,13 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
 	"io"
 	"os"
 	"os/exec"
 	"path/filepath"
+	"strings"
 )
 
 type Invocation struct {
@@ -15,7 +17,7 @@ type Invocation struct {
 }
 
 func main() {
-	invocation := parseArgs(os.Args)
+	invocation := parseArgs(os.Args, os.Stdin)
 	doMain(invocation, os.Stdout)
 }
 
@@ -34,9 +36,14 @@ func doMain(invocation Invocation, outstream io.Writer) {
 	}
 }
 
-func parseArgs(args []string) Invocation {
+func parseArgs(args []string, instream io.Reader) Invocation {
+	argvFullPaths := mapToFullPaths(selectPaths(args[1:]))
+	fullpaths := argvFullPaths
+	if 0 == len(argvFullPaths) {
+		fullpaths = mapToFullPaths(readlines(instream))
+	}
 	return Invocation{
-		fullpaths: mapToFullPaths(selectPaths(args[1:])),
+		fullpaths: fullpaths,
 		doHelp:    doHelp(args),
 		doCopy:    doCopy(args),
 	}
@@ -81,6 +88,19 @@ func mapToFullPaths(relativePaths []string) []string {
 		}
 	}
 	return paths
+}
+
+func readlines(stream io.Reader) []string {
+	reader := bufio.NewReader(stream)
+	lines := []string{}
+	for true {
+		line, metadata := reader.ReadString('\n')
+		lines = append(lines, strings.Trim(line, "\r\n")) // trims both \r and \n
+		if metadata == io.EOF {
+			break
+		}
+	}
+	return lines
 }
 
 func selectPaths(args []string) []string {
