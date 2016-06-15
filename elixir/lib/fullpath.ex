@@ -1,8 +1,14 @@
 defmodule Fullpath do
   def main(args) do
-    paths = remove_empty(args)
+    # paths = paths_from(args)
+    paths = normalize(args)
+    paths = remove_empty(paths)
     paths = expand_args(paths, System.cwd())
     print_paths paths
+  end
+
+  def normalize(paths) do
+    Enum.map paths, fn(path) -> String.rstrip(path, ?\n) end
   end
 
   def remove_empty(args) do
