@@ -1,2 +1,14 @@
 #!/usr/bin/env clisp
-(princ "hello world")
+; run: set syntax=lisp
+; b/c I can't figure out how to tell vim to do that automatically
+; w/o looking it up on the internet, which I don't have
+; But it's fkn inferior, eg that's just syntax highlighting
+
+
+; get argv
+(princ *args*)
+; remove empty shit from it
+; if there are args, then they are pathnames
+; if not, get pathnames from stdin (each line)
+; expand each path
+; print them out
