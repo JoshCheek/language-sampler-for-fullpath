@@ -71,8 +71,8 @@
         (format nil "~a~%" formatted))))
 
 (defun copy-to-pasteboard (string)
-  (let* ((pbcopy   (sb-ext:run-program "/usr/bin/env"
-                                       '("pbcopy")
+  (let* ((pbcopy   (sb-ext:run-program "/usr/bin/pbcopy" ; <-- bs to have to give it the abs path -.^
+                                       '()
                                        :wait nil
                                        :input :stream
                                        :output nil))
