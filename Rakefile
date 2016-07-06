@@ -38,5 +38,5 @@ task default: :elixir
 
 
 desc 'Test fullpath in Common Lisp'
-task(:clisp) { cucumber 'common_lisp' }
-task default: :clisp
+task(:cl) { cucumber 'common_lisp' }
+task default: :cl
