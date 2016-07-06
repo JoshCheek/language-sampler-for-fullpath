@@ -73,7 +73,13 @@
         (format nil "~a~%" formatted))))
 
 (defun copy-to-pasteboard (string)
-                    )
+  (let* ((pbcopy   (sb-ext:run-program "/usr/bin/env"
+                                       (cons "pbcopy" nil)
+                                       :wait nil
+                                       :input :stream))
+         (instream (sb-ext:process-input pbcopy)))
+    (format instream "~a" string)
+    (finish-output instream)))
 
 (if (has-help *posix-argv*)
     (format t (help-screen))
@@ -89,6 +95,3 @@
            (to-print (format-paths paths)))
       (if do-copy (copy-to-pasteboard to-print))
       (princ to-print)))
-
-; if do_copy is true
-;   pass it as stdin to pbcopy
