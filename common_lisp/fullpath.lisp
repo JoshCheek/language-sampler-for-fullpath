@@ -1,22 +1,5 @@
-(defun does-include (needle haystack)
-  (find needle haystack :test #'equal))
-
-(defun has-help (args)
-  (or (does-include "-h"     args)
-      (does-include "--help" args)))
-
-(defun has-copy (args)
-  (or (does-include "-c"     args)
-      (does-include "--copy" args)))
-
 (defun is-empty (list)
   (eq 0 (list-length list)))
-
-(defun readlines (instream)
-  (let ((line (read-line instream nil nil)))
-    (if line
-        (cons line (readlines instream))
-        nil)))
 
 (defun join (list delimiter)
   (if (is-empty list)
@@ -39,6 +22,23 @@
           "  The -c flag will copy the results into your pasteboard"
           "")
         #\linefeed))
+
+(defun does-include (needle haystack)
+  (find needle haystack :test #'equal))
+
+(defun has-help (args)
+  (or (does-include "-h"     args)
+      (does-include "--help" args)))
+
+(defun has-copy (args)
+  (or (does-include "-c"     args)
+      (does-include "--copy" args)))
+
+(defun readlines (instream)
+  (let ((line (read-line instream nil nil)))
+    (if line
+        (cons line (readlines instream))
+        nil)))
 
 (defun is-arg (maybe-arg)
   (if (not (eq 0 (length maybe-arg)))
@@ -72,12 +72,15 @@
 
 (defun copy-to-pasteboard (string)
   (let* ((pbcopy   (sb-ext:run-program "/usr/bin/env"
-                                       (cons "pbcopy" nil)
+                                       '("pbcopy")
                                        :wait nil
-                                       :input :stream))
-         (instream (sb-ext:process-input pbcopy)))
-    (format instream "~a" string)
-    (finish-output instream)))
+                                       :input :stream
+                                       :output nil))
+         (copy-stream (sb-ext:process-input pbcopy)))
+    (princ string copy-stream)
+    (finish-output copy-stream)
+    (sb-ext:process-close pbcopy)
+    (sb-ext:process-exit-code pbcopy)))
 
 (defun main ()
   (if (has-help *posix-argv*)
