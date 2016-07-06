@@ -1,2 +1,40 @@
 #!/usr/bin/env clisp
-(princ "hello")
+
+(loop for arg in *args*
+      do (format t "~A~%" (absolute-pathname arg)))
+
+; (princ (find  *args* "-h"))
+; (princ (type-of (first *args*)))
+; (princ "hello")
+; (format t "~&~S~&" *args*)
+
+; (princ (find "-h" *args* :test #'equal))
+; if there is a -h or --help in argv
+;   print help
+;   quit
+
+; if there is a -c or --copy in argv
+;   remove it
+;   set do_copy to true
+; otherwise
+;   set do_copy to false
+
+; paths =
+;   if argv has paths
+;     argv
+;   otherwise
+;     read the paths from stdin
+
+; remove blank lines from paths
+
+; to_print = for each path
+;   expand it
+;   join with newlines
+
+; if there is more than one path
+;   append a newline to to_print
+
+; if do_copy is true
+;   pass it as stdin to pbcopy
+
+; print to_print
