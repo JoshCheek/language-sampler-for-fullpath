@@ -1,4 +1,4 @@
-#!/usr/bin/env clisp
+#!/usr/bin/env sbcl --script
 
 (defun does-include (needle haystack)
   (find needle haystack :test #'equal))
@@ -46,6 +46,12 @@
 (defun remove-blank (args)
   (remove-if 'is-blank args))
 
+(defun absolute-pathname (relative-path)
+  (namestring
+    (merge-pathnames
+      (make-pathname :name relative-path)
+      (truename "."))))
+
 (defun expand-paths (paths)
   (map 'list
        'absolute-pathname
@@ -64,10 +70,10 @@
 (defun copy-to-pasteboard (string)
                     )
 
-(if (has-help *args*)
+(if (has-help *posix-argv*)
     (format t (help-screen))
-    (let* ((do-copy  (has-copy *args*))
-           (paths    (paths-from *args* *standard-input*))
+    (let* ((do-copy  (has-copy *posix-argv*))
+           (paths    (paths-from (rest *posix-argv*) *standard-input*))
            (to-print (format-paths paths)))
       (if do-copy (copy-to-pasteboard to-print))
       (princ to-print)))
