@@ -35,3 +35,8 @@ file 'elixir/fullpath' do
   cd('elixir') { sh 'mix', 'escript.build' }
 end
 task default: :elixir
+
+
+desc 'Test fullpath in Common Lisp'
+task(:clisp) { cucumber 'common_lisp' }
+task default: :clisp
