@@ -17,10 +17,12 @@
 (defun join (list delimiter)
   (if (is-empty list)
       ""
-      (format nil "~a~a~a"
-              (first list)
-              delimiter
-              (join (rest list) delimiter))))
+      (if (= 1 (list-length list))
+          (first list)
+          (format nil "~a~a~a"
+                  (first list)
+                  delimiter
+                  (join (rest list) delimiter)))))
 
 (defun help-screen ()
   (join '("usage: fullpath *[relative-paths] [-c]"
@@ -30,7 +32,8 @@
           ""
           "  If there is only one path, the trailing newline is omitted"
           ""
-          "  The -c flag will copy the results into your pasteboard")
+          "  The -c flag will copy the results into your pasteboard"
+          "")
         #\linefeed))
 
 (defun is-arg (maybe-arg)
@@ -65,7 +68,10 @@
                         arg-paths)))))
 
 (defun format-paths (paths)
-  (join paths #\linefeed))
+  (let ((formatted (join paths #\linefeed)))
+    (if (< (list-length paths) 2)
+        formatted
+        (format nil "~a~%" formatted))))
 
 (defun copy-to-pasteboard (string)
                     )
@@ -73,21 +79,16 @@
 (if (has-help *posix-argv*)
     (format t (help-screen))
     (let* ((do-copy  (has-copy *posix-argv*))
-           (paths    (paths-from (rest *posix-argv*) *standard-input*))
+           (paths    (rest *posix-argv*))
+           (paths    (remove-flags paths))
+           (paths    (remove-blank paths))
+           (paths    (if (is-empty paths)
+                         (readlines *standard-input*)
+                         paths))
+           (paths    (expand-paths paths))
            (to-print (format-paths paths)))
       (if do-copy (copy-to-pasteboard to-print))
       (princ to-print)))
 
-; remove blank lines from paths
-
-; to_print = for each path
-;   expand it
-;   join with newlines
-
-; if there is more than one path
-;   append a newline to to_print
-
 ; if do_copy is true
 ;   pass it as stdin to pbcopy
-
-; print to_print
