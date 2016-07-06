@@ -93,5 +93,4 @@
              (paths    (expand-paths paths))
              (to-print (format-paths paths)))
         (if do-copy (copy-to-pasteboard to-print))
-        (princ to-print)))
-)
+        (princ to-print))))
