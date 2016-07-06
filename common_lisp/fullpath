@@ -14,6 +14,12 @@
 (defun is-empty (list)
   (eq 0 (list-length list)))
 
+(defun readlines (instream)
+  (let ((line (read-line instream nil nil)))
+    (if line
+        (cons line (readlines instream))
+        nil)))
+
 (defun join (list delimiter)
   (if (is-empty list)
       ""
@@ -60,13 +66,6 @@
        'absolute-pathname
        paths))
 
-(defun paths-from (args stdin)
-  (let ((arg-paths (remove-flags args)))
-    (expand-paths (remove-blank
-                    (if (is-empty arg-paths)
-                        (readlines stdin)
-                        arg-paths)))))
-
 (defun format-paths (paths)
   (let ((formatted (join paths #\linefeed)))
     (if (< (list-length paths) 2)
@@ -85,6 +84,7 @@
            (paths    (if (is-empty paths)
                          (readlines *standard-input*)
                          paths))
+           (paths    (remove-blank paths))
            (paths    (expand-paths paths))
            (to-print (format-paths paths)))
       (if do-copy (copy-to-pasteboard to-print))
