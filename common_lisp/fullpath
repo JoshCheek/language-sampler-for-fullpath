@@ -1,8 +1,15 @@
 #!/usr/bin/env clisp
 
+(defun does-include (needle haystack)
+  (find needle haystack :test #'equal))
+
 (defun has-help (args)
-  (or (find "-h"     *args* :test #'equal)
-      (find "--help" *args* :test #'equal)))
+  (or (does-include "-h"     args)
+      (does-include "--help" args)))
+
+(defun has-copy (args)
+  (or (does-include "-c"     args)
+      (does-include "--copy" args)))
 
 (defun is-empty (list)
   (eq 0 (list-length list)))
@@ -24,33 +31,46 @@
           "  If there is only one path, the trailing newline is omitted"
           ""
           "  The -c flag will copy the results into your pasteboard")
-        "~%"))
+        #\linefeed))
+
+(defun is-arg (maybe-arg)
+  (if (not (eq 0 (length maybe-arg)))
+      (eq #\- (char maybe-arg 0))))
+
+(defun is-blank (maybe-blank)
+  (eq 0 (length maybe-blank)))
+
+(defun remove-flags (args)
+  (remove-if 'is-arg args))
+
+(defun remove-blank (args)
+  (remove-if 'is-blank args))
+
+(defun expand-paths (paths)
+  (map 'list
+       'absolute-pathname
+       paths))
+
+(defun paths-from (args stdin)
+  (let ((arg-paths (remove-flags args)))
+    (expand-paths (remove-blank
+                    (if (is-empty arg-paths)
+                        (readlines stdin)
+                        arg-paths)))))
+
+(defun format-paths (paths)
+  (join paths #\linefeed))
+
+(defun copy-to-pasteboard (string)
+                    )
 
 (if (has-help *args*)
-  (format t (help-screen))
-  (loop for arg in *args*
-        do (format t "~A~%" (absolute-pathname arg))))
-
-; (princ (find  *args* "-h"))
-; (princ (type-of (first *args*)))
-; (princ "hello")
-; (format t "~&~S~&" *args*)
-
-; if there is a -h or --help in argv
-;   print help
-;   quit
-
-; if there is a -c or --copy in argv
-;   remove it
-;   set do_copy to true
-; otherwise
-;   set do_copy to false
-
-; paths =
-;   if argv has paths
-;     argv
-;   otherwise
-;     read the paths from stdin
+    (format t (help-screen))
+    (let* ((do-copy  (has-copy *args*))
+           (paths    (paths-from *args* *standard-input*))
+           (to-print (format-paths paths)))
+      (if do-copy (copy-to-pasteboard to-print))
+      (princ to-print)))
 
 ; remove blank lines from paths
 
