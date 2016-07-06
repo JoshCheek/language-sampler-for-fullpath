@@ -1,14 +1,41 @@
 #!/usr/bin/env clisp
 
-(loop for arg in *args*
-      do (format t "~A~%" (absolute-pathname arg)))
+(defun has-help (args)
+  (or (find "-h"     *args* :test #'equal)
+      (find "--help" *args* :test #'equal)))
+
+(defun is-empty (list)
+  (eq 0 (list-length list)))
+
+(defun join (list delimiter)
+  (if (is-empty list)
+      ""
+      (format nil "~a~a~a"
+              (first list)
+              delimiter
+              (join (rest list) delimiter))))
+
+(defun help-screen ()
+  (join '("usage: fullpath *[relative-paths] [-c]"
+          ""
+          "  Prints the fullpath of the paths"
+          "  If no paths are given as args, it will read them from stdin"
+          ""
+          "  If there is only one path, the trailing newline is omitted"
+          ""
+          "  The -c flag will copy the results into your pasteboard")
+        "~%"))
+
+(if (has-help *args*)
+  (format t (help-screen))
+  (loop for arg in *args*
+        do (format t "~A~%" (absolute-pathname arg))))
 
 ; (princ (find  *args* "-h"))
 ; (princ (type-of (first *args*)))
 ; (princ "hello")
 ; (format t "~&~S~&" *args*)
 
-; (princ (find "-h" *args* :test #'equal))
 ; if there is a -h or --help in argv
 ;   print help
 ;   quit
