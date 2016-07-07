@@ -82,19 +82,23 @@
     (sb-ext:process-close pbcopy)
     (sb-ext:process-exit-code pbcopy)))
 
-(defun main ()
-  (if (has-help *posix-argv*)
+(defun fullpath-program (argv stdout stdin cwd)
+  (if (has-help argv)
       (format t (help-screen))
-      (let* ((do-copy  (has-copy *posix-argv*))
-             (cwd      (truename "."))
-             (paths    (rest *posix-argv*))
+      (let* ((do-copy  (has-copy argv))
+             (paths    (rest argv))
              (paths    (remove-flags paths))
              (paths    (remove-blank paths))
-             (paths    (if (is-empty paths)
-                           (readlines *standard-input*)
-                           paths))
+             (paths    (if (is-empty paths) (readlines stdin) paths))
              (paths    (remove-blank paths))
              (paths    (expand-paths paths cwd))
              (to-print (format-paths paths)))
         (if do-copy (copy-to-pasteboard to-print))
-        (princ to-print))))
+        (princ to-print stdout))))
+
+(defun main ()
+  (fullpath-program
+    *posix-argv*
+    *standard-output*
+    *standard-input*
+    (truename ".")))
