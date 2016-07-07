@@ -53,15 +53,15 @@
 (defun remove-blank (args)
   (remove-if 'is-blank args))
 
-(defun absolute-pathname (relative-path)
+(defun absolute-pathname (relative-path dir)
   (namestring
     (merge-pathnames
       (make-pathname :name relative-path)
-      (truename "."))))
+      dir)))
 
-(defun expand-paths (paths)
+(defun expand-paths (paths dir)
   (map 'list
-       'absolute-pathname
+       (lambda (path) (absolute-pathname path dir))
        paths))
 
 (defun format-paths (paths)
@@ -86,6 +86,7 @@
   (if (has-help *posix-argv*)
       (format t (help-screen))
       (let* ((do-copy  (has-copy *posix-argv*))
+             (cwd      (truename "."))
              (paths    (rest *posix-argv*))
              (paths    (remove-flags paths))
              (paths    (remove-blank paths))
@@ -93,7 +94,7 @@
                            (readlines *standard-input*)
                            paths))
              (paths    (remove-blank paths))
-             (paths    (expand-paths paths))
+             (paths    (expand-paths paths cwd))
              (to-print (format-paths paths)))
         (if do-copy (copy-to-pasteboard to-print))
         (princ to-print))))
