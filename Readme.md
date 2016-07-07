@@ -3,29 +3,58 @@ Language Sampler For Fullpath
 
 Fullpath is a program I initially wrote in Ruby
 (source is [here](https://github.com/JoshCheek/dotfiles/blob/3cabefef72d2d97639f213726b8cd2550740ea7b/bin/fullpath)).
-It makes a good small but still useful program (I use it very frequently)
-to try out for a new language, so I'm going to try writing it in
-new languages as I try to learn them.
+It makes a good small but still useful program (I use it very frequently).
+So I've started using it to try out new languages, and am consolidating the results here.
+
+**NOTE: THIS ONLY WORKS ON OSX** (due to use of the `pbcopy` program)
+
 
 Tests
 -----
 
+Install Ruby. There are any number of options here, I use chruby, so will show that one.
+
+```sh
+# install ruby-install (lets you install different ruby versions)
+$ brew install ruby-install
+
+# install chruby (lets you change between the installed rubies)
+$ brew install chruby
+
+# install the specific ruby
+$ ruby-install ruby 2.3.0
+
+# switch to it
+$ chruby use 2.3.0
+
+# now that you have Ruby, install the dependencies you need to run the tests
+$ gem install bundler
+$ bundle install
+```
+
 Build all implementations and run all tests:
 
-```
+```sh
 $ rake
 ```
 
 See which language tests you can run:
 
-```
+```sh
 $ rake -T
 ```
+
 
 Languages
 ---------
 
-### Go
+### [Go](https://golang.org/)
+
+Install (for Mac, anyway):
+
+```sh
+$ brew install go
+```
 
 Build:
 
@@ -40,7 +69,14 @@ $ go run golang/fullpath.go path1 path2
 ```
 
 
-### Ruby
+### [Ruby](https://www.ruby-lang.org/en/)
+
+This one is the first one, I wrote a long time ago,
+and here I started plaing around with different options there
+(ie its the only one that reads from stdin and writes to
+stdout in real-time).
+
+Installation instructions are above.
 
 Run with the interpreter:
 
@@ -55,10 +91,18 @@ $ ruby/fullpath path1 path2
 ```
 
 
-### Elixir
+### [Elixir](http://elixir-lang.org/)
 
 [Video](https://vimeo.com/170785037) of me writing the code (my first 3 hours of Elixir,
-from no experience to getting `fullpath` written in it).
+from no experience to getting `fullpath` written in it). I felt okay with it,
+but got stuck on stupid things for really long times. Eg the different kinds of strings
+and mix.
+
+Install
+
+```sh
+$ brew install elixir
+```
 
 Build:
 
@@ -73,6 +117,36 @@ options, but couldn't get it t.t
 
 ```sh
 $ elixir/runner a b c
+```
+
+
+### [Common Lisp](http://www.sbcl.org/)
+
+Thoughts: I found this one pretty frustrating. Eventually
+switched from Clisp to SBCL, because I couldn't get it to
+omit the newline. Spent hours on that. Also spent a really
+long time getting it to wait for the output of pbcopy,
+finally hard-coded the path to the executable, but that's
+a bit frustrating. Also, the compile options, as you will see,
+are a bit much.
+
+
+Install
+
+```sh
+$ brew install sbcl
+```
+
+Build:
+
+```sh
+$ sbcl --load common_lisp/fullpath.lisp --eval "(save-lisp-and-die \"common_lisp/fullpath\" :executable t :toplevel 'main :save-runtime-options t)" --end-toplevel-options
+```
+
+Interpret:
+
+```sh
+$ sbcl --noinform --load common_lisp/fullpath.lisp --eval '(main)' --eval '(quit)' --end-toplevel-options a b c
 ```
 
 
