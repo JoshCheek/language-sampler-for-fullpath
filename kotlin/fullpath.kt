@@ -34,15 +34,8 @@ fun breakNewlines(rawPaths:List<String>):List<String> =
 
 fun readLines(inStream:BufferedReader):List<String> {
   var newArgs = mutableListOf<String>()
-  eachLine(inStream) { newArgs.add(it) }
-  return newArgs
-}
-
-fun eachLine(inStream:BufferedReader, block:(String)->Any) {
   while (true) {
-    val line = inStream.readLine()
-    if(line == null)
-      break
-    block(line)
+    inStream.readLine()?.let { newArgs.add(it) } ?: break
   }
+  return newArgs
 }
