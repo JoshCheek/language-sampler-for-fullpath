@@ -150,6 +150,29 @@ $ sbcl --noinform --load common_lisp/fullpath.lisp --eval '(main)' --eval '(quit
 ```
 
 
+### [Kotlin](https://kotlinlang.org)
+
+A fellow at a bar was talking about this language,
+so [@mlarraz](https://github.com/mlarraz) and I sat down to try
+our hand at it. We got a reasonable bit figured out that night,
+and then I spent another couple of hours finishing / polishing today.
+
+I don't have any real insights into it as a language,
+other than I like the `it` thing within the blocks,
+I like the `val`/`var` thing, I dislike the startup time,
+my syntax highlighter needs to be better,
+I like the fn bodies that omit the curlies,
+Java is a little bit annoying.
+
+
+Install
+
+```sh
+$ brew install kotlin
+```
+
+
+
 <a href="http://www.wtfpl.net/"><img src="http://www.wtfpl.net/wp-content/uploads/2012/12/wtfpl.svg" height="20" alt="WTFPL" /></a> License
 -------------------------------------------------------------------------------------------------------------------------------------------
 
