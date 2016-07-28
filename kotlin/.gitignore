@@ -1,2 +1,8 @@
-*.class
+# intermediate info for jar file
 META-INF
+
+# java archive
+*.jar
+
+# wrapper script containing the .jar file (self-contained executable)
+fullpath

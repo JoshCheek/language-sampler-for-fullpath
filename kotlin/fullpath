@@ -1,2 +1,0 @@
-#!/bin/bash
-kotlin -classpath "$(dirname "$0")" FullpathKt "$@"

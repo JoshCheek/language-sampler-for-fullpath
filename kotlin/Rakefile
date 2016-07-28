@@ -1,8 +1,34 @@
-file 'FullpathKt.class' => 'fullpath.kt' do
-  sh 'kotlinc fullpath.kt'
+task default: 'run'
+
+file 'fullpath.jar' => 'fullpath.kt' do
+  sh 'kotlinc',
+     '-include-runtime',
+     '-d', 'fullpath.jar',
+     'fullpath.kt'
 end
 
-task "run" => 'FullpathKt.class' do
+file 'fullpath' => 'fullpath.jar' do
+  # Got the executable approach from here:
+  # https://coderwall.com/p/ssuaxa/how-to-make-a-jar-file-linux-executable
+  require 'open3'
+  out, err, status = Open3.capture3 'cat - fullpath.jar > fullpath', stdin_data: <<-SH.gsub(/^    /, '')
+    #!/bin/sh
+    MYSELF=`which "$0" 2>/dev/null`
+    [ $? -gt 0 -a -f "$0" ] && MYSELF="./$0"
+    java=java
+    if test -n "$JAVA_HOME"; then
+        java="$JAVA_HOME/bin/java"
+    fi
+    exec "$java" $java_args -jar $MYSELF "$@"
+    exit 1
+  SH
+  puts out unless out.empty?
+  puts err unless err.empty?
+  exit 1 unless err == "" && status.success?
+  chmod '+x', 'fullpath'
+end
+
+task 'run' => 'fullpath' do
   sh "./fullpath", "a\nb", "", "c"
   sh "ruby -e 'puts %(x\ny\n\nz)' | ./fullpath"
   sh "./fullpath", "no-newline"
