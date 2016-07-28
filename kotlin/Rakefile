@@ -3,5 +3,7 @@ file 'FullpathKt.class' => 'fullpath.kt' do
 end
 
 task "run" => 'FullpathKt.class' do
-  sh './fullpath', 'abc'
+  sh "./fullpath", "a\nb", "", "c"
+  sh "ruby -e 'puts %(a\nb\n\nc)' | ./fullpath"
+  sh "./fullpath", "a"
 end
