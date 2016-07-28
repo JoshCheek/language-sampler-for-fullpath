@@ -24,20 +24,20 @@ fun getPaths(inStream:BufferedReader, args:List<String>, dir:String):List<String
   var lines = filterBlanks(breakNewlines(args))
   if (lines.isEmpty())
     lines = filterBlanks(readLines(inStream))
-  return lines.map { line -> "${dir}/${line}" }
+  return lines.map { "${dir}/${it}" }
 }
 
 fun filterBlanks(strings:List<String>):List<String> {
-  return strings.filter { a -> a != "" }
+  return strings.filter { it != "" }
 }
 
 fun breakNewlines(rawPaths:List<String>):List<String> {
-  return rawPaths.flatMap { str -> str.split("\n") }
+  return rawPaths.flatMap { it.split("\n") }
 }
 
 fun readLines(inStream:BufferedReader):List<String> {
   var newArgs = mutableListOf<String>()
-  eachLine(inStream) { line -> newArgs.add(line) }
+  eachLine(inStream) { newArgs.add(it) }
   return newArgs
 }
 
