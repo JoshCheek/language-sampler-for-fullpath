@@ -4,5 +4,5 @@ fun main(args : Array<String>) {
     return
   }
 
-  println("Hello, ${args[0]}")
+  println("TEST Hello, ${args[0]}")
 }

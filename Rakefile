@@ -52,3 +52,13 @@ file 'common_lisp/fullpath' => 'common_lisp/fullpath.lisp' do
        '--end-toplevel-options'
 end
 task default: :cl
+
+
+file 'kotlin/fullpath' => 'kotlin/fullpath.kt' do
+  Dir.chdir('kotlin') { sh 'rake FullpathKt.class' }
+end
+desc 'Build / test fullpath in Kotlin'
+task kotlin: 'kotlin/fullpath' do
+  cucumber 'kotlin'
+end
+task default: :kotlin
