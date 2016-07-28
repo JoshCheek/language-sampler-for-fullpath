@@ -4,6 +4,6 @@ end
 
 task "run" => 'FullpathKt.class' do
   sh "./fullpath", "a\nb", "", "c"
-  sh "ruby -e 'puts %(a\nb\n\nc)' | ./fullpath"
-  sh "./fullpath", "a"
+  sh "ruby -e 'puts %(x\ny\n\nz)' | ./fullpath"
+  sh "./fullpath", "no-newline"
 end
