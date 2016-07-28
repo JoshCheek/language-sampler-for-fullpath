@@ -1,0 +1,7 @@
+file 'FullpathKt.class' => 'fullpath.kt' do
+  sh 'kotlinc fullpath.kt'
+end
+
+task "run" => 'FullpathKt.class' do
+  sh './fullpath'
+end

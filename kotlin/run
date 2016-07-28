@@ -1,2 +1,0 @@
-#!/bin/sh
-kotlinc hello.kt && kotlin HelloKt

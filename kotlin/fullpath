@@ -1,3 +1,2 @@
 #!/bin/bash
-kotlin FullpathKt
-
+kotlin FullpathKt "$@"
