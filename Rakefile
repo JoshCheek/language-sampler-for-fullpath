@@ -9,6 +9,7 @@ desc 'Build / test all languages'
 task :default
 
 
+# =====  Go  =====
 desc 'Build / test fullpath in Go'
 task golang: 'golang/fullpath' do
   cucumber 'golang'
@@ -20,6 +21,7 @@ task go: :golang # shorthand
 task default: :golang
 
 
+# =====  Ruby  =====
 desc 'Test fullpath in Ruby'
 task :ruby do
   cucumber 'ruby'
@@ -27,6 +29,7 @@ end
 task default: :ruby
 
 
+# =====  Elixir  =====
 desc 'Build / test fullpath in Elixir'
 task elixir: 'elixir/fullpath' do
   cucumber 'elixir'
@@ -37,6 +40,7 @@ end
 task default: :elixir
 
 
+# =====  Common Lisp  =====
 desc 'Build / test fullpath in Common Lisp'
 task cl: 'common_lisp/fullpath' do
   cucumber 'common_lisp'
@@ -54,11 +58,22 @@ end
 task default: :cl
 
 
-file 'kotlin/fullpath' => 'kotlin/fullpath.kt' do
-  Dir.chdir('kotlin') { sh 'rake FullpathKt.class' }
-end
+# =====  Kotlin  =====
 desc 'Build / test fullpath in Kotlin'
 task kotlin: 'kotlin/fullpath' do
   cucumber 'kotlin'
 end
 task default: :kotlin
+
+file 'kotlin/fullpath' => 'kotlin/fullpath.jar' do
+  sh 'echo "#!/usr/bin/env java -jar" >  kotlin/fullpath'
+  sh 'cat kotlin/fullpath.jar         >> kotlin/fullpath'
+  chmod '+x', 'kotlin/fullpath'
+end
+
+file 'kotlin/fullpath.jar' => 'kotlin/fullpath.kt' do
+  sh 'kotlinc',
+     '-include-runtime',
+     '-d', 'kotlin/fullpath.jar',
+     'kotlin/fullpath.kt'
+end
