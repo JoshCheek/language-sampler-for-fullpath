@@ -4,36 +4,33 @@ import java.io.InputStreamReader
 import java.lang.System
 import java.io.PrintStream
 
+val dir    = System.getProperty("user.dir")
+var stdin  = BufferedReader(InputStreamReader(System.`in`))
+var stdout = System.`out`
+
 fun main(args : Array<String>) {
-  val dir    = System.getProperty("user.dir")
-  var stdin  = BufferedReader(InputStreamReader(System.`in`))
-  var stdout = System.`out`
-  val paths  = getPaths(stdin, args.asList(), dir)
+  val paths = getPaths(stdin, args.asList(), dir)
   printPaths(stdout, paths)
 }
 
-fun printPaths(outStream:PrintStream, paths:List<String>) {
+fun printPaths(outStream:PrintStream, paths:List<String>) =
   if (paths.size == 1)
     outStream.print(paths[0])
   else
-    for (path in paths)
-      outStream.println(path)
-}
+    paths.forEach { outStream.println(it) }
 
 fun getPaths(inStream:BufferedReader, args:List<String>, dir:String):List<String> {
   var lines = filterBlanks(breakNewlines(args))
   if (lines.isEmpty())
     lines = filterBlanks(readLines(inStream))
-  return lines.map { "${dir}/${it}" }
+  return lines.map { "$dir/$it" }
 }
 
-fun filterBlanks(strings:List<String>):List<String> {
-  return strings.filter { it != "" }
-}
+fun filterBlanks(strings:List<String>):List<String> =
+  strings.filter { it != "" }
 
-fun breakNewlines(rawPaths:List<String>):List<String> {
-  return rawPaths.flatMap { it.split("\n") }
-}
+fun breakNewlines(rawPaths:List<String>):List<String> =
+  rawPaths.flatMap { it.split("\n") }
 
 fun readLines(inStream:BufferedReader):List<String> {
   var newArgs = mutableListOf<String>()
