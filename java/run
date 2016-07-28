@@ -1,0 +1,4 @@
+#!/bin/sh
+
+javac Fullpath.java
+java Fullpath
