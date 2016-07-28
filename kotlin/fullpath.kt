@@ -1,10 +1,18 @@
+import kotlin.io.readLine
+
 fun main(args : Array<String>) {
   val path = System.getProperty("user.dir")
 
   if (args.size == 0) {
-    println("Please provide a name as a command-line argument")
+    print("${path}/${readLine()}")
     return
   }
 
-  print("${path}/${args[0]}")
+  if (args.size == 1) {
+    print("${path}/${args[0]}")
+    return
+  }
+
+  for (arg in args)
+    if (arg != "\n") println("${path}/${arg}")
 }
