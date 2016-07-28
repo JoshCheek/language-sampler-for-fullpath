@@ -3,5 +3,5 @@ file 'FullpathKt.class' => 'fullpath.kt' do
 end
 
 task "run" => 'FullpathKt.class' do
-  sh './fullpath'
+  sh './fullpath', 'abc'
 end
