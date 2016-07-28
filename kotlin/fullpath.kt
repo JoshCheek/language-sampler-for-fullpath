@@ -1,8 +1,10 @@
 import kotlin.CharSequence
 import java.io.BufferedReader
 import java.io.InputStreamReader
-import java.lang.System
+import java.io.PrintWriter
 import java.io.PrintStream
+import java.lang.System
+import java.lang.Runtime
 
 data class Invocation(
   val args       : Array<String>,
@@ -39,25 +41,33 @@ fun main(args : Array<String>) {
 fun invoke(invocation:Invocation) {
   if (invocation.printHelp) {
     println(invocation.helpScreen)
-  } else {
-    // copy maybe
-    printPaths(invocation.writer, invocation.paths)
+    return
   }
+  val output = formatPaths(invocation.paths)
+  if (invocation.copyResult)
+    copyToClipboard(output)
+  invocation.writer.print(output)
 }
 
-fun printPaths(outStream:PrintStream, paths:List<String>) =
+fun copyToClipboard(string:String) {
+  val process = Runtime.getRuntime().exec("pbcopy")
+  val writer  = PrintWriter(process.getOutputStream())
+  writer.print(string)
+  writer.close()
+}
+
+fun formatPaths(paths:List<String>) =
   if (paths.size == 1)
-    outStream.print(paths[0])
+    paths[0]
   else
-    paths.forEach { outStream.println(it) }
+    paths.map { "${it}\n" }.joinToString(separator="")
 
 fun withPaths(invocation:Invocation):Invocation {
   var paths:List<String>
   paths = invocation.args.asList()
-  paths = filterBlanks(paths)
-  paths = filterFlags(paths)
   paths = breakNewlines(paths)
   paths = filterBlanks(paths)
+  paths = filterFlags(paths)
   if (paths.isEmpty()) {
     paths = readLines(invocation.reader)
     paths = filterBlanks(paths)
