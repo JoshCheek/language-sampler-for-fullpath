@@ -15,36 +15,34 @@ fun main(args : Array<String>) {
 
 fun getPaths(args : List<String>):List<String> {
   val lines = filterBlanks(breakNewlines(args))
-  /* if (lines.length == 0) { */
-  /*   return filterBlanks(readLines()) */
-  /* } */
+  if (lines.isEmpty()) {
+    return filterBlanks(readLines())
+  }
   return lines
 }
 
 fun filterBlanks(strings : List<String>):List<String> {
-  return strings
-/*   return strings.filter { a -> a != "" } */
+  return strings.filter { a -> a != "" }
 }
 
 fun breakNewlines(rawPaths : List<String>):List<String> {
   return rawPaths.flatMap { str -> str.split("\n") }
-  /* val paths = arrayOf<String>() */
-  /* for (rawPath in rawPaths) { */
-  /*   for (line in rawPath.split("\n")) { */
-  /*     paths.push(line) */
-  /*   } */
-  /* } */
-  /* return paths */
 }
 
-/* fun readLines() { */
-/*   var newArgs = [] */
-/*   while (true) { */
-/*     val line = readLine() */
-/*     if(!line) { */
-/*       break */
-/*     } */
-/*     newArgs.push(line) */
-/*   } */
-/*   return newArgs */
-/* } */
+fun readLines():List<String> {
+  var newArgs = mutableListOf<String>()
+  while (true) {
+    val line = readLine()
+    if(line != null) {
+      newArgs.add(line)
+    } else {
+      break
+    }
+  }
+  return newArgs
+}
+
+/* Maybe useful:
+
+  val paths = arrayOf<String>()
+*/
