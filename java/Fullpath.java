@@ -10,25 +10,17 @@ import java.util.ArrayList;
 
 public class Fullpath {
   public static void main(String[] args) {
-    Invocation invocation = new Invocation()
-      .withArgs(args)
-      .withDir(System.getProperty("user.dir"))
-      .withReader(new BufferedReader(new InputStreamReader(System.in)))
-      .withWriter(System.out)
-      .withPrintHelp( contains(args, "-h") || contains(args, "--help"))
-      .withCopyResult(contains(args, "-c") || contains(args, "--copy"));
-    setPaths(invocation);
+    Invocation invocation = new Invocation(
+      args,
+      System.getProperty("user.dir"),
+      new BufferedReader(new InputStreamReader(System.in)),
+      System.out
+    );
+    invocation.paths = getPaths(invocation);
     invoke(invocation);
   }
 
-  public static boolean contains(String[] haystack, String needle) {
-    for(String hay : haystack)
-      if(hay.equals(needle))
-        return true;
-    return false;
-  }
-
-  public static Invocation setPaths(Invocation invocation) {
+  public static List<String> getPaths(Invocation invocation) {
     List<String> paths = new ArrayList<String>();
     for(String path : invocation.args)
       paths.add(path);
@@ -39,11 +31,10 @@ public class Fullpath {
       paths = readLines(invocation.reader);
       paths = filterBlanks(paths);
     }
-    String dir = invocation.dir;
     List<String> absolutePaths = new ArrayList<String>();
     for(String path : paths)
-      absolutePaths.add(dir + "/" + path);
-    return invocation.withPaths(absolutePaths);
+      absolutePaths.add(invocation.dir + "/" + path);
+    return absolutePaths;
   }
 
   public static void invoke(Invocation invocation) {
@@ -114,11 +105,11 @@ public class Fullpath {
 
 
   private static class Invocation {
-    String[]       args       = {};
+    String         dir;
+    BufferedReader reader;
+    PrintStream    writer;
+    String[]       args;
     List<String>   paths      = new ArrayList<String>();
-    String         dir        = "/";
-    BufferedReader reader     = null;
-    PrintStream    writer     = null;
     boolean        printHelp  = false;
     boolean        copyResult = false;
     String         helpScreen =
@@ -131,44 +122,20 @@ public class Fullpath {
         "\n" +
         "  The -c flag will copy the results into your pasteboard\n";
 
-    public Invocation withArgs(String[] args) {
-      this.args = args;
-      return this;
+    public Invocation(String[] args, String dir, BufferedReader reader, PrintStream writer) {
+      this.args       = args;
+      this.dir        = dir;
+      this.reader     = reader;
+      this.writer     = writer;
+      this.printHelp  = contains(args, "-h") || contains(args, "--help");
+      this.copyResult = contains(args, "-c") || contains(args, "--copy");
     }
 
-    public Invocation withPaths(List<String> paths) {
-      this.paths = paths;
-      return this;
-    }
-
-    public Invocation withDir(String dir) {
-      this.dir = dir;
-      return this;
-    }
-
-    public Invocation withDir(BufferedReader reader) {
-      this.reader = reader;
-      return this;
-    }
-
-    public Invocation withReader(BufferedReader reader) {
-      this.reader = reader;
-      return this;
-    }
-
-    public Invocation withWriter(PrintStream writer) {
-      this.writer = writer;
-      return this;
-    }
-
-    public Invocation withPrintHelp(boolean printHelp) {
-      this.printHelp = printHelp;
-      return this;
-    }
-
-    public Invocation withCopyResult(boolean copyResult) {
-      this.copyResult = copyResult;
-      return this;
+    private boolean contains(String[] haystack, String needle) {
+      for(String hay : haystack)
+        if(hay.equals(needle))
+          return true;
+      return false;
     }
   }
 }
