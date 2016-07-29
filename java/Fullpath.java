@@ -23,7 +23,7 @@ public class Fullpath {
 
   public static boolean contains(String[] haystack, String needle) {
     for(String hay : haystack)
-      if(hay == needle)
+      if(hay.equals(needle))
         return true;
     return false;
   }
@@ -48,7 +48,7 @@ public class Fullpath {
 
   public static void invoke(Invocation invocation) {
     if (invocation.printHelp) {
-      System.out.println(invocation.helpScreen);
+      System.out.print(invocation.helpScreen);
       return;
     }
     String output = formatPaths(invocation.paths);
