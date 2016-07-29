@@ -6,7 +6,9 @@ import os
 # sys.stdout
 
 def normalize(lines):
-    return map(lambda x:x.strip(), lines)
+    lines = map(lambda x:x.strip(), lines)
+    lines = filter(lambda x:x!="", lines)
+    return lines
 
 def printLines(lines):
     if len(lines) == 1:
