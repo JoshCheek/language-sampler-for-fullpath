@@ -77,3 +77,12 @@ file 'kotlin/fullpath.jar' => 'kotlin/fullpath.kt' do
      '-d', 'kotlin/fullpath.jar',
      'kotlin/fullpath.kt'
 end
+
+
+
+# =====  Python  =====
+desc 'Test fullpath in Ruby'
+task :python do
+  cucumber 'python'
+end
+task default: :python
