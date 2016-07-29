@@ -172,6 +172,60 @@ $ brew install kotlin
 ```
 
 
+### [Python](https://www.python.org)
+
+Wound up at a polyglot meetup, quite a few humans there knew some Python,
+so I started writing it in Python. Went really smoothly,
+
+so [@mlarraz](https://github.com/mlarraz) and I sat down to try
+our hand at it. We got a reasonable bit figured out that night,
+and then I spent another couple of hours finishing / polishing today.
+
+I don't have any real insights into it as a language,
+other than I like the `it` thing within the blocks,
+I like the `val`/`var` thing, I dislike the startup time,
+my syntax highlighter needs to be better,
+I like the fn bodies that omit the curlies,
+Java is a little bit annoying.
+
+Install (I just ran with the version that was pre-installed, 2.7.10)
+
+
+
+### [Java](https://docs.oracle.com/javase/8/)
+
+I already knew a little bit of Java, and I had a working Kotlin solution,
+which I figured could be switched over pretty easily.
+So the first bit went pretty smoothly and was somewhat enjoyable.
+When I got to the bits that obviously need map/filter/etc,
+I couldn't figure out how to get them working.
+Maybe I was too tired (haven't retried this morning),
+but I really struggled to get the examples in the blogs working
+(why don't they post full working solutions? -- my guess, Java is too verbose).
+So, anyway, simple things would up taking a stupid amount of obfuscating code.
+
+The solution isn't very fast becuse it takes too long to load everything up,
+IDK if that's a fault of the JVM or of Java not doing something like dead-code elimination.
+Maybe there are flags I could give it to improve this.
+
+Figuring out how to package it was a pain in the ass.
+Notice that it has the most sophisticated and verbose build instructions out of every langauge I'm working with.
+Also the most fragile, those intermediate `.class` files seem incredibly fragile.
+
+Also, the shell script executable trick is kind of ridiculous. But w/e.
+
+Install (IDK, I already had Java 8).
+
+Build/run:
+
+```sh
+$ javac Fullpath.java
+$ java Fullpath
+```
+
+There is no interpreter AFAIK...
+
+
 
 <a href="http://www.wtfpl.net/"><img src="http://www.wtfpl.net/wp-content/uploads/2012/12/wtfpl.svg" height="20" alt="WTFPL" /></a> License
 -------------------------------------------------------------------------------------------------------------------------------------------
