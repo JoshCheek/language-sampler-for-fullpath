@@ -39,22 +39,22 @@ public class Fullpath {
       paths = readLines(invocation.reader);
       paths = filterBlanks(paths);
     }
-    System.out.println(paths);
-    return null;
-    // val dir = invocation.dir;
-    // invocation.paths = paths;
-    // return invocation.copy(paths=paths.map { "$dir/$it" })
+    String dir = invocation.dir;
+    List<String> absolutePaths = new ArrayList<String>();
+    for(String path : paths)
+      absolutePaths.add(dir + "/" + path);
+    return invocation.withPaths(paths);
   }
 
   public static void invoke(Invocation invocation) {
-    // if (invocation.printHelp) {
-    //   println(invocation.helpScreen)
-    //   return
-    // }
-    // val output = formatPaths(invocation.paths)
-    // if (invocation.copyResult)
-    //   copyToClipboard(output)
-    // invocation.writer.print(output)
+    if (invocation.printHelp) {
+      System.out.println(invocation.helpScreen);
+      return;
+    }
+    String output = formatPaths(invocation.paths);
+    if (invocation.copyResult)
+      copyToClipboard(output);
+    invocation.writer.print(output);
   }
 
   public static List<String> breakNewlines(List<String> rawPaths) {
@@ -94,9 +94,25 @@ public class Fullpath {
     return newArgs;
   }
 
+  public static void copyToClipboard(String string) {
+    // val process = Runtime.getRuntime().exec("pbcopy")
+    // val writer  = PrintWriter(process.getOutputStream())
+    // writer.print(string)
+    // writer.close()
+  }
+
+  public static String formatPaths(List<String> paths) {
+    return "";
+    // if (paths.size == 1)
+      // paths[0]
+    // else
+      // paths.map { "${it}\n" }.joinToString(separator="")
+  }
+
+
   private static class Invocation {
     String[]       args       = {};
-    String[]       paths      = {};
+    List<String>   paths      = new ArrayList<String>();
     String         dir        = "/";
     BufferedReader reader     = null;
     PrintStream    writer     = null;
@@ -117,7 +133,7 @@ public class Fullpath {
       return this;
     }
 
-    public Invocation withPaths(String[] paths) {
+    public Invocation withPaths(List<String> paths) {
       this.paths = paths;
       return this;
     }
@@ -153,27 +169,3 @@ public class Fullpath {
     }
   }
 }
-
-// fun invoke(invocation:Invocation) {
-//   if (invocation.printHelp) {
-//     println(invocation.helpScreen)
-//     return
-//   }
-//   val output = formatPaths(invocation.paths)
-//   if (invocation.copyResult)
-//     copyToClipboard(output)
-//   invocation.writer.print(output)
-// }
-
-// fun copyToClipboard(string:String) {
-//   val process = Runtime.getRuntime().exec("pbcopy")
-//   val writer  = PrintWriter(process.getOutputStream())
-//   writer.print(string)
-//   writer.close()
-// }
-
-// fun formatPaths(paths:List<String>) =
-//   if (paths.size == 1)
-//     paths[0]
-//   else
-//     paths.map { "${it}\n" }.joinToString(separator="")
