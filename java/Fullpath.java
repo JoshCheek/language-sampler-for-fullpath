@@ -10,31 +10,18 @@ import java.util.ArrayList;
 
 public class Fullpath {
   public static void main(String[] args) {
+    // realistically, there's probably some abstraction missing here
+    // that would need to be introduced as more requirements were added to the program,
+    // but since I can't quite feel what it is (I hava a vague sense),
+    // I'm not going to try introducing it and making it worse
     Invocation invocation = new Invocation(
       args,
       System.getProperty("user.dir"),
       new BufferedReader(new InputStreamReader(System.in)),
       System.out
     );
-    invocation.paths = getPaths(invocation);
+    invocation.setPaths();
     invoke(invocation);
-  }
-
-  public static List<String> getPaths(Invocation invocation) {
-    List<String> paths = new ArrayList<String>();
-    for(String path : invocation.args)
-      paths.add(path);
-    paths = breakNewlines(paths);
-    paths = filterBlanks(paths);
-    paths = filterFlags(paths);
-    if (paths.isEmpty()) {
-      paths = readLines(invocation.reader);
-      paths = filterBlanks(paths);
-    }
-    List<String> absolutePaths = new ArrayList<String>();
-    for(String path : paths)
-      absolutePaths.add(invocation.dir + "/" + path);
-    return absolutePaths;
   }
 
   public static void invoke(Invocation invocation) {
@@ -46,43 +33,6 @@ public class Fullpath {
     if (invocation.copyResult)
       copyToClipboard(output);
     invocation.writer.print(output);
-  }
-
-  public static List<String> breakNewlines(List<String> rawPaths) {
-    ArrayList<String> paths = new ArrayList<String>();
-    for(String rawPath : rawPaths)
-      for(String path : rawPath.split("\n"))
-        paths.add(path);
-    return paths;
-  }
-
-  public static List<String> filterBlanks(List<String> strings) {
-    ArrayList<String> newStrings = new ArrayList<String>();
-    for(String string : strings)
-      if(string.length() != 0)
-        newStrings.add(string);
-    return newStrings;
-  }
-
-  public static List<String> filterFlags(List<String> args) {
-    char dash = "-".charAt(0);
-    ArrayList<String> newStrings = new ArrayList<String>();
-    for(String arg : args)
-      if(arg.charAt(0) != dash)
-        newStrings.add(arg);
-    return newStrings;
-  }
-
-  public static List<String> readLines(BufferedReader inStream) {
-    List<String> newArgs = new ArrayList<String>();
-    String line = "";
-    while (true) {
-      try { line = inStream.readLine(); }
-      catch(java.io.IOException e) { break; }
-      if(line != null) newArgs.add(line);
-      else break;
-    }
-    return newArgs;
   }
 
   public static void copyToClipboard(String string) {
@@ -137,5 +87,68 @@ public class Fullpath {
           return true;
       return false;
     }
+
+    public void setPaths() {
+      this.paths = getPaths();
+    }
+
+    private List<String> getPaths() {
+      List<String> paths = filterFlags(filterBlanks(breakNewlines(arrayToList(this.args))));
+      if (paths.isEmpty())
+        paths = filterBlanks(readLines(this.reader));
+      return prependDir(this.dir, paths);
+    }
+
+    private List<String> prependDir(String dir, List<String> relativePaths) {
+      List<String> absolutePaths = new ArrayList<String>();
+      for(String path : relativePaths)
+        absolutePaths.add(dir + "/" + path);
+      return absolutePaths;
+    }
+
+    private List<String> arrayToList(String[] strings) {
+      List<String> list = new ArrayList<String>();
+      for(String string : strings)
+        list.add(string);
+      return list;
+    }
+
+    private List<String> breakNewlines(List<String> stringsWithNewlines) {
+      ArrayList<String> stringsWithoutNewlines = new ArrayList<String>();
+      for(String stringWithNewlines : stringsWithNewlines)
+        for(String string : stringWithNewlines.split("\n"))
+          stringsWithoutNewlines.add(string);
+      return stringsWithoutNewlines;
+    }
+
+    private List<String> filterBlanks(List<String> strings) {
+      ArrayList<String> newStrings = new ArrayList<String>();
+      for(String string : strings)
+        if(string.length() != 0)
+          newStrings.add(string);
+      return newStrings;
+    }
+
+    private List<String> filterFlags(List<String> args) {
+      char dash = "-".charAt(0);
+      ArrayList<String> newStrings = new ArrayList<String>();
+      for(String arg : args)
+        if(arg.charAt(0) != dash)
+          newStrings.add(arg);
+      return newStrings;
+    }
+
+    private List<String> readLines(BufferedReader inStream) {
+      List<String> newArgs = new ArrayList<String>();
+      String line = "";
+      while (true) {
+        try { line = inStream.readLine(); }
+        catch(java.io.IOException e) { break; }
+        if(line != null) newArgs.add(line);
+        else break;
+      }
+      return newArgs;
+    }
+
   }
 }
