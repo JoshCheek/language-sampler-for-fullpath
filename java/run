@@ -1,4 +1,4 @@
 #!/bin/sh
 
-javac Fullpath.java
-java Fullpath
+javac -Xlint:unchecked Fullpath.java
+java Fullpath a b c '' d -x

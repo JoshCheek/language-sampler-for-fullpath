@@ -4,6 +4,9 @@ import java.io.PrintWriter;
 import java.io.PrintStream;
 import java.lang.System;
 import java.lang.Runtime;
+import java.util.Arrays;
+import java.util.List;
+import java.util.ArrayList;
 
 public class Fullpath {
   public static void main(String[] args) {
@@ -26,7 +29,9 @@ public class Fullpath {
   }
 
   public static Invocation setPaths(Invocation invocation) {
-    ArrayList<String> paths = new ArrayList<String>();
+    List<String> paths = new ArrayList<String>();
+    for(String path : invocation.args)
+      paths.add(path);
     paths = breakNewlines(paths);
     paths = filterBlanks(paths);
     paths = filterFlags(paths);
@@ -34,9 +39,11 @@ public class Fullpath {
       paths = readLines(invocation.reader);
       paths = filterBlanks(paths);
     }
-    val dir = invocation.dir;
-    invocation.paths = paths;
-    return invocation.copy(paths=paths.map { "$dir/$it" })
+    System.out.println(paths);
+    return null;
+    // val dir = invocation.dir;
+    // invocation.paths = paths;
+    // return invocation.copy(paths=paths.map { "$dir/$it" })
   }
 
   public static void invoke(Invocation invocation) {
@@ -48,6 +55,43 @@ public class Fullpath {
     // if (invocation.copyResult)
     //   copyToClipboard(output)
     // invocation.writer.print(output)
+  }
+
+  public static List<String> breakNewlines(List<String> rawPaths) {
+    ArrayList<String> paths = new ArrayList<String>();
+    for(String rawPath : rawPaths)
+      for(String path : rawPath.split("\n"))
+        paths.add(path);
+    return paths;
+  }
+
+  public static List<String> filterBlanks(List<String> strings) {
+    ArrayList<String> newStrings = new ArrayList<String>();
+    for(String string : strings)
+      if(string.length() != 0)
+        newStrings.add(string);
+    return newStrings;
+  }
+
+  public static List<String> filterFlags(List<String> args) {
+    char dash = "-".charAt(0);
+    ArrayList<String> newStrings = new ArrayList<String>();
+    for(String arg : args)
+      if(arg.charAt(0) != dash)
+        newStrings.add(arg);
+    return newStrings;
+  }
+
+  public static List<String> readLines(BufferedReader inStream) {
+    List<String> newArgs = new ArrayList<String>();
+    String line = "";
+    while (true) {
+      try { line = inStream.readLine(); }
+      catch(java.io.IOException e) { break; }
+      if(line != null) newArgs.add(line);
+      else break;
+    }
+    return newArgs;
   }
 
   private static class Invocation {
@@ -133,35 +177,3 @@ public class Fullpath {
 //     paths[0]
 //   else
 //     paths.map { "${it}\n" }.joinToString(separator="")
-
-// fun withPaths(invocation:Invocation):Invocation {
-//   var paths:List<String>
-//   paths = invocation.args.asList()
-//   paths = breakNewlines(paths)
-//   paths = filterBlanks(paths)
-//   paths = filterFlags(paths)
-//   if (paths.isEmpty()) {
-//     paths = readLines(invocation.reader)
-//     paths = filterBlanks(paths)
-//   }
-//   val dir = invocation.dir
-//   return invocation.copy(paths=paths.map { "$dir/$it" })
-// }
-
-// val dash = "-"[0]
-// fun filterFlags(args:List<String>):List<String> =
-//   args.filter { it[0] != dash }
-
-// fun filterBlanks(strings:List<String>):List<String> =
-//   strings.filter { it != "" }
-
-// fun breakNewlines(rawPaths:List<String>):List<String> =
-//   rawPaths.flatMap { it.split("\n") }
-
-// fun readLines(inStream:BufferedReader):List<String> {
-//   var newArgs = mutableListOf<String>()
-//   while (true) {
-//     inStream.readLine()?.let { newArgs.add(it) } ?: break
-//   }
-//   return newArgs
-// }
