@@ -8,6 +8,9 @@ import os
 args = sys.argv[1:]
 
 if len(args) == 0:
+    lines = sys.stdin.readlines()
+    for path in lines:
+        sys.stdout.write(os.path.abspath(path))
 else:
     if len(args) == 1:
         sys.stdout.write(os.path.abspath(args[0]))
