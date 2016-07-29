@@ -14,8 +14,8 @@ public class Fullpath {
       .withWriter(System.out)
       .withPrintHelp( contains(args, "-h") || contains(args, "--help"))
       .withCopyResult(contains(args, "-c") || contains(args, "--copy"));
-    // invoke(withPaths(invocation));
-    System.out.println(invocation.helpScreen);
+    setPaths(invocation);
+    invoke(invocation);
   }
 
   public static boolean contains(String[] haystack, String needle) {
@@ -23,6 +23,31 @@ public class Fullpath {
       if(hay == needle)
         return true;
     return false;
+  }
+
+  public static Invocation setPaths(Invocation invocation) {
+    ArrayList<String> paths = new ArrayList<String>();
+    paths = breakNewlines(paths);
+    paths = filterBlanks(paths);
+    paths = filterFlags(paths);
+    if (paths.isEmpty()) {
+      paths = readLines(invocation.reader);
+      paths = filterBlanks(paths);
+    }
+    val dir = invocation.dir;
+    invocation.paths = paths;
+    return invocation.copy(paths=paths.map { "$dir/$it" })
+  }
+
+  public static void invoke(Invocation invocation) {
+    // if (invocation.printHelp) {
+    //   println(invocation.helpScreen)
+    //   return
+    // }
+    // val output = formatPaths(invocation.paths)
+    // if (invocation.copyResult)
+    //   copyToClipboard(output)
+    // invocation.writer.print(output)
   }
 
   private static class Invocation {
