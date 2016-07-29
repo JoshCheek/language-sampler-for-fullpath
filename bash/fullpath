@@ -1,0 +1,28 @@
+#!/bin/bash
+set -eu
+set -o pipefail
+
+doHelp=false
+doCopy=false
+paths=()
+
+for arg in "$@"; do
+  if test "$arg" = "-h" -o "$arg" = "--help"; then
+    doHelp=true
+  elif test "$arg" = "-c" -o "$arg" = "--copy"; then
+    doCopy=true
+  else
+    # paths=("${paths[@]}" "$arg")
+    paths+=("$arg")
+  fi
+done
+
+for path in "${paths[@]}"
+do
+  echo "$path"
+done
+
+# $ a=(123 abc xyz)
+# $ a=(${a[@]} 9)
+# $ echo "${a[0]}" ${a[1]} ${a[2]} ${a[3]}
+# 123 abc xyz 9
