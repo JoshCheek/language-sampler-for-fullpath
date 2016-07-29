@@ -77,3 +77,24 @@ file 'kotlin/fullpath.jar' => 'kotlin/fullpath.kt' do
      '-d', 'kotlin/fullpath.jar',
      'kotlin/fullpath.kt'
 end
+
+
+# =====  Java  =====
+desc 'Build / test fullpath in Java'
+task :java do
+  cucumber 'java'
+end
+task default: :java
+
+# file 'java/fullpath' => 'java/fullpath.jar' do
+#   sh 'echo "#!/usr/bin/env java -jar" >  kotlin/fullpath'
+#   sh 'cat kotlin/fullpath.jar         >> kotlin/fullpath'
+#   chmod '+x', 'kotlin/fullpath'
+# end
+
+# file 'kotlin/fullpath.jar' => 'kotlin/fullpath.kt' do
+#   sh 'kotlinc',
+#      '-include-runtime',
+#      '-d', 'kotlin/fullpath.jar',
+#      'kotlin/fullpath.kt'
+# end

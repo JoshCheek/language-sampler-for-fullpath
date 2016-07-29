@@ -43,7 +43,7 @@ public class Fullpath {
     List<String> absolutePaths = new ArrayList<String>();
     for(String path : paths)
       absolutePaths.add(dir + "/" + path);
-    return invocation.withPaths(paths);
+    return invocation.withPaths(absolutePaths);
   }
 
   public static void invoke(Invocation invocation) {
@@ -102,11 +102,12 @@ public class Fullpath {
   }
 
   public static String formatPaths(List<String> paths) {
-    return "";
-    // if (paths.size == 1)
-      // paths[0]
-    // else
-      // paths.map { "${it}\n" }.joinToString(separator="")
+    if (paths.size() == 1)
+      return paths.get(0);
+    String formated = "";
+    for(String path : paths)
+      formated += path + "\n";
+    return formated;
   }
 
 
