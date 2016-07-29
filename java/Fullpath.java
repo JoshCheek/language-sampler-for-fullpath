@@ -95,10 +95,12 @@ public class Fullpath {
   }
 
   public static void copyToClipboard(String string) {
-    // val process = Runtime.getRuntime().exec("pbcopy")
-    // val writer  = PrintWriter(process.getOutputStream())
-    // writer.print(string)
-    // writer.close()
+    try {
+      Process process = Runtime.getRuntime().exec("pbcopy");
+      PrintWriter writer  = new PrintWriter(process.getOutputStream());
+      writer.print(string);
+      writer.close();
+    } catch (java.io.IOException e) { /* noop */ }
   }
 
   public static String formatPaths(List<String> paths) {
