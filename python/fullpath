@@ -11,7 +11,7 @@ def normalize(paths):
     paths = filter(lambda x : x != "", paths)
     return paths
 
-def printLines(doCopy, paths):
+def output(doCopy, paths):
     if len(paths) != 1:
         paths = map(lambda line:os.path.abspath(line)+"\n", paths)
     else:
@@ -37,6 +37,6 @@ if '-h' in args or '--help' in args:
     exit(0)
 
 if len(args) == 0:
-    printLines(doCopy, normalize(sys.stdin.readlines()))
+    output(doCopy, normalize(sys.stdin.readlines()))
 else:
-    printLines(doCopy, normalize(args))
+    output(doCopy, normalize(args))
