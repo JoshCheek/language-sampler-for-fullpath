@@ -5,15 +5,19 @@ import os
 # sys.stdin
 # sys.stdout
 
-args = sys.argv[1:]
+def normalize(lines):
+    return map(lambda x:x.strip(), lines)
 
-if len(args) == 0:
-    lines = sys.stdin.readlines()
-    for path in lines:
-        sys.stdout.write(os.path.abspath(path))
-else:
-    if len(args) == 1:
-        sys.stdout.write(os.path.abspath(args[0]))
+def printLines(lines):
+    if len(lines) == 1:
+        sys.stdout.write(os.path.abspath(lines[0]))
     else:
-        for path in args:
+        for path in lines:
             print(os.path.abspath(path))
+
+args = sys.argv[1:]
+if len(args) == 0:
+    lines = normalize(sys.stdin.readlines())
+    printLines(lines)
+else:
+    printLines(normalize(args))
