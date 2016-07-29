@@ -10,41 +10,39 @@ task :default
 
 
 # =====  Go  =====
+task default: :golang
+task go: :golang # shorthand
+
 desc 'Build / test fullpath in Go'
-task golang: 'golang/fullpath' do
-  cucumber 'golang'
-end
+task(golang: 'golang/fullpath') { cucumber 'golang' }
 file 'golang/fullpath' => 'golang/fullpath.go' do
   sh 'go', 'build', '-o', 'golang/fullpath', 'golang/fullpath.go'
 end
-task go: :golang # shorthand
-task default: :golang
 
 
 # =====  Ruby  =====
-desc 'Test fullpath in Ruby'
-task :ruby do
-  cucumber 'ruby'
-end
 task default: :ruby
+
+desc 'Test fullpath in Ruby'
+task(:ruby) { cucumber 'ruby' }
 
 
 # =====  Elixir  =====
+task default: :elixir
+
 desc 'Build / test fullpath in Elixir'
-task elixir: 'elixir/fullpath' do
-  cucumber 'elixir'
-end
+task(elixir: 'elixir/fullpath') { cucumber 'elixir' }
 file 'elixir/fullpath' do # TODO: if we declare deps, can avoid rebuilding every time we run tests
   cd('elixir') { sh 'mix', 'escript.build' }
 end
-task default: :elixir
 
 
 # =====  Common Lisp  =====
+task default: :cl
+
 desc 'Build / test fullpath in Common Lisp'
-task cl: 'common_lisp/fullpath' do
-  cucumber 'common_lisp'
-end
+task(cl: 'common_lisp/fullpath') { cucumber 'common_lisp' }
+
 file 'common_lisp/fullpath' => 'common_lisp/fullpath.lisp' do
   sh 'sbcl',
        '--load', 'common_lisp/fullpath.lisp',
@@ -55,15 +53,13 @@ file 'common_lisp/fullpath' => 'common_lisp/fullpath.lisp' do
                      :save-runtime-options t)],
        '--end-toplevel-options'
 end
-task default: :cl
 
 
 # =====  Kotlin  =====
-desc 'Build / test fullpath in Kotlin'
-task kotlin: 'kotlin/fullpath' do
-  cucumber 'kotlin'
-end
 task default: :kotlin
+
+desc 'Build / test fullpath in Kotlin'
+task(kotlin: 'kotlin/fullpath') { cucumber 'kotlin' }
 
 file 'kotlin/fullpath' => 'kotlin/fullpath.jar' do
   sh 'echo "#!/usr/bin/env java -jar" >  kotlin/fullpath'
@@ -80,21 +76,17 @@ end
 
 
 # =====  Python  =====
-desc 'Test fullpath in Ruby'
-task :python do
-  cucumber 'python'
-end
 task default: :python
+
+desc 'Test fullpath in Ruby'
+task(:python) { cucumber 'python' }
 
 
 # =====  Java  =====
 task default: :java
 
 desc 'Build / test fullpath in Java'
-task java: 'java/fullpath' do
-  cucumber 'java'
-end
-
+task(java: 'java/fullpath') { cucumber 'java' }
 file 'java/fullpath' => 'java/Fullpath.java' do
   cd 'java' do
     rm_r 'build'
