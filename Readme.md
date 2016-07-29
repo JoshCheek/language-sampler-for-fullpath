@@ -212,8 +212,8 @@ IDK if that's a fault of the JVM or of Java not doing something like dead-code e
 Maybe there are flags I could give it to improve this.
 
 Figuring out how to package it was a pain in the ass.
-Notice that it has the most sophisticated and verbose build instructions out of every langauge I'm working with.
-Also the most fragile, those intermediate `.class` files seem incredibly fragile.
+I finally settled for "blow the whole thing away and rebuild it from scratch whenever there is a change".
+The time difference is basically unnoticable, and it makes the build way simpler.
 
 Also, the shell script executable trick is kind of ridiculous. But w/e.
 

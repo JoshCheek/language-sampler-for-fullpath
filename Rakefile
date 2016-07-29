@@ -95,37 +95,17 @@ task java: 'java/fullpath' do
   cucumber 'java'
 end
 
-file 'java/fullpath' => 'java/build/Fullpath.jar' do
-  sh 'echo "#!/usr/bin/env java -jar" >  java/fullpath'
-  sh 'cat java/build/Fullpath.jar     >> java/fullpath'
-  chmod '+x', 'java/fullpath'
-end
-
-file 'java/build/Fullpath.jar' => %w[
-  java/build/META-INF/MANIFEST.MF
-  java/build/Fullpath.class
-  java/build/Fullpath$1.class
-  java/build/Fullpath$Invocation.class
-] do
-  Dir.chdir 'java/build' do
-    sh 'jar', 'cvmf', 'META-INF/MANIFEST.MF',
-                      'Fullpath.jar',
-                      'Fullpath.class', 'Fullpath$1.class', 'Fullpath$Invocation.class'
+file 'java/fullpath' => 'java/Fullpath.java' do
+  cd 'java' do
+    rm_r 'build'
+    mkdir_p 'build/META-INF'
+    File.write 'build/META-INF/MANIFEST.MF', "Manifest-Version: 1.0\n"+
+                                             "Created-By: Josh Cheek\n"+
+                                             "Main-Class: Fullpath\n"
+    sh 'javac', '-d', "build", "-Xlint:unchecked", "Fullpath.java"
+    cd('build') { sh 'jar', 'cvmf', 'META-INF/MANIFEST.MF', 'Fullpath.jar', *FileList['*.class'] }
+    sh 'echo "#!/usr/bin/env java -jar" >  fullpath'
+    sh 'cat build/Fullpath.jar          >> fullpath'
+    chmod '+x', 'fullpath'
   end
 end
-directory 'java/build/META-INF'
-file 'java/build/META-INF/MANIFEST.MF' => 'java/build/META-INF' do
-  File.write 'java/build/META-INF/MANIFEST.MF', <<-MANIFEST.gsub(/^ */, '')
-    Manifest-Version: 1.0
-    Created-By: Josh Cheek
-    Main-Class: Fullpath
-  MANIFEST
-end
-compile_java = Proc.new do
-  sh 'javac', '-d', "java/build",
-              "-Xlint:unchecked",
-              "java/Fullpath.java"
-end
-file 'java/build/Fullpath.class'            => 'java/Fullpath.java', &compile_java
-file 'java/build/Fullpath$1.class'          => 'java/Fullpath.java', &compile_java
-file 'java/build/Fullpath$Invocation.class' => 'java/Fullpath.java', &compile_java
