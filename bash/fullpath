@@ -1,25 +1,38 @@
-#!/bin/bash
+#!/usr/bin/env bash
 set -eu
 set -o pipefail
 
+# parse args
 doHelp=false
 doCopy=false
 paths=()
-
 for arg in "$@"; do
-  if test "$arg" = "-h" -o "$arg" = "--help"; then
+  if   [[ "$arg" == "-h" || "$arg" == "--help" ]]; then
     doHelp=true
-  elif test "$arg" = "-c" -o "$arg" = "--copy"; then
+  elif [[ "$arg" == "-c" || "$arg" == "--copy" ]]; then
     doCopy=true
   else
-    # paths=("${paths[@]}" "$arg")
     paths+=("$arg")
   fi
 done
 
+if $doHelp; then
+  echo 'usage: fullpath *[relative-paths] [-c]'
+  echo
+  echo '  Prints the fullpath of the paths'
+  echo '  If no paths are given as args, it will read them from stdin'
+  echo
+  echo '  If there is only one path, the trailing newline is omitted'
+  echo
+  echo '  The -c flag will copy the results into your pasteboard'
+  exit 0
+fi
+
+
+
 for path in "${paths[@]}"
 do
-  echo "$path"
+  echo "${PWD}/${path}"
 done
 
 # $ a=(123 abc xyz)

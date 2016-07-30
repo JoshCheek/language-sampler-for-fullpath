@@ -101,3 +101,10 @@ file 'java/fullpath' => 'java/Fullpath.java' do
     chmod '+x', 'fullpath'
   end
 end
+
+
+# =====  Bash  =====
+task default: :bash
+
+desc 'Test fullpath in Bash'
+task(:bash) { cucumber 'bash' }
