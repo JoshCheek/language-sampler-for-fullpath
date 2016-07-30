@@ -11,11 +11,12 @@ void output(char *paths[], int num_paths, char *dir) {
       printf("%s/%s\n", dir, paths[i]);
 }
 
-void remove_empties(char **from_strings, int num_from_strings, char **to_strings, int *num_to_strings) {
-  *num_to_strings = 0;
-  for(int i=0; i<num_from_strings; ++i)
-    if(*from_strings[i])
-      to_strings[(*num_to_strings)++] = from_strings[i];
+void remove_empties(char **strings, int *num_strings) {
+  int from, to;
+  for(from=0, to=0; from<*num_strings; ++from)
+    if(*strings[from])
+      strings[to++] = strings[from];
+  *num_strings = to;
 }
 
 int main(int argc, char **argv) {
@@ -24,11 +25,17 @@ int main(int argc, char **argv) {
   getcwd(cwd, sizeof(cwd));
 
   // copy nonempty paths
-  char **paths  = (char**)malloc(argc*sizeof(char*));
-  int num_paths = 0;
-  remove_empties(argv+1, argc-1, paths, &num_paths);
+  char **paths  = argv+1;
+  int num_paths = argc-1;
+  remove_empties(paths, &num_paths);
 
   // output
   output(paths, num_paths, cwd);
   return 0;
 }
+
+/* char line[1024]; */
+/* scanf("%s", line); */
+/* printf("line: %s\n", line); */
+/* scanf("%s", line); */
+/* printf("line: %s\n", line); */
