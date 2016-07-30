@@ -1,2 +1,2 @@
 #!/bin/bash
-gcc fullpath.c -o fullpath && ./fullpath a b c '' 'd e' -c
+gcc fullpath.c -o fullpath && ./fullpath a b -c '' 'd e'

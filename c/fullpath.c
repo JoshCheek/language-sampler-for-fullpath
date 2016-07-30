@@ -19,12 +19,15 @@ void remove_empties(char **strings, int *num_strings) {
   *num_strings = to;
 }
 
-void remove_string(char **strings, int*num_strings, char *to_remove) {
-  int from, to;
-  for(from=0, to=0; from<*num_strings; ++from)
+int remove_string(char **strings, int*num_strings, char *to_remove) {
+  int from=0, to=0, removed=0;
+  for(; from<*num_strings; ++from)
     if(0 != strcmp(strings[from], to_remove))
       strings[to++] = strings[from];
+    else
+      removed = 1;
   *num_strings = to;
+  return removed;
 }
 
 int main(int argc, char **argv) {
@@ -36,10 +39,8 @@ int main(int argc, char **argv) {
   char **paths  = argv+1;
   int num_paths = argc-1;
   remove_empties(paths, &num_paths);
-  remove_string(paths, &num_paths, "-h");
-  remove_string(paths, &num_paths, "--help");
-  remove_string(paths, &num_paths, "-c");
-  remove_string(paths, &num_paths, "--copy");
+  int do_help   = remove_string(paths, &num_paths, "-h") | remove_string(paths, &num_paths, "--help");
+  int do_copy   = remove_string(paths, &num_paths, "-c") | remove_string(paths, &num_paths, "--copy");
 
   // output
   output(paths, num_paths, cwd);
