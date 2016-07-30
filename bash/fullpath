@@ -61,5 +61,8 @@ printPaths () {
     done
   fi
 }
-printPaths "${paths[@]}" | pbcopy
+
+if $doCopy; then
+  printPaths "${paths[@]}" | pbcopy
+fi
 printPaths "${paths[@]}"

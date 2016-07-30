@@ -71,6 +71,11 @@ Feature: fullpath
     Then stdout is exactly "{{pwd}}/a-long"
     And the clipboard now contains "{{pwd}}/a-long"
 
+  Scenario: does not copy when there is no -c / --copy flag
+    Given I previously copied "not-a"
+    When I run "fullpath a"
+    Then the clipboard now contains "not-a"
+
   Scenario: -h and --help flags display the help screen
     When I run "fullpath -h"
     Then stdout is exactly:
@@ -98,3 +103,23 @@ Feature: fullpath
       The -c flag will copy the results into your pasteboard
 
     """
+
+  @not-implemented
+  Scenario: Expands the path
+    When I run "fullpath a/../b/../c"
+    Then stdout is exactly "{{pwd}}/c"
+    Given the stdin content "d/../e/../f"
+    When I run "fullpath"
+    Then stdout is exactly "{{pwd}}/f"
+
+  Scenario: Spaces in the path
+    When I run "fullpath 'a b'"
+    Then stdout is exactly "{{pwd}}/a b"
+    Given the stdin content "c d"
+    When I run "fullpath"
+    Then stdout is exactly "{{pwd}}/c d"
+
+  Scenario: Nothing to print
+    Given the stdin content ""
+    When I run "fullpath"
+    Then stdout is exactly ""

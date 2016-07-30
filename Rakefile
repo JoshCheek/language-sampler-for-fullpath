@@ -2,7 +2,7 @@ def self.cucumber(lang)
   original_path = ENV['PATH']
   puts "\e[35m=====  #{lang}  =====\e[39m"
   ENV['FULLPATH_DIR'] = File.expand_path(lang, __dir__)
-  sh 'bundle exec cucumber'
+  sh 'bundle exec cucumber -t ~@not-implemented'
 end
 
 desc 'Build / test all languages'
