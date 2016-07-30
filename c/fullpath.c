@@ -3,12 +3,40 @@
 #include <stdlib.h>
 #include <string.h>
 
-void output(char *paths[], int num_paths, char *dir) {
-  if(num_paths == 1)
-    printf("%s/%s", dir, paths[0]);
+typedef struct invocation {
+  int num_args;
+  char **args;
+
+  char *cwd;
+
+  int num_chars;
+  int num_paths;
+  char **relative_paths;
+
+  int copy_result;
+  int print_help;
+} Invocation;
+
+void print_help() {
+  printf("usage: fullpath *[relative-paths] [-c]\n");
+  printf("\n");
+  printf("  Prints the fullpath of the paths\n");
+  printf("  If no paths are given as args, it will read them from stdin\n");
+  printf("\n");
+  printf("  If there is only one path, the trailing newline is omitted\n");
+  printf("\n");
+  printf("  The -c flag will copy the results into your pasteboard\n");
+}
+
+
+void output(Invocation *invocation) {
+  if(invocation->print_help)
+    print_help();
+  else if(invocation->num_paths == 1)
+    printf("%s/%s", invocation->cwd, invocation->relative_paths[0]);
   else
-    for(int i=0; i<num_paths; ++i)
-      printf("%s/%s\n", dir, paths[i]);
+    for(int i=0; i < invocation->num_paths; ++i)
+      printf("%s/%s\n", invocation->cwd, invocation->relative_paths[i]);
 }
 
 
@@ -30,16 +58,6 @@ void remove_string(char **strings, int*num_strings, char *to_remove, int *remove
   *num_strings = to;
 }
 
-typedef struct invocation {
-  int num_args;
-  char **args;
-  int num_chars;
-  int num_paths;
-  char **relative_paths;
-  int copy_result;
-  int print_help;
-} Invocation;
-
 void set_invocation_counts(struct invocation *invcn, char **strings, int num_strings) {
   for(int istring=0; istring < num_strings; ++istring, ++invcn->num_chars, ++invcn->num_paths) {
     for(int ichar=0; strings[istring][ichar]; ++ichar) {
@@ -50,31 +68,24 @@ void set_invocation_counts(struct invocation *invcn, char **strings, int num_str
   }
 }
 
-void print_help() {
-  printf("usage: fullpath *[relative-paths] [-c]\n");
-  printf("\n");
-  printf("  Prints the fullpath of the paths\n");
-  printf("  If no paths are given as args, it will read them from stdin\n");
-  printf("\n");
-  printf("  If there is only one path, the trailing newline is omitted\n");
-  printf("\n");
-  printf("  The -c flag will copy the results into your pasteboard\n");
-}
-
 int main(int argc, char **argv) {
-  // get current working directory
-  char cwd[1024];
-  getcwd(cwd, sizeof(cwd));
-
   // invocation info
   struct invocation invcn;
-  invcn.num_chars   = 0;
-  invcn.num_paths   = 0;
-  invcn.copy_result = 0;
-  invcn.print_help  = 0;
-  invcn.num_args    = argc-1;
-  invcn.args        = argv+1;
+  invcn.num_args       = argc-1;
+  invcn.args           = argv+1;
+
+  char cwd[1024];
+  invcn.cwd            = cwd;
+  getcwd(invcn.cwd, sizeof(cwd));
+
+  invcn.num_chars      = 0;
+  invcn.num_paths      = 0;
+  invcn.relative_paths = 0; // filled in later
+
+  invcn.copy_result    = 0;
+  invcn.print_help     = 0;
   set_invocation_counts(&invcn, argv+1, argc-1);
+
 
   // break newlines (omg, this is misery >.<)
   char *all_args       = (char*)malloc(invcn.num_chars*sizeof(char));
@@ -108,17 +119,7 @@ int main(int argc, char **argv) {
   remove_string(invcn.relative_paths, &invcn.num_paths, "-c",     &invcn.copy_result);
   remove_string(invcn.relative_paths, &invcn.num_paths, "--copy", &invcn.copy_result);
 
-  /* for(int i=0; i < invcn.num_paths; ++i) { */
-  /*   printf("%d: %s\n", i, invcn.relative_paths[i]); */
-  /* } */
-
-  if(invcn.print_help) {
-    print_help();
-    goto done;
-  }
-
-  // output
-  output(invcn.relative_paths, invcn.num_paths, cwd);
+  output(&invcn);
 done:
   free(all_args);
   free(invcn.relative_paths);
