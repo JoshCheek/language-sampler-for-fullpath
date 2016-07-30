@@ -19,6 +19,14 @@ void remove_empties(char **strings, int *num_strings) {
   *num_strings = to;
 }
 
+void remove_string(char **strings, int*num_strings, char *to_remove) {
+  int from, to;
+  for(from=0, to=0; from<*num_strings; ++from)
+    if(0 != strcmp(strings[from], to_remove))
+      strings[to++] = strings[from];
+  *num_strings = to;
+}
+
 int main(int argc, char **argv) {
   // get current working directory
   char cwd[1024];
@@ -28,6 +36,10 @@ int main(int argc, char **argv) {
   char **paths  = argv+1;
   int num_paths = argc-1;
   remove_empties(paths, &num_paths);
+  remove_string(paths, &num_paths, "-h");
+  remove_string(paths, &num_paths, "--help");
+  remove_string(paths, &num_paths, "-c");
+  remove_string(paths, &num_paths, "--copy");
 
   // output
   output(paths, num_paths, cwd);
