@@ -11,11 +11,12 @@ for arg in "$@"; do
     doHelp=true
   elif [[ "$arg" == "-c" || "$arg" == "--copy" ]]; then
     doCopy=true
-  else
+  elif [[ "$arg" != "" ]]; then
     paths+=("$arg")
   fi
 done
 
+# Print help and quit
 if $doHelp; then
   echo 'usage: fullpath *[relative-paths] [-c]'
   echo
@@ -28,6 +29,24 @@ if $doHelp; then
   exit 0
 fi
 
+# Read from stdin if no paths in argv
+if [[ 0 == "${#paths[@]}" ]]; then
+  paths=()
+  while true; do
+    set +e
+    read line
+    newline_status=$?
+    set -e
+    if [[ "$line" != "" ]]; then
+      paths+=("$line")
+    fi
+    if [[ "$newline_status" != 0 ]]; then
+      break
+    fi
+  done
+fi
+
+# Print / copy the paths
 printPaths () {
   if [[ 1 == "$#" ]]; then
     echo -n "${PWD}/${paths[0]}"
@@ -37,6 +56,5 @@ printPaths () {
     done
   fi
 }
-
 printPaths "${paths[@]}" | pbcopy
 printPaths "${paths[@]}"

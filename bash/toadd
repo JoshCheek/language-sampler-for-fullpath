@@ -1,2 +1,4 @@
 a/../b # => $PWD/b
 "a b"  # => $PWD/a b
+does not copy when no -c flag is set
+nothing to print
