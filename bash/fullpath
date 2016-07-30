@@ -33,13 +33,18 @@ fi
 if [[ 0 == "${#paths[@]}" ]]; then
   paths=()
   while true; do
+    # read the line, regardless of whether there is a newline at the end
     set +e
     read line
     newline_status=$?
     set -e
+
+    # add nonempty lines to the set of paths
     if [[ "$line" != "" ]]; then
       paths+=("$line")
     fi
+
+    # quit if there was no trailing newline on the last read
     if [[ "$newline_status" != 0 ]]; then
       break
     fi
