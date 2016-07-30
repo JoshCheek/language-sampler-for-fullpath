@@ -29,17 +29,6 @@ void print_help() {
 }
 
 
-void output(Invocation *invocation) {
-  if(invocation->print_help)
-    print_help();
-  else if(invocation->num_paths == 1)
-    printf("%s/%s", invocation->cwd, invocation->relative_paths[0]);
-  else
-    for(int i=0; i < invocation->num_paths; ++i)
-      printf("%s/%s\n", invocation->cwd, invocation->relative_paths[i]);
-}
-
-
 void remove_empties(char **strings, int *num_strings) {
   int from, to;
   for(from=0, to=0; from<*num_strings; ++from)
@@ -111,19 +100,38 @@ int main(int argc, char **argv) {
   remove_string(invcn.relative_paths, &invcn.num_paths, "-c",     &invcn.copy_result);
   remove_string(invcn.relative_paths, &invcn.num_paths, "--copy", &invcn.copy_result);
 
-  if(!invcn.num_paths) {
-    // get paths from stdin *sigh*
+  if(invcn.print_help) {
+    print_help();
+    goto done;
   }
 
-  output(&invcn);
+  if(!invcn.num_paths) {
+    size_t size=0;
+    char* read;
+    while(1) {
+      read = NULL; // causes it to allocate a new buffer, note that we should free it at the end.
+      int result = getline(&read, &size, stdin);
+      if(result == -1)
+        break;
+      printf("result=%d, size=%d - %s\n", result, (int)size, read);
+    }
+
+    // get paths from stdin *sigh*
+    /* int path_length = 0 */
+    /* char relative_path[2048]; */
+    /* for(int i=0; i < 3; ++i) { */
+    /*   getline(relative_path, ); */
+    /*   printf("(%d): %s\n", (int)relative_path[0], relative_path); */
+    /* } */
+  }
+
+  if(invcn.num_paths == 1)
+    printf("%s/%s", invcn.cwd, invcn.relative_paths[0]);
+  else
+    for(int i=0; i < invcn.num_paths; ++i)
+      printf("%s/%s\n", invcn.cwd, invcn.relative_paths[i]);
 done:
   free(all_args);
   free(invcn.relative_paths);
   return 0;
 }
-
-/* char line[1024]; */
-/* scanf("%s", line); */
-/* printf("line: %s\n", line); */
-/* scanf("%s", line); */
-/* printf("line: %s\n", line); */

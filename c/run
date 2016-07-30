@@ -1,3 +1,5 @@
 #!/usr/bin/env fish
 gcc fullpath.c -o fullpath
 and ./fullpath a b -c '' 'd e' f\ng\nh
+and ./fullpath -h
+and ./fullpath
