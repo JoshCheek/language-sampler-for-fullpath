@@ -28,17 +28,15 @@ if $doHelp; then
   exit 0
 fi
 
-if [[ 1 == "${#paths[@]}" ]]; then
-  echo -n "${PWD}/${paths[0]}"
-else
-  for path in "${paths[@]}"
-  do
-    echo "${PWD}/${path}"
-  done
-fi
+printPaths () {
+  if [[ 1 == "$#" ]]; then
+    echo -n "${PWD}/${paths[0]}"
+  else
+    for path in "$@"; do
+      echo "${PWD}/${path}"
+    done
+  fi
+}
 
-
-# $ a=(123 abc xyz)
-# $ a=(${a[@]} 9)
-# $ echo "${a[0]}" ${a[1]} ${a[2]} ${a[3]}
-# 123 abc xyz 9
+printPaths "${paths[@]}" | pbcopy
+printPaths "${paths[@]}"
