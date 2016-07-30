@@ -56,6 +56,47 @@ void set_invocation_counts(struct invocation *invcn, char **strings, int num_str
     }
 }
 
+void read_paths(FILE *stream, Invocation *invocation) {
+  // read lines into a list since we don't know how many there are going to be
+  struct string_list {
+    char* string;
+    struct string_list* next;
+  };
+
+  struct string_list *head=NULL, *tail=NULL;
+  invocation->num_paths = 0;
+  size_t size = 0;
+  char* line;
+  while(1) {
+    // setting line to NULL causes getline to allocate a new buffer
+    // note that it's our responsibility to free this memory
+    line = NULL;
+    int result = getline(&line, &size, stream);
+    if(result == -1) {
+      // free(line); <-- check docs when I get internet, do I need to free it in this situation?
+      break;
+    } else if (0 < result && line[result-1] == '\n') {
+      line[result-1] = '\0';
+    }
+    struct string_list* node = (struct string_list*)malloc(sizeof(struct string_list));
+    node->string = line;
+    node->next   = NULL;
+    ++(invocation->num_paths);
+    if(!head) head       = node;
+    if(tail)  tail->next = node;
+    tail = node;
+  }
+
+  invocation->relative_paths = (char**)malloc(invocation->num_paths * sizeof(char*));
+
+  for(int i=0; i < invocation->num_paths; i++) {
+    invocation->relative_paths[i] = head->string;
+    struct string_list* next_head = head->next;
+    free(head);
+    head = next_head;
+  }
+}
+
 int main(int argc, char **argv) {
   // invocation info
   struct invocation invcn;
@@ -105,25 +146,8 @@ int main(int argc, char **argv) {
     goto done;
   }
 
-  if(!invcn.num_paths) {
-    size_t size=0;
-    char* read;
-    while(1) {
-      read = NULL; // causes it to allocate a new buffer, note that we should free it at the end.
-      int result = getline(&read, &size, stdin);
-      if(result == -1)
-        break;
-      printf("result=%d, size=%d - %s\n", result, (int)size, read);
-    }
-
-    // get paths from stdin *sigh*
-    /* int path_length = 0 */
-    /* char relative_path[2048]; */
-    /* for(int i=0; i < 3; ++i) { */
-    /*   getline(relative_path, ); */
-    /*   printf("(%d): %s\n", (int)relative_path[0], relative_path); */
-    /* } */
-  }
+  if(!invcn.num_paths)
+    read_paths(stdin, &invcn);
 
   if(invcn.num_paths == 1)
     printf("%s/%s", invcn.cwd, invcn.relative_paths[0]);
