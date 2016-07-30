@@ -108,3 +108,13 @@ task default: :bash
 
 desc 'Test fullpath in Bash'
 task(:bash) { cucumber 'bash' }
+
+
+# =====  C  =====
+task default: :c
+
+desc 'Test fullpath in Bash'
+task(c: 'c/fullpath') { cucumber 'c' }
+file 'c/fullpath' => 'c/fullpath.c' do
+  sh 'gcc', 'c/fullpath.c', '-o', 'c/fullpath'
+end
