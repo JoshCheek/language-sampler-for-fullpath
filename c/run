@@ -1,2 +1,3 @@
-#!/bin/bash
-gcc fullpath.c -o fullpath && ./fullpath a b -c '' 'd e'
+#!/usr/bin/env fish
+gcc fullpath.c -o fullpath
+and ./fullpath a b -c '' 'd e' f\ng\nh
