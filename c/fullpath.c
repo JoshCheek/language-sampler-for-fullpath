@@ -20,15 +20,14 @@ void remove_empties(char **strings, int *num_strings) {
   *num_strings = to;
 }
 
-int remove_string(char **strings, int*num_strings, char *to_remove) {
-  int from=0, to=0, removed=0;
+void remove_string(char **strings, int*num_strings, char *to_remove, int *removed) {
+  int from=0, to=0;
   for(; from<*num_strings; ++from)
     if(0 != strcmp(strings[from], to_remove))
       strings[to++] = strings[from];
     else
-      removed = 1;
+      *removed = 1;
   *num_strings = to;
-  return removed;
 }
 
 typedef struct invocation {
@@ -102,21 +101,16 @@ int main(int argc, char **argv) {
     ++i_to_str;
   }
 
-  for(int i=0; i < invcn.num_paths; ++i) {
-    printf("%d: %s\n", i, invcn.relative_paths[i]);
-  }
+  // remove empty strings and flags
+  remove_empties(invcn.relative_paths, &invcn.num_paths);
+  remove_string(invcn.relative_paths, &invcn.num_paths, "-h",     &invcn.print_help);
+  remove_string(invcn.relative_paths, &invcn.num_paths, "--help", &invcn.print_help);
+  remove_string(invcn.relative_paths, &invcn.num_paths, "-c",     &invcn.copy_result);
+  remove_string(invcn.relative_paths, &invcn.num_paths, "--copy", &invcn.copy_result);
 
-  /* invcn.print_help  = remove_string(paths, &num_paths, "-h") | remove_string(paths, &num_paths, "--help"); */
-  /* invcn.copy_result = remove_string(paths, &num_paths, "-c") | remove_string(paths, &num_paths, "--copy"); */
-
-  printf("invcn.num_chars = %d\ninvcn.num_paths = %d\n",
-      invcn.num_chars,
-      invcn.num_paths);
-
-  // copy nonempty paths
-  /* char **paths  = argv+1; */
-  /* int num_paths = argc-1; */
-  /* remove_empties(paths, &num_paths); */
+  /* for(int i=0; i < invcn.num_paths; ++i) { */
+  /*   printf("%d: %s\n", i, invcn.relative_paths[i]); */
+  /* } */
 
   if(invcn.print_help) {
     print_help();
@@ -124,7 +118,7 @@ int main(int argc, char **argv) {
   }
 
   // output
-  /* output(paths, num_paths, cwd); */
+  output(invcn.relative_paths, invcn.num_paths, cwd);
 done:
   free(all_args);
   free(invcn.relative_paths);
