@@ -149,6 +149,8 @@ int main(int argc, char **argv) {
   if(!invcn.num_paths)
     read_paths(stdin, &invcn);
 
+  remove_empties(invcn.relative_paths, &invcn.num_paths);
+
   if(invcn.num_paths == 1)
     printf("%s/%s", invcn.cwd, invcn.relative_paths[0]);
   else
