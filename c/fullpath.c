@@ -59,13 +59,12 @@ void remove_string(char **strings, int*num_strings, char *to_remove, int *remove
 }
 
 void set_invocation_counts(struct invocation *invcn, char **strings, int num_strings) {
-  for(int istring=0; istring < num_strings; ++istring, ++invcn->num_chars, ++invcn->num_paths) {
+  for(int istring=0; istring < num_strings; ++istring, ++invcn->num_chars, ++invcn->num_paths)
     for(int ichar=0; strings[istring][ichar]; ++ichar) {
       ++invcn->num_chars;
       if(strings[istring][ichar] == '\n')
         ++invcn->num_paths;
     }
-  }
 }
 
 int main(int argc, char **argv) {
@@ -94,22 +93,15 @@ int main(int argc, char **argv) {
   invcn.relative_paths[0] = all_args;
   for(int i_from_str=0, i_to_str=1, i_all_args=0; i_from_str < invcn.num_args; ++i_from_str) {
     char *from_str = invcn.args[i_from_str];
-    for(int ichar=0; from_str[ichar]; ++ichar) {
-      char c = from_str[ichar];
-      if(c == '\n') {
-        all_args[i_all_args] = '\0';
-        ++i_all_args;
-        invcn.relative_paths[i_to_str] = all_args+i_all_args;
-        ++i_to_str;
+    for(int ichar=0; from_str[ichar]; ++ichar)
+      if(from_str[ichar] == '\n') {
+        all_args[i_all_args++] = '\0';
+        invcn.relative_paths[i_to_str++] = all_args+i_all_args;
       } else {
-        all_args[i_all_args] = c;
-        ++i_all_args;
+        all_args[i_all_args++] = from_str[ichar];
       }
-    }
-    all_args[i_all_args] = '\0';
-    ++i_all_args;
-    invcn.relative_paths[i_to_str] = all_args+i_all_args;
-    ++i_to_str;
+    all_args[i_all_args++] = '\0';
+    invcn.relative_paths[i_to_str++] = all_args+i_all_args;
   }
 
   // remove empty strings and flags
@@ -118,6 +110,10 @@ int main(int argc, char **argv) {
   remove_string(invcn.relative_paths, &invcn.num_paths, "--help", &invcn.print_help);
   remove_string(invcn.relative_paths, &invcn.num_paths, "-c",     &invcn.copy_result);
   remove_string(invcn.relative_paths, &invcn.num_paths, "--copy", &invcn.copy_result);
+
+  if(!invcn.num_paths) {
+    // get paths from stdin *sigh*
+  }
 
   output(&invcn);
 done:
