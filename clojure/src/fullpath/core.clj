@@ -6,10 +6,11 @@
 
 
 (defn format-paths [paths]
-  (let [chomp          #(clojure.string/trim-newline %)
-        normalize-path #(str (chomp %) "\n")]
-    ; check how many paths there are, if there is only one, we don't want the newline
-    (clojure.string/join (map normalize-path paths))))
+  (let [chomp             #(clojure.string/trim-newline %)
+        ends-with-newline #(str (chomp %) "\n")]
+    (if (= 1 (count paths))
+        (chomp (first paths))
+        (clojure.string/join (map ends-with-newline paths)))))
 
 (defn -main [& argv]
   (let [cwd       (System/getProperty "user.dir")
