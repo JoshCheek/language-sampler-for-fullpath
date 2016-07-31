@@ -3,4 +3,4 @@
 # makes it not 1.2s instead of 2.7s to run
 # (still way too much *sigh*)
 set -x LEIN_FAST_TRAMPOLINE y
-lein trampoline run a b "c d" -c
+lein trampoline run a b "c d" "" -c
