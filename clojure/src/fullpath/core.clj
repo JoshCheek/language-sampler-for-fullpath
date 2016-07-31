@@ -38,6 +38,8 @@
         paths     (filter-flags (filter-blank argv))]
     (if help?
       (print-help)
-      (let [fullpaths (if (empty? paths) (read-lines *in*) paths)]
+      (let [fullpaths (if (empty? paths)
+                          (filter-blank (read-lines *in*))
+                          paths)]
            (print (format-paths cwd fullpaths))))
     (flush))) ; <-- ...uhm, why do I have to do this?
