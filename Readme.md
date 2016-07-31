@@ -230,7 +230,7 @@ There is no interpreter AFAIK...
 
 
 
-### [Bash](fill this in when I get internet)
+### [Bash](https://www.gnu.org/software/bash/)
 
 Was with a friend who does sysadmin work, so he knows a ton of bash.
 That made the whole thing go much smoother, really. I'd just shout at him
@@ -254,7 +254,7 @@ $ bash -l
 
 
 
-### [C](fill this in when I get internet)
+### [C](https://en.wikipedia.org/wiki/C_(programming_language)
 
 I did some C a while back, and you can use the man pages, so I wasn't at
 such a disadvantage without internet. In the end, this is a miserable language.
