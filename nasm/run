@@ -1,0 +1,5 @@
+#!/bin/sh
+
+nasm -f macho hello_world.asm
+ld -o hello_world -e mystart hello_world.o
+./hello_world
