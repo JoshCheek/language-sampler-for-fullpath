@@ -1,15 +1,25 @@
 Language Sampler For Fullpath
 =============================
 
+<strong>
+[Bash](#bash),
+[C](#c),
+[Clojure](#clojure),
+[Common Lisp](#common-lisp),
+[Elixir](#elixir),
+[Go](#go),
+[Java](#java),
+[Kotlin](#kotlin),
+[Python](#python),
+[Ruby](#ruby)
+</strong>
+
 Fullpath is a program I initially wrote in Ruby
 (source is [here](https://github.com/JoshCheek/dotfiles/blob/3cabefef72d2d97639f213726b8cd2550740ea7b/bin/fullpath)).
 It makes a good small but still useful program (I use it very frequently).
 So I've started using it to try out new languages, and am consolidating the results here.
 
 **NOTE: THIS ONLY WORKS ON OSX** (due to use of the `pbcopy` program)
-
-Languages: [go](#go), [ruby](#ruby), [elixir](#elixir), [common lisp](#common-lisp),
-[kotlin](#kotlin), [python](#python), [java](#java) [Bash](#bash), [c](#c), [Clojure](#clojure).
 
 
 Tests
