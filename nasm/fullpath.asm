@@ -1,7 +1,6 @@
-; hello.asm - a "hello, world" program using NASM
 section .text
 
-global mystart                ; make the main function externally visible
+global main                   ; make the main function externally visible
 
 ; a procedure wrapping the system call to write
 mywrite:
@@ -15,8 +14,7 @@ myexit:
     int 0x80                  ; make system call
     ; no need to return
 
-mystart:
-
+main:
 ; 1 print "hello, world"
 
     ; 1a prepare arguments
