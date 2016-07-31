@@ -9,7 +9,7 @@ So I've started using it to try out new languages, and am consolidating the resu
 **NOTE: THIS ONLY WORKS ON OSX** (due to use of the `pbcopy` program)
 
 Languages: [go](#go), [ruby](#ruby), [elixir](#elixir), [common lisp](#common-lisp),
-[kotlin](#kotlin), [python](#python), [java](#java).
+[kotlin](#kotlin), [python](#python), [java](#java) [Bash](#bash), [c](#c), [Clojure](#clojure).
 
 
 Tests
