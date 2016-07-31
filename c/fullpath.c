@@ -12,10 +12,13 @@ typedef struct invocation {
 
   int num_chars;
   int num_paths;
+  int free_paths;
   char **relative_paths;
 
   int copy_result;
   int print_help;
+
+  pid_t child_pid;
 } Invocation;
 
 void print_help() {
@@ -27,6 +30,14 @@ void print_help() {
   printf("  If there is only one path, the trailing newline is omitted\n");
   printf("\n");
   printf("  The -c flag will copy the results into your pasteboard\n");
+}
+
+void output(FILE *stream, Invocation *invocation) {
+  if(invocation->num_paths == 1)
+    fprintf(stream, "%s/%s", invocation->cwd, invocation->relative_paths[0]);
+  else
+    for(int i=0; i < invocation->num_paths; ++i)
+      fprintf(stream, "%s/%s\n", invocation->cwd, invocation->relative_paths[i]);
 }
 
 
@@ -73,12 +84,10 @@ void read_paths(FILE *stream, Invocation *invocation) {
     // note that it's our responsibility to free this memory
     line = NULL;
     int result = getline(&line, &size, stream);
-    if(result == -1) {
-      // free(line); <-- check docs when I get internet, do I need to free it in this situation?
+    if(result == -1)
       break;
-    } else if (0 < result && line[result-1] == '\n') {
+    else if (0 < result && line[result-1] == '\n')
       line[result-1] = '\0';
-    }
     struct string_list* node = (struct string_list*)malloc(sizeof(struct string_list));
     node->string = line;
     node->next   = NULL;
@@ -89,6 +98,7 @@ void read_paths(FILE *stream, Invocation *invocation) {
   }
 
   invocation->relative_paths = (char**)malloc(invocation->num_paths * sizeof(char*));
+  invocation->free_paths     = 1;
 
   for(int i=0; i < invocation->num_paths; i++) {
     invocation->relative_paths[i] = head->string;
@@ -110,10 +120,12 @@ int main(int argc, char **argv) {
 
   invcn.num_chars      = 0;
   invcn.num_paths      = 0;
+  invcn.free_paths     = 0;
   invcn.relative_paths = 0; // filled in later
 
   invcn.copy_result    = 0;
   invcn.print_help     = 0;
+  invcn.child_pid      = 0;
   set_invocation_counts(&invcn, argv+1, argc-1);
 
 
@@ -147,46 +159,41 @@ int main(int argc, char **argv) {
     goto done;
   }
 
-  if(!invcn.num_paths)
+  if(!invcn.num_paths) {
+    free(invcn.relative_paths);
     read_paths(stdin, &invcn);
+    remove_empties(invcn.relative_paths, &invcn.num_paths);
+  }
 
-  remove_empties(invcn.relative_paths, &invcn.num_paths);
-
-  pid_t child_pid = 0;
-  int filedescriptors[2];
   if(invcn.copy_result) {
+    int filedescriptors[2];
     pipe(filedescriptors);
-    if(!(child_pid=fork())) {
+    if(!(invcn.child_pid=fork())) {
       dup2(filedescriptors[0], STDIN_FILENO);
       close(filedescriptors[0]);
       close(filedescriptors[1]);
       char* pbcopy_argv[] = {"pbcopy", 0};
       execvp(pbcopy_argv[0], pbcopy_argv);
+    } else {
+      FILE* write_stream = fdopen(filedescriptors[1], "w");
+      output(write_stream, &invcn);
+      fclose(write_stream);
+      close(filedescriptors[0]);
+      close(filedescriptors[1]);
     }
   }
-
-  FILE *streams[3] = {stdout, NULL, NULL};
-  FILE *write_stream = NULL;
-  if(invcn.copy_result)
-    streams[1] = write_stream = fdopen(filedescriptors[1], "w");
-
-  if(invcn.num_paths == 1)
-    for(FILE** streams_ptr=streams; *streams_ptr; streams_ptr++)
-      fprintf(*streams_ptr, "%s/%s", invcn.cwd, invcn.relative_paths[0]);
-  else
-    for(FILE** streams_ptr=streams; *streams_ptr; streams_ptr++)
-      for(int i=0; i < invcn.num_paths; ++i)
-        fprintf(*streams_ptr, "%s/%s\n", invcn.cwd, invcn.relative_paths[i]);
+  output(stdout, &invcn);
 
 done:
+  if(invcn.free_paths) {
+    for(int i=0; i < invcn.num_paths; ++i)
+      free(invcn.relative_paths[i]);
+  }
   free(all_args);
   free(invcn.relative_paths);
-  if(child_pid) {
-    fclose(write_stream);
-    close(filedescriptors[0]);
-    close(filedescriptors[1]);
+  if(invcn.child_pid) {
     int statloc = -1;
-    waitpid(child_pid, &statloc, 0);
+    waitpid(invcn.child_pid, &statloc, 0);
   }
   return 0;
 }
