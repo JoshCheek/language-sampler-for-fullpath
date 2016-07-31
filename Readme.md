@@ -296,6 +296,29 @@ Interpret: No fkn clue.
 
 Mostly I found it frustrating.
 
+In part because, like all JVM environments,
+it just takes so fucking long to load. This was partially mitigated by the trampoline thing,
+but still, I have very little patience for such things, and I actively want to avoid
+developing such a patience as I consider it harmful. There should be a way to leave the
+code loaded up and just reload/compile/run the file, but it wasn't obvious to me how to do it.
+I searched for the answer and only found the trampoline thing, which helped a bit,
+but then behaviour differed when I'd run with the trampoline vs without it.
+
+This was generally a problem, something would work in the REPL but not the real program.
+The print thing wouldn't work in the real program unless I flushed the pipe.
+The sh command caused the real program to freeze.
+Docs didn't bring this stuff up, or if it did, not in an obvious place (ie the examples).
+
+There seems to be too many collection types / independent methods for each.
+
+It also won't let you nest lambdas within each other, which seems bizarre to me,
+given that it's a functional language. I'm guessing there's some second way to make a lambda.
+
+Clearly, I am cranky right now. Likely in part due to this,
+and in part due to other shit that has nothing to do with Clojure.
+But while that is true, don't let it soften the criticism of the absurd startup time.
+
+
 Run annoyingly slowly:
 
 ```sh
