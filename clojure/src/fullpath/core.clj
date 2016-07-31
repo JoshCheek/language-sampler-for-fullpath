@@ -5,9 +5,7 @@
   (filter #(not (clojure.string/blank? %)) args))
 
 (defn filter-flags [args]
-  ; (filter #(not (clojure.string/blank? %)) args))
-  args
-  )
+  (filter #(not (= \- (first %))) args))
 
 (defn format-paths [cwd paths]
   (let [chomp             #(clojure.string/trim-newline %)
@@ -32,12 +30,12 @@
   (println "  The -c flag will copy the results into your pasteboard"))
 
 (defn -main [& argv]
-  (let [cwd       (System/getProperty "user.dir")
-        paths     (filter-flags (filter-blank argv))
-        help?     (or (some #(= "-h" %)     argv)
+  (let [help?     (or (some #(= "-h" %)     argv)
                       (some #(= "--help" %) argv))
         copy?     (or (some #(= "-c" %)     argv)
-                      (some #(= "--copy" %) argv))]
+                      (some #(= "--copy" %) argv))
+        cwd       (System/getProperty "user.dir")
+        paths     (filter-flags (filter-blank argv))]
     (if help?
       (print-help)
       (let [fullpaths (if (empty? paths) (read-lines *in*) paths)]
