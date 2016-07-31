@@ -291,6 +291,16 @@ $ ./fullpath
 Interpret: No fkn clue.
 
 
+
+### [Clojure](http://clojure.org)
+
+Run:
+
+```sh
+$ lein run
+```
+
+
 <a href="http://www.wtfpl.net/"><img src="http://www.wtfpl.net/wp-content/uploads/2012/12/wtfpl.svg" height="20" alt="WTFPL" /></a> License
 -------------------------------------------------------------------------------------------------------------------------------------------
 
