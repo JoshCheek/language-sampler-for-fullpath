@@ -118,3 +118,22 @@ task(c: 'c/fullpath') { cucumber 'c' }
 file 'c/fullpath' => 'c/fullpath.c' do
   sh 'gcc', 'c/fullpath.c', '-o', 'c/fullpath'
 end
+
+# =====  C  =====
+task default: :clojure
+clojure_jarfile = 'clojure/target/fullpath-0.1.0-SNAPSHOT-standalone.jar'
+
+desc 'Build / test fullpath in Clojure'
+task(clojure: 'clojure/fullpath') { cucumber 'clojure' }
+
+file 'clojure/fullpath' => clojure_jarfile do
+  sh 'echo "#!/usr/bin/env java -jar" >  clojure/fullpath'
+  sh "cat #{clojure_jarfile}          >> clojure/fullpath"
+  chmod '+x', 'clojure/fullpath'
+end
+
+file clojure_jarfile => 'clojure/src/fullpath/core.clj'
+file clojure_jarfile => 'clojure/project.clj'
+file clojure_jarfile do
+  cd('clojure') { sh 'lein', 'uberjar' }
+end
