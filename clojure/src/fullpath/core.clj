@@ -14,12 +14,12 @@
         (pathify (chomp (first paths)))
         (clojure.string/join (map #(pathify (ends-with-newline %)) paths)))))
 
+(defn read-lines [instream]
+  (line-seq (java.io.BufferedReader. instream)))
+
 (defn -main [& argv]
   (let [cwd       (System/getProperty "user.dir")
         paths     (filter-blank argv)
-        fullpaths (if (= 0 (count paths))
-                      (line-seq (java.io.BufferedReader. *in*))
-                      paths)
-        ]
+        fullpaths (if (empty? paths) (read-lines *in*) paths)]
     (print (format-paths cwd fullpaths))
     (flush))) ; <-- ...uhm, why do I have to do this?
