@@ -41,4 +41,5 @@
             formatted-paths (format-paths cwd (filter-blank paths))]
         (print formatted-paths)
         (if copy? (clojure.java.shell/sh "pbcopy" :in formatted-paths))))
-    (flush))) ; <-- ...uhm, why do I have to do this?
+    (shutdown-agents) ; <-- you need this for the sh command to work, why this isn't in any of the docs, IDK
+    (flush)))         ; <-- you need this for the print command to work, why the stream isn't flushed when the program exits, IDK
