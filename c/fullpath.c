@@ -2,6 +2,7 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <string.h>
+#include <fcntl.h>
 
 typedef struct invocation {
   int num_args;
@@ -151,13 +152,41 @@ int main(int argc, char **argv) {
 
   remove_empties(invcn.relative_paths, &invcn.num_paths);
 
+  pid_t child_pid = 0;
+  int filedescriptors[2];
+  if(invcn.copy_result) {
+    pipe(filedescriptors);
+    if(!(child_pid=fork())) {
+      dup2(filedescriptors[0], STDIN_FILENO);
+      close(filedescriptors[0]);
+      close(filedescriptors[1]);
+      char* pbcopy_argv[] = {"pbcopy", 0};
+      execvp(pbcopy_argv[0], pbcopy_argv);
+    }
+  }
+
+  FILE *streams[3] = {stdout, NULL, NULL};
+  FILE *write_stream = NULL;
+  if(invcn.copy_result)
+    streams[1] = write_stream = fdopen(filedescriptors[1], "w");
+
   if(invcn.num_paths == 1)
-    printf("%s/%s", invcn.cwd, invcn.relative_paths[0]);
+    for(FILE** streams_ptr=streams; *streams_ptr; streams_ptr++)
+      fprintf(*streams_ptr, "%s/%s", invcn.cwd, invcn.relative_paths[0]);
   else
-    for(int i=0; i < invcn.num_paths; ++i)
-      printf("%s/%s\n", invcn.cwd, invcn.relative_paths[i]);
+    for(FILE** streams_ptr=streams; *streams_ptr; streams_ptr++)
+      for(int i=0; i < invcn.num_paths; ++i)
+        fprintf(*streams_ptr, "%s/%s\n", invcn.cwd, invcn.relative_paths[i]);
+
 done:
   free(all_args);
   free(invcn.relative_paths);
+  if(child_pid) {
+    fclose(write_stream);
+    close(filedescriptors[0]);
+    close(filedescriptors[1]);
+    int statloc = -1;
+    waitpid(child_pid, &statloc, 0);
+  }
   return 0;
 }
