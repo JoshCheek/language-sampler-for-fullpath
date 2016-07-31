@@ -230,6 +230,67 @@ There is no interpreter AFAIK...
 
 
 
+### [Bash](fill this in when I get internet)
+
+Was with a friend who does sysadmin work, so he knows a ton of bash.
+That made the whole thing go much smoother, really. I'd just shout at him
+whenever I was confused. On the whole, it's reasonably decent.
+
+Install (IDK, I already had bash 4.3).
+
+Build: none
+
+Interpret:
+
+```sh
+$ bash fullpath a b
+```
+
+REPL:
+
+```sh
+$ bash -l
+```
+
+
+
+### [C](fill this in when I get internet)
+
+I did some C a while back, and you can use the man pages, so I wasn't at
+such a disadvantage without internet. In the end, this is a miserable language.
+Manual memory management makes it very difficult to do things well, it's just
+much easier to let the function know about the caller and not have to set up
+some contract about who is in charge of what memory.
+
+With a decent string / array / subprocess library, this would have been a lot less painful.
+But I have no clue how to locate C libraries (also I didn't have internet to install them).
+
+I find it easier to think about pointer arithmetic than track tons of variables.
+The lack of blocks means that logic of what you want to do has to be coupled to logic of
+how to iterate over the collection. Sometimes the collection is a PITA to iterate over,
+making the logic much harder to think about than it should be.
+I enjoyed getting to use a goto. I should maybe go back in and check to see if there are
+good opportunities to use a macro.
+
+Docs:
+
+```sh
+$ man stdio   # man page for the header file, includes a list of functions with short descriptions
+$ man malloc  # docs on the malloc function
+$ man 3 exec  # exclusively search C Library functions (b/c there is more than one match)
+$ man 2 open  # exclusively search system calls
+```
+
+Build and run:
+
+```sh
+$ gcc fullpath.c -o fullpath    # -o sets the output filename
+$ ./fullpath
+```
+
+Interpret: No fkn clue.
+
+
 <a href="http://www.wtfpl.net/"><img src="http://www.wtfpl.net/wp-content/uploads/2012/12/wtfpl.svg" height="20" alt="WTFPL" /></a> License
 -------------------------------------------------------------------------------------------------------------------------------------------
 
