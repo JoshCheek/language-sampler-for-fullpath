@@ -2,5 +2,8 @@
 
 # makes it not 1.2s instead of 2.7s to run
 # (still way too much *sigh*)
+
+# lein run "$@"
+
 export LEIN_FAST_TRAMPOLINE=y
 lein trampoline run "$@"

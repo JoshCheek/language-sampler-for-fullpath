@@ -1,6 +1,8 @@
 (ns fullpath.core
   (:gen-class))
 
+(require 'clojure.java.shell) ; <-- apparently have to do this, doing the same thing with use freezes the program
+
 (defn filter-blank [args]
   (filter #(not (clojure.string/blank? %)) args))
 
@@ -19,27 +21,27 @@
 (defn read-lines [instream]
   (line-seq (java.io.BufferedReader. instream)))
 
-(defn print-help []
-  (println "usage: fullpath *[relative-paths] [-c]")
-  (println)
-  (println "  Prints the fullpath of the paths")
-  (println "  If no paths are given as args, it will read them from stdin")
-  (println)
-  (println "  If there is only one path, the trailing newline is omitted")
-  (println)
-  (println "  The -c flag will copy the results into your pasteboard"))
+(defn help-screen []
+  (str "usage: fullpath *[relative-paths] [-c]\n"
+       "\n"
+       "  Prints the fullpath of the paths\n"
+       "  If no paths are given as args, it will read them from stdin\n"
+       "\n"
+       "  If there is only one path, the trailing newline is omitted\n"
+       "\n"
+       "  The -c flag will copy the results into your pasteboard\n"))
 
 (defn -main [& argv]
-  (let [help?     (or (some #(= "-h" %)     argv)
-                      (some #(= "--help" %) argv))
-        copy?     (or (some #(= "-c" %)     argv)
-                      (some #(= "--copy" %) argv))
-        cwd       (System/getProperty "user.dir")
-        paths     (filter-flags (filter-blank argv))]
+  (let [help?      (or (some #(= "-h" %)     argv)
+                       (some #(= "--help" %) argv))
+        copy?      (or (some #(= "-c" %)     argv)
+                       (some #(= "--copy" %) argv))
+        cwd        (System/getProperty "user.dir")
+        argv-paths (filter-flags (filter-blank argv))]
     (if help?
-      (print-help)
-      (let [fullpaths (if (empty? paths)
-                          (filter-blank (read-lines *in*))
-                          paths)]
-           (print (format-paths cwd fullpaths))))
+      (print (help-screen))
+      (let [paths           (if (empty? argv-paths) (read-lines *in*) argv-paths)
+            formatted-paths (format-paths cwd (filter-blank paths))]
+        (print formatted-paths)
+        (if copy?  (clojure.java.shell/sh "pbcopy" :in formatted-paths))))
     (flush))) ; <-- ...uhm, why do I have to do this?
