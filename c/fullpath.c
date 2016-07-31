@@ -166,20 +166,20 @@ int main(int argc, char **argv) {
   }
 
   if(invcn.copy_result) {
-    int filedescriptors[2];
-    pipe(filedescriptors);
+    int fdescs[2]; // file descriptors
+    pipe(fdescs);
     if(!(invcn.child_pid=fork())) {
-      dup2(filedescriptors[0], STDIN_FILENO);
-      close(filedescriptors[0]);
-      close(filedescriptors[1]);
+      dup2(fdescs[0], STDIN_FILENO);
+      close(fdescs[0]);
+      close(fdescs[1]);
       char* pbcopy_argv[] = {"pbcopy", 0};
       execvp(pbcopy_argv[0], pbcopy_argv);
     } else {
-      FILE* write_stream = fdopen(filedescriptors[1], "w");
+      FILE* write_stream = fdopen(fdescs[1], "w");
       output(write_stream, &invcn);
       fclose(write_stream);
-      close(filedescriptors[0]);
-      close(filedescriptors[1]);
+      close(fdescs[0]);
+      close(fdescs[1]);
     }
   }
   output(stdout, &invcn);
