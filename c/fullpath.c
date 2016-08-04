@@ -34,11 +34,9 @@ void print_help() {
 }
 
 void output(FILE *stream, Invocation *invocation) {
-  if(invocation->num_paths == 1)
-    fprintf(stream, "%s/%s", invocation->cwd, invocation->relative_paths[0]);
-  else
-    for(int i=0; i < invocation->num_paths; ++i)
-      fprintf(stream, "%s/%s\n", invocation->cwd, invocation->relative_paths[i]);
+  char *eol = (invocation->num_paths == 1 ? "" : "\n");
+  for(int i=0; i < invocation->num_paths; ++i)
+    fprintf(stream, "%s/%s%s", invocation->cwd, invocation->relative_paths[i], eol);
 }
 
 
@@ -51,8 +49,8 @@ void remove_empties(char **strings, int *num_strings) {
 }
 
 void remove_string(char **strings, int*num_strings, char *to_remove, bool *removed) {
-  int from=0, to=0;
-  for(; from<*num_strings; ++from)
+  int from, to;
+  for(from=0, to=0; from<*num_strings; ++from)
     if(0 != strcmp(strings[from], to_remove))
       strings[to++] = strings[from];
     else
@@ -80,15 +78,15 @@ void read_paths(FILE *stream, Invocation *invocation) {
   invocation->num_paths = 0;
   size_t size = 0;
   char* line;
-  while(1) {
+  while(true) {
     // setting line to NULL causes getline to allocate a new buffer
     // note that it's our responsibility to free this memory
     line = NULL;
-    int result = getline(&line, &size, stream);
-    if(result == -1)
+    int last_char = getline(&line, &size, stream) - 1;
+    if(last_char == -2) // it returned -1 implying input stream is closed or w/e
       break;
-    else if (0 < result && line[result-1] == '\n')
-      line[result-1] = '\0';
+    else if (0 <= last_char && line[last_char] == '\n')
+      line[last_char] = '\0';
     struct string_list* node = (struct string_list*)malloc(sizeof(struct string_list));
     node->string = line;
     node->next   = NULL;
@@ -183,18 +181,17 @@ int main(int argc, char **argv) {
       close(fdescs[1]);
     }
   }
+
   output(stdout, &invcn);
 
 done:
-  if(invcn.free_paths) {
+  if(invcn.free_paths)
     for(int i=0; i < invcn.num_paths; ++i)
       free(invcn.relative_paths[i]);
-  }
   free(all_args);
   free(invcn.relative_paths);
-  if(invcn.child_pid) {
-    int statloc = -1;
+  int statloc = -1;
+  if(invcn.child_pid)
     waitpid(invcn.child_pid, &statloc, 0);
-  }
   return 0;
 }
