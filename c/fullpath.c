@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <fcntl.h>
+#include <stdbool.h>
 
 typedef struct invocation {
   int num_args;
@@ -12,11 +13,11 @@ typedef struct invocation {
 
   int num_chars;
   int num_paths;
-  int free_paths;
+  bool free_paths;
   char **relative_paths;
 
-  int copy_result;
-  int print_help;
+  bool copy_result;
+  bool print_help;
 
   pid_t child_pid;
 } Invocation;
@@ -49,13 +50,13 @@ void remove_empties(char **strings, int *num_strings) {
   *num_strings = to;
 }
 
-void remove_string(char **strings, int*num_strings, char *to_remove, int *removed) {
+void remove_string(char **strings, int*num_strings, char *to_remove, bool *removed) {
   int from=0, to=0;
   for(; from<*num_strings; ++from)
     if(0 != strcmp(strings[from], to_remove))
       strings[to++] = strings[from];
     else
-      *removed = 1;
+      *removed = true;
   *num_strings = to;
 }
 
@@ -98,7 +99,7 @@ void read_paths(FILE *stream, Invocation *invocation) {
   }
 
   invocation->relative_paths = (char**)malloc(invocation->num_paths * sizeof(char*));
-  invocation->free_paths     = 1;
+  invocation->free_paths     = true;
 
   for(int i=0; i < invocation->num_paths; i++) {
     invocation->relative_paths[i] = head->string;
@@ -120,11 +121,11 @@ int main(int argc, char **argv) {
 
   invcn.num_chars      = 0;
   invcn.num_paths      = 0;
-  invcn.free_paths     = 0;
+  invcn.free_paths     = false;
   invcn.relative_paths = 0; // filled in later
 
-  invcn.copy_result    = 0;
-  invcn.print_help     = 0;
+  invcn.copy_result    = false;
+  invcn.print_help     = false;
   invcn.child_pid      = 0;
   set_invocation_counts(&invcn, argv+1, argc-1);
 
