@@ -1,3 +1,7 @@
 #!/usr/bin/env node
 
-console.log("hello world");
+var args = process.argv.slice(2);
+for(var i = 0; i < args.length; ++i) {
+  var arg = args[i];
+  console.log(arg);
+}
