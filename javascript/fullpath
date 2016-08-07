@@ -1,8 +1,14 @@
 #!/usr/bin/env node
 
-var args = process.argv.slice(2);
-var cwd  = process.cwd();
+var args   = process.argv.slice(2);
+var cwd    = process.cwd();
+var stdout = process.stdout;
 
-for(var i = 0; i < args.length; ++i) {
-  console.log([cwd, args[i]].join("/"));
-}
+var paths  = args.map(function(arg) {
+  return [cwd, arg].join("/")
+});
+
+if(paths.length == 1)
+  stdout.write(paths[0]);
+else
+  paths.forEach(function(path) { stdout.write(path+"\n") });
