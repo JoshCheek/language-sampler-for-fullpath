@@ -3,27 +3,34 @@
 const args          = process.argv.slice(2);
 const cwd           = process.cwd();
 const stdout        = process.stdout;
-const relativePaths = args;
+const relativePaths = removeFlags(args);
 const newlineAscii  = "\n"[0];
 
 function chomp(str) {
+  if (str.length == 0) return str;
   if (str[str.length-1] != newlineAscii)
     return str;
-  String.prototype.substring.call(str, 0, str.length-1);
+  return String.prototype.substring.call(str, 0, str.length-1);
 }
 
 function printPaths(cwd, relativePaths) {
-  const absolutePaths = relativePaths.map(function(arg) {
-    return [cwd, chomp(arg)].join("/")
-  });
+  const absolutePaths = relativePaths
+          .filter(function(arg) { return arg != "" })
+          .map(function(arg) { return [cwd, chomp(arg)].join("/") });
   if(absolutePaths.length == 1)
     stdout.write(absolutePaths[0]);
   else
     absolutePaths.forEach(function(path) { stdout.write(path+"\n") });
 }
 
+function removeFlags(array) {
+  return array.filter(function(string) {
+    return string[0] != "-"[0];
+  });
+}
+
 if(relativePaths.length == 0) {
-  process.stdin.on('data', function(line) { relativePaths.push(line) })
+  process.stdin.on('data', function(line) { relativePaths.push(chomp(line)) })
   process.stdin.on('end', function() { printPaths(cwd, relativePaths) });
 } else {
   printPaths(cwd, relativePaths);
