@@ -137,3 +137,10 @@ file clojure_jarfile => 'clojure/project.clj'
 file clojure_jarfile do
   cd('clojure') { sh 'lein', 'uberjar' }
 end
+
+# =====  JavaScript  =====
+task default: :javascript
+
+desc 'Test fullpath in JavaScript'
+task(:javascript) { cucumber 'javascript' }
+task js: :javascript
