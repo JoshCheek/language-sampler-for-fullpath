@@ -4,6 +4,8 @@ const args          = process.argv.slice(2);
 const cwd           = process.cwd();
 const stdout        = process.stdout;
 const relativePaths = removeFlags(args);
+const doHelp        = hasFlag(args, "-h") || hasFlag(args, "--help");
+const doCopy        = hasFlag(args, "-c") || hasFlag(args, "--copy");
 const newlineAscii  = 10;
 
 function chomp(str) {
@@ -29,7 +31,20 @@ function removeFlags(array) {
   });
 }
 
-if(relativePaths.length == 0) {
+function hasFlag(strings, flag) {
+  return -1 != strings.indexOf(flag);
+}
+
+if(doHelp) {
+  stdout.write("usage: fullpath *[relative-paths] [-c]\n");
+  stdout.write("\n");
+  stdout.write("  Prints the fullpath of the paths\n");
+  stdout.write("  If no paths are given as args, it will read them from stdin\n");
+  stdout.write("\n");
+  stdout.write("  If there is only one path, the trailing newline is omitted\n");
+  stdout.write("\n");
+  stdout.write("  The -c flag will copy the results into your pasteboard\n");
+} else if(relativePaths.length == 0) {
   process.stdin.on('data', function(line) { relativePaths.push(chomp(line)) })
   process.stdin.on('end', function() { printPaths(cwd, relativePaths) });
 } else {
