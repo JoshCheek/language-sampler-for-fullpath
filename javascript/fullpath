@@ -15,14 +15,14 @@ function chomp(str) {
   return String.prototype.substring.call(str, 0, str.length-1);
 }
 
-function printPaths(cwd, relativePaths) {
+function printPaths(stream, cwd, relativePaths) {
   const absolutePaths = relativePaths
           .filter(function(arg) { return arg != "" })
           .map(function(arg) { return [cwd, chomp(arg)].join("/") });
   if(absolutePaths.length == 1)
-    stdout.write(absolutePaths[0]);
+    stream.write(absolutePaths[0]);
   else
-    absolutePaths.forEach(function(path) { stdout.write(path+"\n") });
+    absolutePaths.forEach(function(path) { stream.write(path+"\n") });
 }
 
 function removeFlags(array) {
@@ -46,7 +46,9 @@ if(doHelp) {
   stdout.write("  The -c flag will copy the results into your pasteboard\n");
 } else if(relativePaths.length == 0) {
   process.stdin.on('data', function(line) { relativePaths.push(chomp(line)) })
-  process.stdin.on('end', function() { printPaths(cwd, relativePaths) });
+  process.stdin.on('end', function() {
+    printPaths(stdout, cwd, relativePaths)
+  });
 } else {
-  printPaths(cwd, relativePaths);
+  printPaths(stdout, cwd, relativePaths);
 }
