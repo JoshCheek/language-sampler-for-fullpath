@@ -4,11 +4,11 @@ const args          = process.argv.slice(2);
 const cwd           = process.cwd();
 const stdout        = process.stdout;
 const relativePaths = removeFlags(args);
-const newlineAscii  = "\n"[0];
+const newlineAscii  = 10;
 
 function chomp(str) {
   if (str.length == 0) return str;
-  if (str[str.length-1] != newlineAscii)
+  if (str[str.length-1] != 10)
     return str;
   return String.prototype.substring.call(str, 0, str.length-1);
 }
