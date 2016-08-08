@@ -67,6 +67,9 @@ access.the.bsd.kernel:
   system SYS_read
 %endmacro
 
-%macro sys.write 0
+%macro sys.write 3
+  push dword %1 ; number of bytes to write
+  push dword %2 ; location of the string
+  push dword %3 ; file descriptor
   system SYS_write
 %endmacro

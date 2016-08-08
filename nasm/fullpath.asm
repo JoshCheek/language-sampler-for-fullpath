@@ -7,10 +7,7 @@ section .data
 section .text
 global main
 main:
-  push dword hbytes
-  push dword hello
-  push dword stdout
-  sys.write
+  sys.write hbytes, hello, stdout
 
   push dword 0
   sys.exit
