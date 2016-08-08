@@ -37,9 +37,9 @@ function hasFlag(strings, flag) {
   return -1 != strings.indexOf(flag);
 }
 
-function copyPaths(cwd, relativePaths) {
+function copyPaths(callback) {
   const pbcopy = spawn("pbcopy", [], {stdio: ["pipe", "ignore", "inherit"]});
-  printPaths(pbcopy.stdin, cwd, relativePaths);
+  callback(pbcopy.stdin);
   pbcopy.stdin.end();
 }
 
@@ -65,9 +65,13 @@ if(doHelp) {
 } else if(relativePaths.length == 0) {
   readLines(process.stdin, function(relativePaths) {
     printPaths(stdout, cwd, relativePaths);
-    doCopy && copyPaths(cwd, relativePaths);
+    doCopy && copyPaths(function(childStdin) {
+      printPaths(childStdin, cwd, relativePaths);
+    });
   });
 } else {
   printPaths(stdout, cwd, relativePaths);
-  doCopy && copyPaths(cwd, relativePaths);
+  doCopy && copyPaths(function(childStdin) {
+    printPaths(childStdin, cwd, relativePaths);
+  });
 }
