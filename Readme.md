@@ -265,7 +265,7 @@ $ bash -l
 
 
 
-### [C](https://en.wikipedia.org/wiki/C_(programming_language)
+### [C](https://en.wikipedia.org/wiki/C_%28programming_language%29)
 
 I did some C a while back, and you can use the man pages, so I wasn't at
 such a disadvantage without internet. In the end, this is a miserable language.
