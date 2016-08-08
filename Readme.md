@@ -9,6 +9,7 @@ Language Sampler For Fullpath
 [Elixir](#elixir),
 [Go](#go),
 [Java](#java),
+[JavaScript](#javascript),
 [Kotlin](#kotlin),
 [Python](#python),
 [Ruby](#ruby)
@@ -345,6 +346,32 @@ $ lein trampoline run "$@"
 There's some whole packaging thing that you can use to get an executable
 jar file, but it's kind of complicated. I don't remember how I did it,
 just that I tried a lot of shit until it workd.
+
+
+### [JavaScript](https://github.com/tc39)
+
+This one was legitimately fun to write, and I'm satisfied with my solution,
+which often doesn't happen. Even to the point of considering adding unit tests.
+
+I used Node 4.2.1
+
+Install node
+
+```sh
+$ brew install node
+```
+
+Run
+
+```sh
+$ node ./fullpath
+```
+
+Repl
+
+```sh
+$ node
+```
 
 
 <a href="http://www.wtfpl.net/"><img src="http://www.wtfpl.net/wp-content/uploads/2012/12/wtfpl.svg" height="20" alt="WTFPL" /></a> License
