@@ -15,9 +15,31 @@ usage: fullpath *[relative-paths] [-c]
 
 main(process.argv, process.stdin, process.stdout, process.cwd())
 
-function removeFlags(array)         { return array.filter(string => string[0] != "-"[0]) }
-function hasFlag(strings, flag)     { return -1 != strings.indexOf(flag) }
-function normalizePaths(cwd, paths) { return paths.filter(p => "" != p).map(p => [cwd, p].join("/")) }
+function main(argv, stdin, stdout, cwd) {
+  const args         = argv.slice(2)
+  const argvPaths    = removeFlags(args)
+  const doHelp       = hasFlag(args, "-h") || hasFlag(args, "--help")
+  const doCopy       = hasFlag(args, "-c") || hasFlag(args, "--copy")
+  const pathsOnStdin = 0 == argvPaths.length
+  const output       = function(relativePaths) {
+    const absolutePaths = normalizePaths(cwd, relativePaths)
+    printPaths(stdout, absolutePaths)
+    doCopy && copyPaths(stream => printPaths(stream, absolutePaths))
+  }
+  doHelp ? stdout.write(helpScreen) : pathsOnStdin ? readLines(stdin, output) : output(argvPaths)
+}
+
+function removeFlags(array) {
+  return array.filter(string => string[0] != "-"[0])
+}
+
+function hasFlag(strings, flag) {
+  return -1 != strings.indexOf(flag)
+}
+
+function normalizePaths(cwd, paths) {
+  return paths.filter(p => "" != p).map(p => [cwd, p].join("/"))
+}
 
 function printPaths(stream, paths) {
   if(paths.length === 1) stream.write(paths[0])
@@ -34,18 +56,4 @@ function readLines(instream, callback) {
   let stdinData = ""
   instream.on('data',  (data) => stdinData += data)
   instream.on('close', () => callback(stdinData.split("\n")))
-}
-
-function main(argv, stdin, stdout, cwd) {
-  const args         = argv.slice(2)
-  const argvPaths    = removeFlags(args)
-  const doHelp       = hasFlag(args, "-h") || hasFlag(args, "--help")
-  const doCopy       = hasFlag(args, "-c") || hasFlag(args, "--copy")
-  const pathsOnStdin = 0 == argvPaths.length
-  const output       = function(relativePaths) {
-    const absolutePaths = normalizePaths(cwd, relativePaths)
-    printPaths(stdout, absolutePaths)
-    doCopy && copyPaths(stream => printPaths(stream, absolutePaths))
-  }
-  doHelp ? stdout.write(helpScreen) : pathsOnStdin ? readLines(stdin, output) : output(argvPaths)
 }
