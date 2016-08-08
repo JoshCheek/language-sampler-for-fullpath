@@ -12,7 +12,7 @@ usage: fullpath *[relative-paths] [-c]
   The -c flag will copy the results into your pasteboard
 <?php }
 
-  function paths_in($paths) {
+  function select_paths($paths) {
     return array_filter($paths, function($str) {
       return $str != "" && $str[0] != "-";
     });
@@ -42,22 +42,22 @@ usage: fullpath *[relative-paths] [-c]
     proc_close($process);
   }
 
+  $args        = array_slice($argv, 1); // $argv[0] is the filename
   $print_help  = in_array("-h", $argv, true) || in_array("--help", $argv, true);
   $copy_output = in_array("-c", $argv, true) || in_array("--copy", $argv, true);
 
   if ($print_help) {
     print_help();
   } else {
-    $paths = array_slice($argv, 1); // $argv[0] is the filename
-    $paths = paths_in($paths);
+    $paths = select_paths($args);
     if(count($paths) == 0)
-      $paths = paths_in(read_lines(STDIN));
+      $paths = select_paths(read_lines(STDIN));
     $paths = absolute_paths(getcwd(), $paths);
-    print_paths(STDOUT, $paths);
-    if($copy_output) {
-      pbcopy(function($stream) use ($paths) {
-        print_paths($stream, $paths);
-      });
-    }
+    $print_paths = function($stream) use ($paths) {
+      print_paths($stream, $paths);
+    };
+    $print_paths(STDOUT);
+    if($copy_output)
+      pbcopy($print_paths);
   }
 ?>
