@@ -1,69 +1,49 @@
 #!/usr/bin/env node
 "use strict"
 
-const spawn         = require('child_process').spawn
-const args          = process.argv.slice(2)
-const cwd           = process.cwd()
-const stdout        = process.stdout
-const relativePaths = removeFlags(args)
-const doHelp        = hasFlag(args, "-h") || hasFlag(args, "--help")
-const doCopy        = hasFlag(args, "-c") || hasFlag(args, "--copy")
-const newlineAscii  = 10
-const helpScreen    =
-  "usage: fullpath *[relative-paths] [-c]\n"+
-  "\n"+
-  "  Prints the fullpath of the paths\n"+
-  "  If no paths are given as args, it will read them from stdin\n"+
-  "\n"+
-  "  If there is only one path, the trailing newline is omitted\n"+
-  "\n"+
-  "  The -c flag will copy the results into your pasteboard\n"
+const spawn          = require('child_process').spawn
+const helpScreen     = "usage: fullpath *[relative-paths] [-c]\n"+
+                       "\n"+
+                       "  Prints the fullpath of the paths\n"+
+                       "  If no paths are given as args, it will read them from stdin\n"+
+                       "\n"+
+                       "  If there is only one path, the trailing newline is omitted\n"+
+                       "\n"+
+                       "  The -c flag will copy the results into your pasteboard\n"
 
+main(process.argv, process.stdin, process.stdout, process.cwd())
 
-function chomp(str) {
-  if (str.length == 0)
-    return str
-  if (str[str.length-1] != newlineAscii)
-    return str
-  return str.substring(0, str.length-1)
-}
+function removeFlags(array)         { return array.filter(string => string[0] != "-"[0]) }
+function hasFlag(strings, flag)     { return -1 != strings.indexOf(flag) }
+function normalizePaths(cwd, paths) { return paths.filter(p => "" != p).map(p => [cwd, p].join("/")) }
 
-function printPaths(stream, cwd, relativePaths) {
-  const absolutePaths = relativePaths.filter(s => "" != s).map(s => [cwd, chomp(s)].join("/"))
-  if(absolutePaths.length == 1)
-    stream.write(absolutePaths[0])
-  else
-    absolutePaths.forEach(path => stream.write(path+"\n"))
-}
-
-function removeFlags(array) {
-  return array.filter(string => string[0] != "-"[0])
-}
-
-function hasFlag(strings, flag) {
-  return -1 != strings.indexOf(flag)
+function printPaths(stream, paths) {
+  if(paths.length === 1) stream.write(paths[0])
+  else paths.forEach(p => stream.write(`${p}\n`))
 }
 
 function copyPaths(callback) {
-  const pbcopy = spawn("pbcopy", [], {stdio: ["pipe", "ignore", "inherit"]})
+  const pbcopy = spawn("pbcopy", [], {stdio: ["pipe", "inherit", "inherit"]})
   callback(pbcopy.stdin)
   pbcopy.stdin.end()
 }
 
 function readLines(instream, callback) {
   let stdinData = ""
-  process.stdin.on('data',  (data) => stdinData += data)
-  process.stdin.on('close', () => callback(stdinData.split("\n")))
+  instream.on('data',  (data) => stdinData += data)
+  instream.on('close', () => callback(stdinData.split("\n")))
 }
 
-if(doHelp) {
-  stdout.write(helpScreen)
-} else if(relativePaths.length == 0) {
-  readLines(process.stdin, lines => {
-    printPaths(stdout, cwd, lines)
-    doCopy && copyPaths(childStdin => printPaths(childStdin, cwd, lines))
-  })
-} else {
-  printPaths(stdout, cwd, relativePaths)
-  doCopy && copyPaths(childStdin => printPaths(childStdin, cwd, relativePaths))
+function main(argv, stdin, stdout, cwd) {
+  const args         = argv.slice(2)
+  const argvPaths    = removeFlags(args)
+  const doHelp       = hasFlag(args, "-h") || hasFlag(args, "--help")
+  const doCopy       = hasFlag(args, "-c") || hasFlag(args, "--copy")
+  const pathsOnStdin = 0 == argvPaths.length
+  const output       = function(relativePaths) {
+    const absolutePaths = normalizePaths(cwd, relativePaths)
+    printPaths(stdout, absolutePaths)
+    doCopy && copyPaths(stream => printPaths(stream, absolutePaths))
+  }
+  doHelp ? stdout.write(helpScreen) : pathsOnStdin ? readLines(stdin, output) : output(argvPaths)
 }
