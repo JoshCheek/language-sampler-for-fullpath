@@ -23,7 +23,15 @@
 ; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
 ; STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
 ; USE OF THIS DOCUMENTATION, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+;
+;
+; ----------  End of stupid copywrite nonsense  ----------
 
+
+; Turns out this info is already on my system, in the file sys/syscall.h
+; I wrote a program to locate the file (included in this dir)
+; and this script will reformat it for inclusion into this file
+; $ ./included-from sys/syscall.h | xargs sed -ne 's/#/%/; /^%define/p' | column -t
 
 %define	stdin      0
 %define	stdout     1
