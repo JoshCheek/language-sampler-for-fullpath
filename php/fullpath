@@ -36,16 +36,10 @@ usage: fullpath *[relative-paths] [-c]
   }
 
   function pbcopy($callback) {
-    $descriptorspec = array(
-      0 => array("pipe", "r")
-    );
-    $process = proc_open('pbcopy', $descriptorspec, $pipes);
-    if (is_resource($process)) {
-      $callback($pipes[0]);
-      /* fwrite($pipes[0], $callback); */
-      fclose($pipes[0]);
-      proc_close($process);
-    }
+    $process = proc_open('pbcopy', array(0 => array("pipe", "r")), $pipes);
+    $callback($pipes[0]);
+    fclose($pipes[0]);
+    proc_close($process);
   }
 
   $print_help  = in_array("-h", $argv, true) || in_array("--help", $argv, true);
