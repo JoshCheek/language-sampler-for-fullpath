@@ -377,6 +377,22 @@ $ node
 
 ### [PHP](http://php.net)
 
+On the whole, I enjoyed PHP. I think the `<?php ... ?>` thing is kind of dumb,
+but whatever. I like that closures have to declare what variables they are going
+to enclose. Not sure how I feel about the passing by reference, it was used
+reasonably in setting the child process' pipes, but a better approach would still
+be to pass a function in. The toplevel function thing is kind of dumb to me,
+eg all the methods that begin with `array_` because they aren't namespaced.
+It would be nice to have a better array literal syntax. The arrays as hash maps
+seems like a hack to me. The interfaces to some of the functions was inconsistent,
+eg `array_filter($array, $callback)` vs `array_map($callback, $array)`.
+It was pretty fast, which was nice (faster than JS, for example,
+though common lisp was about twice as fast). I like their community's large
+set of examples in the docs, though they did get in the way when searching
+for the function I wanted. Maybe putting the function list on the left on the
+website would alleviate that?
+
+
 Docs: [http://php.net/manual/en/index.php](http://php.net/manual/en/index.php)
 
 Install: idk, I already had php 5.5.34 on my computer
@@ -385,6 +401,12 @@ Run
 
 ```sh
 $ php ./fullpath
+```
+
+Explore
+
+```sh
+$ php -r '$a = array("a", "", "b", "-h", "c"); echo var_dump($a);'
 ```
 
 Useful tips:
