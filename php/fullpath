@@ -1,5 +1,7 @@
-#!/usr/bin/env php
-<?php function print_help() { ?>
+#!/usr/bin/env php --no-php-ini
+<?php
+
+  function print_help() { ?>
 usage: fullpath *[relative-paths] [-c]
 
   Prints the fullpath of the paths
