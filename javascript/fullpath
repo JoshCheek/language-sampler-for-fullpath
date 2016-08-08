@@ -5,7 +5,7 @@ const spawn         = require('child_process').spawn
 const args          = process.argv.slice(2)
 const cwd           = process.cwd()
 const stdout        = process.stdout
-let   relativePaths = removeFlags(args)
+const relativePaths = removeFlags(args)
 const doHelp        = hasFlag(args, "-h") || hasFlag(args, "--help")
 const doCopy        = hasFlag(args, "-c") || hasFlag(args, "--copy")
 const newlineAscii  = 10
@@ -29,9 +29,7 @@ function chomp(str) {
 }
 
 function printPaths(stream, cwd, relativePaths) {
-  const absolutePaths = relativePaths
-          .filter(arg => arg != "")
-          .map(arg => [cwd, chomp(arg)].join("/"))
+  const absolutePaths = relativePaths.filter(s => "" != s).map(s => [cwd, chomp(s)].join("/"))
   if(absolutePaths.length == 1)
     stream.write(absolutePaths[0])
   else
@@ -61,9 +59,9 @@ function readLines(instream, callback) {
 if(doHelp) {
   stdout.write(helpScreen)
 } else if(relativePaths.length == 0) {
-  readLines(process.stdin, relativePaths => {
-    printPaths(stdout, cwd, relativePaths)
-    doCopy && copyPaths(childStdin => printPaths(childStdin, cwd, relativePaths))
+  readLines(process.stdin, lines => {
+    printPaths(stdout, cwd, lines)
+    doCopy && copyPaths(childStdin => printPaths(childStdin, cwd, lines))
   })
 } else {
   printPaths(stdout, cwd, relativePaths)
