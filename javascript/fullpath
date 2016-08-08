@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+"use strict";
 
 const args          = process.argv.slice(2);
 const cwd           = process.cwd();
@@ -10,7 +11,7 @@ const newlineAscii  = 10;
 
 function chomp(str) {
   if (str.length == 0) return str;
-  if (str[str.length-1] != 10)
+  if (str[str.length-1] != newlineAscii)
     return str;
   return String.prototype.substring.call(str, 0, str.length-1);
 }
@@ -45,10 +46,9 @@ if(doHelp) {
   stdout.write("\n");
   stdout.write("  The -c flag will copy the results into your pasteboard\n");
 } else if(relativePaths.length == 0) {
-  process.stdin.on('data', function(line) { relativePaths.push(chomp(line)) })
-  process.stdin.on('end', function() {
-    printPaths(stdout, cwd, relativePaths)
-  });
+  let stdinData = "";
+  process.stdin.on('data', function(data) { stdinData += data; });
+  process.stdin.on('close', function() { printPaths(stdout, cwd, stdinData.split("\n")) });
 } else {
   printPaths(stdout, cwd, relativePaths);
 }
