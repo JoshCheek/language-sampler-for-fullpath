@@ -24,8 +24,10 @@ usage: fullpath *[relative-paths] [-c]
     return(array_map($make_absolute, $relative_paths));
   }
 
-  function read_paths_from_stdin() {
-    return(array());
+  function read_paths($stream) {
+    $paths = array();
+    while($f = fgets($stream)) array_push($paths, rtrim($f, "\n"));
+    return($paths);
   }
 
   $print_help = in_array("-h", $argv, true) || in_array("--help", $argv, true);
@@ -34,17 +36,11 @@ usage: fullpath *[relative-paths] [-c]
     print_help();
   } else {
     $paths = paths_in(array_slice($argv, 1));
-    if(count($paths) == 0) {
-      $paths = read_paths_from_stdin();
-    }
-
+    if(count($paths) == 0) $paths = read_paths(STDIN);
     $paths = absolute_paths(getcwd(), $paths);
     $delimiter = "\n";
-    if (1 == count($paths))
-      $delimiter = "";
-    foreach ($paths as $index => $path) {
-      echo "$path$delimiter";
-    }
+    if (1 == count($paths)) $delimiter = "";
+    foreach ($paths as $index => $path) echo "$path$delimiter";
     /* if should copy */
     /*   copy paths */
   }
