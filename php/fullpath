@@ -19,16 +19,27 @@ usage: fullpath *[relative-paths] [-c]
     }));
   }
 
+  function absolute_paths($cwd, $relative_paths) {
+    $make_absolute = function($path) use ($cwd) { return("$cwd/$path"); };
+    return(array_map($make_absolute, $relative_paths));
+  }
+
+  function read_paths_from_stdin() {
+    return(array());
+  }
+
   $print_help = in_array("-h", $argv, true) || in_array("--help", $argv, true);
 
   if ($print_help) {
     print_help();
   } else {
     $paths = paths_in(array_slice($argv, 1));
-    var_dump($paths);
+    if(count($paths) == 0) {
+      $paths = read_paths_from_stdin();
+    }
 
-    /* if no paths */
-    /*   paths = read stdin and normalize */
+    $paths = absolute_paths(getcwd(), $paths);
+    var_dump($paths);
     /* print paths */
     /* if should copy */
     /*   copy paths */
