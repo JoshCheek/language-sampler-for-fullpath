@@ -30,18 +30,16 @@ function chomp(str) {
 
 function printPaths(stream, cwd, relativePaths) {
   const absolutePaths = relativePaths
-          .filter(function(arg) { return arg != "" })
-          .map(function(arg) { return [cwd, chomp(arg)].join("/") })
+          .filter(arg => arg != "")
+          .map(arg => [cwd, chomp(arg)].join("/"))
   if(absolutePaths.length == 1)
     stream.write(absolutePaths[0])
   else
-    absolutePaths.forEach(function(path) { stream.write(path+"\n") })
+    absolutePaths.forEach(path => stream.write(path+"\n"))
 }
 
 function removeFlags(array) {
-  return array.filter(function(string) {
-    return string[0] != "-"[0]
-  })
+  return array.filter(string => string[0] != "-"[0])
 }
 
 function hasFlag(strings, flag) {
@@ -56,26 +54,18 @@ function copyPaths(callback) {
 
 function readLines(instream, callback) {
   let stdinData = ""
-  process.stdin.on('data', function(data) {
-    stdinData += data
-  })
-  process.stdin.on('close', function() {
-    callback(stdinData.split("\n"))
-  })
+  process.stdin.on('data',  (data) => stdinData += data)
+  process.stdin.on('close', () => callback(stdinData.split("\n")))
 }
 
 if(doHelp) {
   stdout.write(helpScreen)
 } else if(relativePaths.length == 0) {
-  readLines(process.stdin, function(relativePaths) {
+  readLines(process.stdin, relativePaths => {
     printPaths(stdout, cwd, relativePaths)
-    doCopy && copyPaths(function(childStdin) {
-      printPaths(childStdin, cwd, relativePaths)
-    })
+    doCopy && copyPaths(childStdin => printPaths(childStdin, cwd, relativePaths))
   })
 } else {
   printPaths(stdout, cwd, relativePaths)
-  doCopy && copyPaths(function(childStdin) {
-    printPaths(childStdin, cwd, relativePaths)
-  })
+  doCopy && copyPaths(childStdin => printPaths(childStdin, cwd, relativePaths))
 }
