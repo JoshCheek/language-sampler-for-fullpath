@@ -12,16 +12,25 @@ usage: fullpath *[relative-paths] [-c]
   The -c flag will copy the results into your pasteboard
 <?php }
 
+
+  function paths_in($paths) {
+    return(array_filter($paths, function($str) {
+      return($str != "" && $str[0] != "-");
+    }));
+  }
+
   $print_help = in_array("-h", $argv, true) || in_array("--help", $argv, true);
 
   if ($print_help) {
     print_help();
+  } else {
+    $paths = paths_in(array_slice($argv, 1));
+    var_dump($paths);
+
+    /* if no paths */
+    /*   paths = read stdin and normalize */
+    /* print paths */
+    /* if should copy */
+    /*   copy paths */
   }
-  /* else */
-  /*   paths = normalize argv */
-  /*   if no paths */
-  /*     paths = read stdin and normalize */
-  /*   print paths */
-  /*   if should copy */
-  /*     copy paths */
 ?>
