@@ -4,4 +4,4 @@ set -o pipefail
 
 nasm -f macho fullpath.asm
 ld -o fullpath -e main fullpath.o
-./fullpath a b "c d" "" -c
+./fullpath a b "c d" "" -c || echo "exit status: $?"
