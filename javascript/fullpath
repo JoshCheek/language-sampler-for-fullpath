@@ -1,15 +1,17 @@
 #!/usr/bin/env node
 "use strict"
 
-const spawn          = require('child_process').spawn
-const helpScreen     = "usage: fullpath *[relative-paths] [-c]\n"+
-                       "\n"+
-                       "  Prints the fullpath of the paths\n"+
-                       "  If no paths are given as args, it will read them from stdin\n"+
-                       "\n"+
-                       "  If there is only one path, the trailing newline is omitted\n"+
-                       "\n"+
-                       "  The -c flag will copy the results into your pasteboard\n"
+const spawn      = require('child_process').spawn
+const helpScreen = `\
+usage: fullpath *[relative-paths] [-c]
+
+  Prints the fullpath of the paths
+  If no paths are given as args, it will read them from stdin
+
+  If there is only one path, the trailing newline is omitted
+
+  The -c flag will copy the results into your pasteboard
+`
 
 main(process.argv, process.stdin, process.stdout, process.cwd())
 
