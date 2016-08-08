@@ -14,20 +14,20 @@ usage: fullpath *[relative-paths] [-c]
 
 
   function paths_in($paths) {
-    return(array_filter($paths, function($str) {
-      return($str != "" && $str[0] != "-");
-    }));
+    return array_filter($paths, function($str) {
+      return $str != "" && $str[0] != "-";
+    });
   }
 
   function absolute_paths($cwd, $relative_paths) {
-    $make_absolute = function($path) use ($cwd) { return("$cwd/$path"); };
-    return(array_map($make_absolute, $relative_paths));
+    $make_absolute = function($path) use ($cwd) { return "$cwd/$path"; };
+    return array_map($make_absolute, $relative_paths);
   }
 
   function read_paths($stream) {
     $paths = array();
     while($f = fgets($stream)) array_push($paths, rtrim($f, "\n"));
-    return($paths);
+    return $paths;
   }
 
   function print_paths($stream, $paths) {
