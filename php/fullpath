@@ -30,6 +30,12 @@ usage: fullpath *[relative-paths] [-c]
     return($paths);
   }
 
+  function print_paths($stream, $paths) {
+    $delimiter = (count($paths) == 1 ? "" : "\n");
+    foreach ($paths as $index => $path)
+      fwrite($stream, "$path$delimiter");
+  }
+
   $print_help = in_array("-h", $argv, true) || in_array("--help", $argv, true);
 
   if ($print_help) {
@@ -38,9 +44,7 @@ usage: fullpath *[relative-paths] [-c]
     $paths = paths_in(array_slice($argv, 1));
     if(count($paths) == 0) $paths = read_paths(STDIN);
     $paths = absolute_paths(getcwd(), $paths);
-    $delimiter = "\n";
-    if (1 == count($paths)) $delimiter = "";
-    foreach ($paths as $index => $path) echo "$path$delimiter";
+    print_paths(STDOUT, $paths);
     /* if should copy */
     /*   copy paths */
   }
