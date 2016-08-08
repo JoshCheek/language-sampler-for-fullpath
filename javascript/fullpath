@@ -37,6 +37,12 @@ function hasFlag(strings, flag) {
   return -1 != strings.indexOf(flag);
 }
 
+function copy(printer) {
+  const pbcopy = spawn("pbcopy", [], {stdio: ["pipe", "ignore", "inherit"]});
+  printer(pbcopy.stdin);
+  pbcopy.stdin.end();
+}
+
 if(doHelp) {
   stdout.write("usage: fullpath *[relative-paths] [-c]\n");
   stdout.write("\n");
@@ -53,16 +59,16 @@ if(doHelp) {
     relativePaths = stdinData.split("\n");
     printPaths(stdout, cwd, relativePaths);
     if(doCopy) {
-      const pbcopy = spawn("pbcopy", [], {stdio: ["pipe", "ignore", "inherit"]});
-      printPaths(pbcopy.stdin, cwd, relativePaths);
-      pbcopy.stdin.end();
+      copy(function(childStdin) {
+        printPaths(childStdin, cwd, relativePaths);
+      });
     }
   });
 } else {
   printPaths(stdout, cwd, relativePaths);
   if(doCopy) {
-    const pbcopy = spawn("pbcopy", [], {stdio: ["pipe", "ignore", "inherit"]});
-    printPaths(pbcopy.stdin, cwd, relativePaths);
-    pbcopy.stdin.end();
+    copy(function(childStdin) {
+      printPaths(childStdin, cwd, relativePaths);
+    });
   }
 }
