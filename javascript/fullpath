@@ -1,10 +1,11 @@
 #!/usr/bin/env node
 "use strict";
 
+const spawn         = require('child_process').spawn;
 const args          = process.argv.slice(2);
 const cwd           = process.cwd();
 const stdout        = process.stdout;
-const relativePaths = removeFlags(args);
+let   relativePaths = removeFlags(args);
 const doHelp        = hasFlag(args, "-h") || hasFlag(args, "--help");
 const doCopy        = hasFlag(args, "-c") || hasFlag(args, "--copy");
 const newlineAscii  = 10;
@@ -48,7 +49,20 @@ if(doHelp) {
 } else if(relativePaths.length == 0) {
   let stdinData = "";
   process.stdin.on('data', function(data) { stdinData += data; });
-  process.stdin.on('close', function() { printPaths(stdout, cwd, stdinData.split("\n")) });
+  process.stdin.on('close', function() {
+    relativePaths = stdinData.split("\n");
+    printPaths(stdout, cwd, relativePaths);
+    if(doCopy) {
+      const pbcopy = spawn("pbcopy", [], {stdio: ["pipe", "ignore", "inherit"]});
+      printPaths(pbcopy.stdin, cwd, relativePaths);
+      pbcopy.stdin.end();
+    }
+  });
 } else {
   printPaths(stdout, cwd, relativePaths);
+  if(doCopy) {
+    const pbcopy = spawn("pbcopy", [], {stdio: ["pipe", "ignore", "inherit"]});
+    printPaths(pbcopy.stdin, cwd, relativePaths);
+    pbcopy.stdin.end();
+  }
 }
