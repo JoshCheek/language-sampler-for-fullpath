@@ -42,9 +42,15 @@ usage: fullpath *[relative-paths] [-c]
     proc_close($process);
   }
 
+  function has_flags($args /*, ...$flags */) {
+    $flags = array_slice(func_get_args(), 1); // ignore the first arg since we've got it by name
+    $found = array_intersect($args, $flags);
+    return 0 < count($found);
+  }
+
   $args        = array_slice($argv, 1); // $argv[0] is the filename
-  $print_help  = in_array("-h", $argv, true) || in_array("--help", $argv, true);
-  $copy_output = in_array("-c", $argv, true) || in_array("--copy", $argv, true);
+  $print_help  = has_flags($args, "-h", "--help");
+  $copy_output = has_flags($args, "-c", "--copy");
 
   if ($print_help) {
     print_help();
