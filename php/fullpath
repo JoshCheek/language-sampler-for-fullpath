@@ -10,9 +10,11 @@ usage: fullpath *[relative-paths] [-c]
   The -c flag will copy the results into your pasteboard
 <?php }
 
-  /* Print $argv; */
-  /* if should print help */
-    print_help()
+  $print_help = in_array("-h", $argv, true) || in_array("--help", $argv, true);
+
+  if ($print_help) {
+    print_help();
+  }
   /* else */
   /*   paths = normalize argv */
   /*   if no paths */
