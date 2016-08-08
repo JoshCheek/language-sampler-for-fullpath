@@ -55,7 +55,8 @@ access.the.bsd.kernel:
 %endmacro
 
 
-%macro sys.exit 0
+%macro sys.exit 1
+  push dword %1
   system SYS_exit
 %endmacro
 

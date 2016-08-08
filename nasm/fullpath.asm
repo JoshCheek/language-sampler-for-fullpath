@@ -8,9 +8,7 @@ section .text
 global main
 main:
   call printit
-
-  push dword 0
-  sys.exit
+  sys.exit 0
 
 printit:
   sys.write hbytes, hello, stdout
