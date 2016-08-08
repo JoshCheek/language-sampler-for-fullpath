@@ -1,5 +1,6 @@
 #!/usr/bin/env php --no-php-ini
 <?php
+  main(array_slice($argv, 1), STDIN, STDOUT, getcwd()); // $argv[0] is the filename
 
   function print_help() { ?>
 usage: fullpath *[relative-paths] [-c]
@@ -11,6 +12,23 @@ usage: fullpath *[relative-paths] [-c]
 
   The -c flag will copy the results into your pasteboard
 <?php }
+
+  function main($args, $stdin, $stdout, $cwd) {
+    if (has_flags($args, "-h", "--help")) {
+      print_help();
+      return;
+    }
+    $paths = select_paths($args);
+    if(empty($paths)) {
+      $paths = select_paths(read_lines($stdin));
+    }
+    $paths = absolute_paths($cwd, $paths);
+    $print_paths = function($stream) use ($paths) {
+      print_paths($stream, $paths);
+    };
+    $print_paths($stdout);
+    has_flags($args, "-c", "--copy") && pbcopy($print_paths);
+  }
 
   function select_paths($paths) {
     return array_filter($paths, function($str) {
@@ -43,27 +61,8 @@ usage: fullpath *[relative-paths] [-c]
   }
 
   function has_flags($args /*, ...$flags */) {
-    $flags = array_slice(func_get_args(), 1); // ignore the first arg since we've got it by name
+    $flags = array_slice(func_get_args(), 1); // first arg is `$args`
     $found = array_intersect($args, $flags);
-    return 0 < count($found);
-  }
-
-  $args        = array_slice($argv, 1); // $argv[0] is the filename
-  $print_help  = has_flags($args, "-h", "--help");
-  $copy_output = has_flags($args, "-c", "--copy");
-
-  if ($print_help) {
-    print_help();
-  } else {
-    $paths = select_paths($args);
-    if(count($paths) == 0)
-      $paths = select_paths(read_lines(STDIN));
-    $paths = absolute_paths(getcwd(), $paths);
-    $print_paths = function($stream) use ($paths) {
-      print_paths($stream, $paths);
-    };
-    $print_paths(STDOUT);
-    if($copy_output)
-      pbcopy($print_paths);
+    return !empty($found);
   }
 ?>
