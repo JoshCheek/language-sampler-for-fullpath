@@ -12,7 +12,6 @@ usage: fullpath *[relative-paths] [-c]
   The -c flag will copy the results into your pasteboard
 <?php }
 
-
   function paths_in($paths) {
     return array_filter($paths, function($str) {
       return $str != "" && $str[0] != "-";
@@ -24,7 +23,7 @@ usage: fullpath *[relative-paths] [-c]
     return array_map($make_absolute, $relative_paths);
   }
 
-  function read_paths($stream) {
+  function read_lines($stream) {
     $paths = array();
     while($f = fgets($stream)) array_push($paths, rtrim($f, "\n"));
     return $paths;
@@ -36,16 +35,35 @@ usage: fullpath *[relative-paths] [-c]
       fwrite($stream, "$path$delimiter");
   }
 
-  $print_help = in_array("-h", $argv, true) || in_array("--help", $argv, true);
+  function pbcopy($callback) {
+    $descriptorspec = array(
+      0 => array("pipe", "r")
+    );
+    $process = proc_open('pbcopy', $descriptorspec, $pipes);
+    if (is_resource($process)) {
+      $callback($pipes[0]);
+      /* fwrite($pipes[0], $callback); */
+      fclose($pipes[0]);
+      proc_close($process);
+    }
+  }
+
+  $print_help  = in_array("-h", $argv, true) || in_array("--help", $argv, true);
+  $copy_output = in_array("-c", $argv, true) || in_array("--copy", $argv, true);
 
   if ($print_help) {
     print_help();
   } else {
-    $paths = paths_in(array_slice($argv, 1));
-    if(count($paths) == 0) $paths = read_paths(STDIN);
+    $paths = array_slice($argv, 1); // $argv[0] is the filename
+    $paths = paths_in($paths);
+    if(count($paths) == 0)
+      $paths = paths_in(read_lines(STDIN));
     $paths = absolute_paths(getcwd(), $paths);
     print_paths(STDOUT, $paths);
-    /* if should copy */
-    /*   copy paths */
+    if($copy_output) {
+      pbcopy(function($stream) use ($paths) {
+        print_paths($stream, $paths);
+      });
+    }
   }
 ?>
