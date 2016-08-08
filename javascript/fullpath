@@ -37,9 +37,9 @@ function hasFlag(strings, flag) {
   return -1 != strings.indexOf(flag);
 }
 
-function copy(printer) {
+function copyPaths(cwd, relativePaths) {
   const pbcopy = spawn("pbcopy", [], {stdio: ["pipe", "ignore", "inherit"]});
-  printer(pbcopy.stdin);
+  printPaths(pbcopy.stdin, cwd, relativePaths);
   pbcopy.stdin.end();
 }
 
@@ -58,17 +58,9 @@ if(doHelp) {
   process.stdin.on('close', function() {
     relativePaths = stdinData.split("\n");
     printPaths(stdout, cwd, relativePaths);
-    if(doCopy) {
-      copy(function(childStdin) {
-        printPaths(childStdin, cwd, relativePaths);
-      });
-    }
+    doCopy && copyPaths(cwd, relativePaths);
   });
 } else {
   printPaths(stdout, cwd, relativePaths);
-  if(doCopy) {
-    copy(function(childStdin) {
-      printPaths(childStdin, cwd, relativePaths);
-    });
-  }
+  doCopy && copyPaths(cwd, relativePaths);
 }
