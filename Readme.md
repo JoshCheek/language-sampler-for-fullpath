@@ -11,6 +11,7 @@ Language Sampler For Fullpath
 [Java](#java),
 [JavaScript](#javascript),
 [Kotlin](#kotlin),
+[PHP](#php),
 [Python](#python),
 [Ruby](#ruby)
 </strong>
@@ -372,6 +373,25 @@ Repl
 ```sh
 $ node
 ```
+
+
+### [PHP](http://php.net)
+
+Docs: [http://php.net/manual/en/index.php](http://php.net/manual/en/index.php)
+
+Install: idk, I already had php 5.5.34 on my computer
+
+Run
+
+```sh
+$ php ./fullpath
+```
+
+Useful tips:
+
+* The whole thing is run inside an erb-like script, you can swtich into php like this: `<?php Print "Hello" ?>`
+* Arrays are really hash maps
+* `var_dump($argv)` prints out arrays
 
 
 <a href="http://www.wtfpl.net/"><img src="http://www.wtfpl.net/wp-content/uploads/2012/12/wtfpl.svg" height="20" alt="WTFPL" /></a> License
