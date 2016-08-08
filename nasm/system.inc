@@ -68,8 +68,9 @@ access.the.bsd.kernel:
 %endmacro
 
 %macro sys.write 3
-  push dword %1 ; number of bytes to write
-  push dword %2 ; location of the string
-  push dword %3 ; file descriptor
+  push dword %1    ; number of bytes to write
+  push dword %2    ; location of the string
+  push dword %3    ; file descriptor
   system SYS_write
+  add esp, byte 12 ; remove the args from the stack
 %endmacro
