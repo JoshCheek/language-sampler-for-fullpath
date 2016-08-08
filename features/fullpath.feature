@@ -66,6 +66,12 @@ Feature: fullpath
     Then stdout is exactly "{{pwd}}/a"
     And the clipboard now contains "{{pwd}}/a"
 
+    Given the stdin content "from-stdin"
+    And I previously copied "not-a"
+    When I run "fullpath -c"
+    Then stdout is exactly "{{pwd}}/from-stdin"
+    And the clipboard now contains "{{pwd}}/from-stdin"
+
     Given I previously copied "not-a-long"
     When I run "fullpath a-long --copy"
     Then stdout is exactly "{{pwd}}/a-long"
