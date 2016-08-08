@@ -39,8 +39,12 @@ usage: fullpath *[relative-paths] [-c]
     }
 
     $paths = absolute_paths(getcwd(), $paths);
-    var_dump($paths);
-    /* print paths */
+    $delimiter = "\n";
+    if (1 == count($paths))
+      $delimiter = "";
+    foreach ($paths as $index => $path) {
+      echo "$path$delimiter";
+    }
     /* if should copy */
     /*   copy paths */
   }
