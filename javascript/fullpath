@@ -43,6 +43,16 @@ function copyPaths(cwd, relativePaths) {
   pbcopy.stdin.end();
 }
 
+function readLines(instream, callback) {
+  let stdinData = "";
+  process.stdin.on('data', function(data) {
+    stdinData += data;
+  });
+  process.stdin.on('close', function() {
+    callback(stdinData.split("\n"));
+  });
+}
+
 if(doHelp) {
   stdout.write("usage: fullpath *[relative-paths] [-c]\n");
   stdout.write("\n");
@@ -53,10 +63,7 @@ if(doHelp) {
   stdout.write("\n");
   stdout.write("  The -c flag will copy the results into your pasteboard\n");
 } else if(relativePaths.length == 0) {
-  let stdinData = "";
-  process.stdin.on('data', function(data) { stdinData += data; });
-  process.stdin.on('close', function() {
-    relativePaths = stdinData.split("\n");
+  readLines(process.stdin, function(relativePaths) {
     printPaths(stdout, cwd, relativePaths);
     doCopy && copyPaths(cwd, relativePaths);
   });
