@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+set -eu
+set -o pipefail
+
+# Make the tempfile
+TMPFILE=`mktemp /tmp/$(basename "$0").XXXXXX` || exit 1
+mv "$TMPFILE" "${TMPFILE}.c"
+TMPFILE="${TMPFILE}.c"
+
+# Print a C program into it
+for arg  in "$@"; do
+  echo "#include <$arg>" >> "$TMPFILE"
+done
+echo 'int main() { }' >> "$TMPFILE"
+
+# Find the header locations or print the error
+if gcc -H -fsyntax-only "$TMPFILE" 2>/dev/null; then
+  # filter to just the ones that begin with a single dot
+  # (implies toplevel, the ones we explicilty included)
+  # and remove the dot/space for printing
+  gcc -H -fsyntax-only "$TMPFILE" 2>&1 | sed -n 's/^\. //p'
+else
+  gcc -fsyntax-only "$TMPFILE" || true
+fi
+
+# Clean up after ourselves
+rm -f "$TMPFILE"
