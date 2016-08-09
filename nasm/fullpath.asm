@@ -10,20 +10,14 @@ global main
 main:
   pop ecx ; argc
   pop eax ; filename
-  pop eax
-  add ecx, -1
+  dec ecx ; don't count the filename
   .pop_arg
     pop eax
-    sys.write hbytes, hello, stdout
-    ; call printit
-    add ecx, -1
-  jecxz .done
-  jmp .pop_arg
-  .done
+    call printit
+    dec ecx
+    jnz .pop_arg
   sys.exit ecx
 
-; prints a null-terminated string pointed to by eax
+; pops and prints a null-terminated string from the stack
 printit:
-  mov ebx, [eax]
-  ; sys.write 1
-  ret
+  sys.write hbytes, hello, stdout
