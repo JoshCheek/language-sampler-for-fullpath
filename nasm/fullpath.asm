@@ -28,7 +28,7 @@ main:
       sys.write truestr_size, truestr, stdout
     .end_is_flag
 
-    call printit
+    call print_arg
     pop eax
     dec ecx
     jnz .pop_arg
@@ -48,7 +48,7 @@ is_flag:
 
 
 ; prints a null-terminated string from the stack
-printit:
+print_arg:
   mov eax, [esp+4]
   push ecx
   mov ecx, 0
