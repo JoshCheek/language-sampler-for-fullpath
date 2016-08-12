@@ -20,11 +20,16 @@ main = do
   programName <- getProgName
   args        <- getArgs
   cwd         <- getCurrentDirectory
-  -- mapM putStr (splitOn "C" "abCdeCfg")
   let argPaths = selectPaths args in
     if doPrintHelp args
       then putStr $ helpScreen programName
-      else putStr $ formatPaths cwd argPaths
+      else
+        if null argPaths
+          then do
+            rawStdinLines <- getContents
+            putStr $ formatPaths cwd (selectPaths (splitOn "\n" rawStdinLines))
+          else
+            putStr $ formatPaths cwd argPaths
 
 exactlyOne :: [a] -> Bool
 exactlyOne []        = False
@@ -55,11 +60,3 @@ formatPaths dir relativePaths =
   where
     absolutePaths = map pathFromDir relativePaths
     pathFromDir path = dir ++ "/" ++ path
-
--- stdinPaths    = do
---   rawStdinLines <- getContents
---   [rawStdinLines]
--- relativePaths =
---   if null argPaths
---     then stdinPaths
---     else argPaths
