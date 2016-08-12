@@ -1,14 +1,13 @@
 import System.Environment
 import Data.List
 
+helpScreen programName = "help screen for " ++ programName
+argstream args = "arg stream"
+doPrintHelp args = True
 
 main = do
   args <- getArgs
-  progName <- getProgName
-  putStrLn "The arguments are:"
-  mapM putStrLn args
-  putStrLn "The program name is:"
-  putStrLn progName
-  putStrLn myStr
-  where
-    myStr = "Hello, World!"
+  programName <- getProgName
+  if doPrintHelp args
+    then putStrLn $ helpScreen programName
+    else putStrLn $ argstream args
