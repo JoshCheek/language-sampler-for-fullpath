@@ -1,4 +1,5 @@
 import System.Environment
+import System.Directory
 import Data.List
 
 helpScreen programName =
@@ -16,16 +17,21 @@ isPath ""         = False
 isPath ('-':rest) = False
 isPath nonflag    = True
 selectPaths args  = Data.List.filter isPath args
-formatPaths paths = join paths "\n"
+
+formatPaths dir relativePaths =
+  let absolutePaths = map (\path -> dir ++ "/" ++ path) relativePaths in
+    join absolutePaths "\n"
+
 join list delim =
   foldl append "" list
   where
     append joined toJoin = joined ++ toJoin ++ delim
 
 main = do
-  args <- getArgs
   programName <- getProgName
+  args        <- getArgs
+  cwd         <- getCurrentDirectory
   let paths = selectPaths args in
     if doPrintHelp args
       then putStr $ helpScreen programName
-      else putStr $ formatPaths paths
+      else putStr $ formatPaths cwd paths
