@@ -156,6 +156,7 @@ task(:php) { cucumber 'php' }
 
 # =====  Haskell  =====
 task default: :haskell
+task hs: :haskell
 
 desc 'Build / test fullpath in Haskell'
 task(haskell: 'haskell/fullpath') { cucumber 'haskell' }
