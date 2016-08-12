@@ -347,6 +347,21 @@ jar file, but it's kind of complicated. I don't remember how I did it,
 just that I tried a lot of shit until it workd.
 
 
+### [Assembly](idk)
+
+Here are some links I've been using to try to figure it out.
+
+* http://www.freebsd.org/doc/en/books/developers-handbook/book.html#x86
+* http://www.nasm.us/doc/
+* http://www.nasm.us/doc/nasmdoc3.html#section-3.5
+* http://www.nasm.us/doc/nasmdocb.html
+* http://www.eecg.toronto.edu/~amza/www.mindsec.com/files/x86regs.html
+* https://www.cs.uaf.edu/2005/fall/cs301/support/x86/nasm.html
+* http://unixwiz.net/techtips/x86-jumps.html
+* https://en.wikipedia.org/wiki/X86_instruction_listings
+
+
+
 <a href="http://www.wtfpl.net/"><img src="http://www.wtfpl.net/wp-content/uploads/2012/12/wtfpl.svg" height="20" alt="WTFPL" /></a> License
 -------------------------------------------------------------------------------------------------------------------------------------------
 
