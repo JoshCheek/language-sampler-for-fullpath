@@ -8,6 +8,7 @@ Language Sampler For Fullpath
 [Common Lisp](#common-lisp),
 [Elixir](#elixir),
 [Go](#go),
+[Haskell](#haskell),
 [Java](#java),
 [JavaScript](#javascript),
 [Kotlin](#kotlin),
@@ -414,6 +415,43 @@ Useful tips:
 * The whole thing is run inside an erb-like script, you can swtich into php like this: `<?php Print "Hello" ?>`
 * Arrays are really hash maps
 * `var_dump($argv)` prints out arrays
+
+
+### [Haskell](https://www.haskell.org/)
+
+On the whole I enjoyed it. Would be nice if the prelude had a bit more in it,
+I switched to using Cabal because I didn't have a way to split a string.
+
+Build in raw haskell:
+
+```
+$ ghc -o fullpath fullpath.hs
+```
+
+Interpret raw haskell:
+
+```
+$ runhaskell fullpath.hs
+```
+
+REPL
+
+```
+$ ghci
+```
+
+Cabal is the package manager, you can start a new cabal project with
+(paraphrasing [this](https://wiki.haskell.org/How_to_write_a_Haskell_program#Structure_of_a_simple_project)):
+
+```
+$ cabal update
+$ cabal init
+$ cabal sanxbox init
+$ cabal install -j    # this one builds it, but there's got to be a better way than this, it just took forever every single time >.<
+```
+
+Then add dependencies to the file `MyProj.cabal` in the `build-depends` key.
+
 
 
 <a href="http://www.wtfpl.net/"><img src="http://www.wtfpl.net/wp-content/uploads/2012/12/wtfpl.svg" height="20" alt="WTFPL" /></a> License
