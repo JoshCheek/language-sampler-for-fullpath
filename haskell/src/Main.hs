@@ -61,6 +61,7 @@ output toOutput doCopy = do
     return () -- note that this doesn't return, it's just a way to make the else branch have the same type
   putStr toOutput
 
+selectPaths :: [String] -> [String]
 selectPaths args =
   Data.List.filter isPath args
   where
@@ -68,6 +69,7 @@ selectPaths args =
     isPath ('-':rest) = False
     isPath nonflag    = True
 
+formatPaths :: String -> [String] -> String
 formatPaths dir relativePaths =
   if exactlyOne relativePaths
     then pathFromDir $ head relativePaths
