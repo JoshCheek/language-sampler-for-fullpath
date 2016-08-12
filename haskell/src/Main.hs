@@ -17,6 +17,9 @@ helpScreen programName =
   "\n" ++
   "  The -c flag will copy the results into your pasteboard\n"
 
+checkPrintHelp  args = Data.List.any (\arg -> arg == "-h" || arg == "--help") args
+checkCopyOutput args = Data.List.any (\arg -> arg == "-c" || arg == "--copy") args
+
 main :: IO ()
 main = do
   programName <- getProgName
@@ -33,6 +36,17 @@ main = do
                 formatAndOutput $ selectPaths (splitOn "\n" rawStdinLines)
         else do formatAndOutput argPaths
 
+exactlyOne :: [a] -> Bool
+exactlyOne []        = False
+exactlyOne (head:[]) = True
+exactlyOne list      = False
+
+join :: [String] -> String -> String
+join list delim =
+  foldl append "" list
+  where
+    append joined toJoin = joined ++ toJoin ++ delim
+
 copyOutput :: String -> IO ()
 copyOutput str = do
   (Just hin, _, _, _) <- createProcess (proc "pbcopy" []) { std_in = CreatePipe }
@@ -46,21 +60,6 @@ output toOutput doCopy = do
   else
     return () -- note that this doesn't return, it's just a way to make the else branch have the same type
   putStr toOutput
-
-
-exactlyOne :: [a] -> Bool
-exactlyOne []        = False
-exactlyOne (head:[]) = True
-exactlyOne list      = False
-
-join :: [String] -> String -> String
-join list delim =
-  foldl append "" list
-  where
-    append joined toJoin = joined ++ toJoin ++ delim
-
-checkPrintHelp  args = Data.List.any (\arg -> arg == "-h" || arg == "--help") args
-checkCopyOutput args = Data.List.any (\arg -> arg == "-c" || arg == "--copy") args
 
 selectPaths args =
   Data.List.filter isPath args
