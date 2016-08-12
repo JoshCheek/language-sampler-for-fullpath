@@ -1,11 +1,18 @@
 %include 'system.inc'
 
 section .data
-  newline       db  0Ah
-  newline_size  equ $-newline
+  newline        db  0Ah
+  newline_size   equ $-newline
+  print_help     dd  0
+  copy_output    dd  0
 
-  truestr       db  'true', 0Ah
-  truestr_size  equ $-truestr
+  dash_h         db  '-h',     0
+  dash_dash_help db  '--help', 0
+  dash_c         db  '-c',     0
+  dash_dash_copy db  '--copy', 0
+
+  truestr        db  'true', 0Ah
+  truestr_size   equ $-truestr
 
   falsestr       db  'false', 0Ah
   falsestr_size  equ $-falsestr
@@ -33,6 +40,15 @@ main:
     dec ecx
     jnz .pop_arg
   sys.exit ecx
+
+check_flag:
+  push ecx
+  mov ecx, 0
+  mov eax, [esp+8]
+  mov ebx, [esp+16]
+  pop ecx
+  ret
+
 
 ; sets eax to 1 if the string on the stack is a flag
 is_flag:
