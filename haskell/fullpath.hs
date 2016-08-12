@@ -12,6 +12,18 @@ helpScreen programName =
   "\n" ++
   "  The -c flag will copy the results into your pasteboard\n"
 
+exactlyOne :: [a] -> Bool
+exactlyOne []        = False
+exactlyOne (head:[]) = True
+exactlyOne list      = False
+
+join :: [String] -> String -> String
+join list delim =
+  foldl append "" list
+  where
+    append joined toJoin = joined ++ toJoin ++ delim
+
+doPrintHelp :: [String] -> Bool
 doPrintHelp args =
   Data.List.any (\arg -> arg == "-h" || arg == "--help") args
 
@@ -22,10 +34,6 @@ selectPaths args =
     isPath ('-':rest) = False
     isPath nonflag    = True
 
-exactlyOne []        = False
-exactlyOne (head:[]) = True
-exactlyOne list      = False
-
 formatPaths dir relativePaths =
   if exactlyOne relativePaths
     then pathFromDir $ head relativePaths
@@ -33,11 +41,6 @@ formatPaths dir relativePaths =
   where
     absolutePaths = map pathFromDir relativePaths
     pathFromDir path = dir ++ "/" ++ path
-
-join list delim =
-  foldl append "" list
-  where
-    append joined toJoin = joined ++ toJoin ++ delim
 
 main = do
   programName <- getProgName
