@@ -2,8 +2,10 @@ module Main where
 
 import System.Environment
 import System.Directory
+import System.Process
 import Data.List
 import Data.List.Split
+import GHC.IO.Handle
 
 helpScreen programName =
   "usage: " ++ programName ++ " *[relative-paths] [-c]\n" ++
@@ -30,6 +32,9 @@ main = do
             let stdinPaths = selectPaths (splitOn "\n" rawStdinLines) in
               if doCopyOutput args
               then do
+                (Just hin, _, _, _) <- createProcess (proc "pbcopy" []){ std_in = CreatePipe }
+                hPutStr hin $ formatPaths cwd stdinPaths
+                hClose hin
                 copyOutput $ formatPaths cwd stdinPaths
                 putStr $ formatPaths cwd stdinPaths
               else
