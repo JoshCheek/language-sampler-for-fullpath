@@ -22,8 +22,14 @@ selectPaths args =
     isPath ('-':rest) = False
     isPath nonflag    = True
 
+exactlyOne []        = False
+exactlyOne (head:[]) = True
+exactlyOne list      = False
+
 formatPaths dir relativePaths =
-  join absolutePaths "\n"
+  if exactlyOne relativePaths
+    then pathFromDir $ head relativePaths
+    else join absolutePaths "\n"
   where
     absolutePaths = map pathFromDir relativePaths
     pathFromDir path = dir ++ "/" ++ path
