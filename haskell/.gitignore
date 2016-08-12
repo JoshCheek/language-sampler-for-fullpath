@@ -1,3 +1,5 @@
 *.o
 *.hi
 fullpath
+.cabal-sandbox
+dist
