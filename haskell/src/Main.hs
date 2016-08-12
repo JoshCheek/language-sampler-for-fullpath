@@ -22,34 +22,30 @@ main = do
   programName <- getProgName
   args        <- getArgs
   cwd         <- getCurrentDirectory
-  let doPrintHelp  = checkPrintHelp args
-      doCopyOutput = checkCopyOutput args
-      argPaths     = selectPaths args
-    in
-      if doPrintHelp
-        then putStr $ helpScreen programName
-        else
-          if null argPaths
-            then do
-              rawStdinLines <- getContents
-              output (formatPaths cwd (selectPaths (splitOn "\n" rawStdinLines))) doCopyOutput
-            else do
-              output (formatPaths cwd argPaths) doCopyOutput
+  let doPrintHelp           = checkPrintHelp  args
+      doCopyOutput          = checkCopyOutput args
+      argPaths              = selectPaths     args
+      formatAndOutput paths = do output (formatPaths cwd paths) doCopyOutput
+    in if doPrintHelp
+      then putStr $ helpScreen programName
+      else if null argPaths
+        then do rawStdinLines <- getContents
+                formatAndOutput $ selectPaths (splitOn "\n" rawStdinLines)
+        else do formatAndOutput argPaths
 
 copyOutput :: String -> IO ()
 copyOutput str = do
-  (Just hin, _, _, _) <- createProcess (proc "pbcopy" []){ std_in = CreatePipe }
+  (Just hin, _, _, _) <- createProcess (proc "pbcopy" []) { std_in = CreatePipe }
   hPutStr hin str
   hClose hin
 
 output :: String -> Bool -> IO ()
-output toPrint doCopy = do
-  if doCopy
-  then do
-    copyOutput toPrint
+output toOutput doCopy = do
+  if doCopy then do
+    copyOutput toOutput
   else
-    return ()
-  putStr toPrint
+    return () -- note that this doesn't return, it's just a way to make the else branch have the same type
+  putStr toOutput
 
 
 exactlyOne :: [a] -> Bool
