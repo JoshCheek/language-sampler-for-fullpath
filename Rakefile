@@ -152,3 +152,14 @@ task default: :php
 
 desc 'Test fullpath in PHP'
 task(:php) { cucumber 'php' }
+
+
+# =====  Haskell  =====
+task default: :haskell
+
+desc 'Build / test fullpath in Haskell'
+task(haskell: 'haskell/fullpath') { cucumber 'haskell' }
+file 'haskell/fullpath' => 'haskell/fullpath.hs' do
+  sh 'ghc', '-o', 'haskell/fullpath', 'haskell/fullpath.hs'
+end
+
