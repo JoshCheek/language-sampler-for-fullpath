@@ -3,6 +3,7 @@ module Main where
 import System.Environment
 import System.Directory
 import Data.List
+import Data.List.Split
 
 helpScreen programName =
   "usage: " ++ programName ++ " *[relative-paths] [-c]\n" ++
@@ -19,6 +20,7 @@ main = do
   programName <- getProgName
   args        <- getArgs
   cwd         <- getCurrentDirectory
+  -- mapM putStr (splitOn "C" "abCdeCfg")
   let argPaths = selectPaths args in
     if doPrintHelp args
       then putStr $ helpScreen programName
