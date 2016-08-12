@@ -28,9 +28,23 @@ main = do
           then do
             rawStdinLines <- getContents
             let stdinPaths = selectPaths (splitOn "\n" rawStdinLines) in
-              putStr $ formatPaths cwd stdinPaths
+              if doCopyOutput args
+              then do
+                copyOutput $ formatPaths cwd stdinPaths
+                putStr $ formatPaths cwd stdinPaths
+              else
+                putStr $ formatPaths cwd stdinPaths
           else
-            putStr $ formatPaths cwd argPaths
+            if doCopyOutput args
+            then
+              -- copyOutput $ formatPaths cwd argPaths
+              putStr $ formatPaths cwd argPaths
+            else
+              putStr $ formatPaths cwd argPaths
+
+copyOutput :: String -> IO String
+copyOutput str = do
+  return str
 
 exactlyOne :: [a] -> Bool
 exactlyOne []        = False
@@ -43,9 +57,8 @@ join list delim =
   where
     append joined toJoin = joined ++ toJoin ++ delim
 
-doPrintHelp :: [String] -> Bool
-doPrintHelp args =
-  Data.List.any (\arg -> arg == "-h" || arg == "--help") args
+doPrintHelp  args = Data.List.any (\arg -> arg == "-h" || arg == "--help") args
+doCopyOutput args = Data.List.any (\arg -> arg == "-c" || arg == "--copy") args
 
 selectPaths args =
   Data.List.filter isPath args
