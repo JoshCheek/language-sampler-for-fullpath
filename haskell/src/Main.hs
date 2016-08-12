@@ -32,24 +32,23 @@ main = do
             let stdinPaths = selectPaths (splitOn "\n" rawStdinLines) in
               if doCopyOutput args
               then do
-                (Just hin, _, _, _) <- createProcess (proc "pbcopy" []){ std_in = CreatePipe }
-                hPutStr hin $ formatPaths cwd stdinPaths
-                hClose hin
                 copyOutput $ formatPaths cwd stdinPaths
                 putStr $ formatPaths cwd stdinPaths
               else
                 putStr $ formatPaths cwd stdinPaths
           else
             if doCopyOutput args
-            then
-              -- copyOutput $ formatPaths cwd argPaths
+            then do
+              copyOutput $ formatPaths cwd argPaths
               putStr $ formatPaths cwd argPaths
             else
               putStr $ formatPaths cwd argPaths
 
-copyOutput :: String -> IO String
+copyOutput :: String -> IO ()
 copyOutput str = do
-  return str
+  (Just hin, _, _, _) <- createProcess (proc "pbcopy" []){ std_in = CreatePipe }
+  hPutStr hin str
+  hClose hin
 
 exactlyOne :: [a] -> Bool
 exactlyOne []        = False
