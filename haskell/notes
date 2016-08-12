@@ -1,0 +1,12 @@
+https://wiki.haskell.org/How_to_write_a_Haskell_program#Structure_of_a_simple_project
+
+Start a new cabal project
+$ cabal update
+$ cabal init
+$ cabal sanxbox init
+$ cabal install -j
+
+
+
+Install cabal dependency
+$ cabal install foo

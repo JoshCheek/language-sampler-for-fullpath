@@ -27,7 +27,8 @@ main = do
         if null argPaths
           then do
             rawStdinLines <- getContents
-            putStr $ formatPaths cwd (selectPaths (splitOn "\n" rawStdinLines))
+            let stdinPaths = selectPaths (splitOn "\n" rawStdinLines) in
+              putStr $ formatPaths cwd stdinPaths
           else
             putStr $ formatPaths cwd argPaths
 
