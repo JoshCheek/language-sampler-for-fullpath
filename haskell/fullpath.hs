@@ -11,12 +11,14 @@ helpScreen programName =
   "\n" ++
   "  The -c flag will copy the results into your pasteboard\n"
 
-argstream args = "arg stream"
 doPrintHelp args = Data.List.any (\arg -> arg == "-h" || arg == "--help") args
+removeFlags args = Data.List.filter (\arg -> True) args
+formatPaths paths = foldl (\formatted toFormat -> formatted ++ toFormat ++ "\n") "" paths
 
 main = do
   args <- getArgs
   programName <- getProgName
-  if doPrintHelp args
-    then putStr $ helpScreen programName
-    else putStr $ argstream args
+  let paths = removeFlags args in
+    if doPrintHelp args
+      then putStr $ helpScreen programName
+      else putStr $ formatPaths paths
