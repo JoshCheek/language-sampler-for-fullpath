@@ -12,15 +12,21 @@ helpScreen programName =
   "\n" ++
   "  The -c flag will copy the results into your pasteboard\n"
 
-doPrintHelp args  = Data.List.any (\arg -> arg == "-h" || arg == "--help") args
-isPath ""         = False
-isPath ('-':rest) = False
-isPath nonflag    = True
-selectPaths args  = Data.List.filter isPath args
+doPrintHelp args =
+  Data.List.any (\arg -> arg == "-h" || arg == "--help") args
+
+selectPaths args =
+  Data.List.filter isPath args
+  where
+    isPath ""         = False
+    isPath ('-':rest) = False
+    isPath nonflag    = True
 
 formatPaths dir relativePaths =
-  let absolutePaths = map (\path -> dir ++ "/" ++ path) relativePaths in
-    join absolutePaths "\n"
+  join absolutePaths "\n"
+  where
+    absolutePaths = map pathFromDir relativePaths
+    pathFromDir path = dir ++ "/" ++ path
 
 join list delim =
   foldl append "" list
