@@ -22,21 +22,19 @@ main = do
   programName <- getProgName
   args        <- getArgs
   cwd         <- getCurrentDirectory
-  let argPaths = selectPaths args in
-    if doPrintHelp args
-      then putStr $ helpScreen programName
-      else
-        if null argPaths
-          then do
-            rawStdinLines <- getContents
-            let
-              stdinPaths = selectPaths (splitOn "\n" rawStdinLines)
-              toPrint = formatPaths cwd stdinPaths
-              in
-                output toPrint (doCopyOutput args)
-          else
-            let toPrint = formatPaths cwd argPaths in
-              output toPrint (doCopyOutput args)
+  let doPrintHelp  = checkPrintHelp args
+      doCopyOutput = checkCopyOutput args
+      argPaths     = selectPaths args
+    in
+      if doPrintHelp
+        then putStr $ helpScreen programName
+        else
+          if null argPaths
+            then do
+              rawStdinLines <- getContents
+              output (formatPaths cwd (selectPaths (splitOn "\n" rawStdinLines))) doCopyOutput
+            else do
+              output (formatPaths cwd argPaths) doCopyOutput
 
 copyOutput :: String -> IO ()
 copyOutput str = do
@@ -49,9 +47,9 @@ output toPrint doCopy = do
   if doCopy
   then do
     copyOutput toPrint
-    putStr toPrint
   else
-    putStr toPrint
+    return ()
+  putStr toPrint
 
 
 exactlyOne :: [a] -> Bool
@@ -65,8 +63,8 @@ join list delim =
   where
     append joined toJoin = joined ++ toJoin ++ delim
 
-doPrintHelp  args = Data.List.any (\arg -> arg == "-h" || arg == "--help") args
-doCopyOutput args = Data.List.any (\arg -> arg == "-c" || arg == "--copy") args
+checkPrintHelp  args = Data.List.any (\arg -> arg == "-h" || arg == "--help") args
+checkCopyOutput args = Data.List.any (\arg -> arg == "-c" || arg == "--copy") args
 
 selectPaths args =
   Data.List.filter isPath args
