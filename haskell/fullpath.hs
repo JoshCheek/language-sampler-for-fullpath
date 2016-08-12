@@ -12,7 +12,7 @@ helpScreen programName =
   "  The -c flag will copy the results into your pasteboard\n"
 
 argstream args = "arg stream"
-doPrintHelp args = True
+doPrintHelp args = Data.List.any (\arg -> arg == "-h" || arg == "--help") args
 
 main = do
   args <- getArgs
