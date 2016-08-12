@@ -46,7 +46,15 @@ main = do
   programName <- getProgName
   args        <- getArgs
   cwd         <- getCurrentDirectory
-  let paths = selectPaths args in
+  let argPaths = selectPaths args in
     if doPrintHelp args
       then putStr $ helpScreen programName
-      else putStr $ formatPaths cwd paths
+      else putStr $ formatPaths cwd argPaths
+
+-- stdinPaths    = do
+--   rawStdinLines <- getContents
+--   [rawStdinLines]
+-- relativePaths =
+--   if null argPaths
+--     then stdinPaths
+--     else argPaths
