@@ -3,5 +3,3 @@ set -eu
 set -o pipefail
 ghc -o fullpath fullpath.hs
 ./fullpath a 'b c' '' -c d
-
-
