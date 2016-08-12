@@ -29,20 +29,24 @@ main = do
         if null argPaths
           then do
             rawStdinLines <- getContents
-            let stdinPaths = selectPaths (splitOn "\n" rawStdinLines) in
+            let
+              stdinPaths = selectPaths (splitOn "\n" rawStdinLines)
+              toPrint = formatPaths cwd stdinPaths
+              in
+                if doCopyOutput args
+                then do
+                  copyOutput toPrint
+                  putStr toPrint
+                else
+                  putStr toPrint
+          else
+            let toPrint = formatPaths cwd argPaths in
               if doCopyOutput args
               then do
-                copyOutput $ formatPaths cwd stdinPaths
-                putStr $ formatPaths cwd stdinPaths
+                copyOutput toPrint
+                putStr toPrint
               else
-                putStr $ formatPaths cwd stdinPaths
-          else
-            if doCopyOutput args
-            then do
-              copyOutput $ formatPaths cwd argPaths
-              putStr $ formatPaths cwd argPaths
-            else
-              putStr $ formatPaths cwd argPaths
+                putStr toPrint
 
 copyOutput :: String -> IO ()
 copyOutput str = do
