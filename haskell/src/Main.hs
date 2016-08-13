@@ -19,20 +19,19 @@ helpScreen programName =
     , "  The -c flag will copy the results into your pasteboard"
     ]
 
-data Options = Options { printHelp :: Bool, shouldCopyOutput :: Bool, argvPaths :: [String] } deriving (Show)
+data Options = Options { printHelp :: Bool, copyOutput :: Bool, argvPaths :: [String] } deriving (Show)
 
 parseOptions :: [String] -> Options
 parseOptions argv =
   foldr handleArg defaults argv
   where
-    defaults = Options { printHelp = False, shouldCopyOutput = False, argvPaths = [] }
-    -- seems I have to duplicate bodies for now,
-    -- though there is a proposal for allowing multiple patterns to be matched https://wiki.haskell.org/MultiCase
-    handleArg "-h"     options = options { printHelp        = True }
-    handleArg "--help" options = options { printHelp        = True }
-    handleArg "-c"     options = options { shouldCopyOutput = True }
-    handleArg "--copy" options = options { shouldCopyOutput = True }
-    handleArg path     options = options { argvPaths        = path : argvPaths options }
+    isHelp arg = "-h" == arg || "--help" == arg
+    isCopy arg = "-c" == arg || "--copy" == arg
+    defaults = Options { printHelp = False, copyOutput = False, argvPaths = [] }
+    handleArg arg options
+      | isHelp arg = options { printHelp  = True }
+      | isCopy arg = options { copyOutput = True }
+      | otherwise  = options { argvPaths  = arg : (argvPaths options) }
 
 main :: IO ()
 main = do
@@ -41,7 +40,7 @@ main = do
   cwd         <- getCurrentDirectory
   let options               = parseOptions args
       argPaths              = selectPaths args
-      formatAndOutput paths = do output (formatPaths cwd paths) (shouldCopyOutput options)
+      formatAndOutput paths = do output (formatPaths cwd paths) (copyOutput options)
     in if printHelp options
       then putStr (helpScreen programName)
       else if null (argvPaths options)
@@ -54,16 +53,16 @@ exactlyOne []        = False
 exactlyOne (head:[]) = True
 exactlyOne list      = False
 
-copyOutput :: String -> IO ()
-copyOutput str = do
+doCopyOutput :: String -> IO ()
+doCopyOutput str = do
   (Just hin, _, _, _) <- createProcess (proc "pbcopy" []) { std_in = CreatePipe }
   hPutStr hin str
   hClose hin
 
 output :: String -> Bool -> IO ()
-output toOutput doCopy = do
-  if doCopy then do
-    copyOutput toOutput
+output toOutput copyOutput = do
+  if copyOutput then do
+    doCopyOutput toOutput
   else
     return () -- note that this doesn't return, it's just a way to make the else branch have the same type
   putStr toOutput
