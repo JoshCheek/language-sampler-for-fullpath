@@ -360,6 +360,9 @@ Here are some links I've been using to try to figure it out.
 * http://unixwiz.net/techtips/x86-jumps.html
 * https://en.wikipedia.org/wiki/X86_instruction_listings
 
+Here, I demonstrate how to call a C function
+
+* https://gist.github.com/JoshCheek/b978b95c5990cde910815ccf172be8c4
 
 
 <a href="http://www.wtfpl.net/"><img src="http://www.wtfpl.net/wp-content/uploads/2012/12/wtfpl.svg" height="20" alt="WTFPL" /></a> License
