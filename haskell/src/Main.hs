@@ -1,11 +1,11 @@
 module Main where
 
-import System.Environment
-import System.Directory
-import System.Process
-import Data.List
-import Data.List.Split
-import GHC.IO.Handle
+import System.Environment (getArgs, getProgName)
+import System.Directory (getCurrentDirectory)
+import System.Process (std_in, proc, createProcess, StdStream(CreatePipe))
+import GHC.IO.Handle (hPutStr, hClose)
+import Data.List (any, filter)
+import Data.List.Split (splitOn)
 
 helpScreen programName =
   "usage: " ++ programName ++ " *[relative-paths] [-c]\n" ++
