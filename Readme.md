@@ -171,7 +171,7 @@ $ sbcl --noinform --load common_lisp/fullpath.lisp --eval '(main)' --eval '(quit
 A fellow at a bar was talking about this language,
 so [@mlarraz](https://github.com/mlarraz) and I sat down to try
 our hand at it. We got a reasonable bit figured out that night,
-and then I spent another couple of hours finishing / polishing today.
+and then I spent another couple of hours finishing / polishing the next day.
 
 I don't have any real insights into it as a language,
 other than I like the `it` thing within the blocks,
