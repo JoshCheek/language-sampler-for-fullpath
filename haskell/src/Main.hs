@@ -19,6 +19,20 @@ helpScreen programName =
     , "  The -c flag will copy the results into your pasteboard"
     ]
 
+data Options = Options { printHelp :: Bool, shouldCopyOutput :: Bool, argvPaths :: [String] } deriving (Show)
+
+parseOptions :: [String] -> Options
+parseOptions argv =
+  foldr handleArg initialOptions argv
+  where
+    isHelp arg = "-h" == arg || "--help" == arg
+    isCopy arg = "-c" == arg || "--copy" == arg
+    initialOptions = Options { printHelp = False, shouldCopyOutput = False, argvPaths = [] }
+    handleArg arg options
+      | isHelp arg = options { printHelp  = True }
+      | isCopy arg = options { shouldCopyOutput = True }
+      | otherwise  = options { argvPaths  = arg : (argvPaths options) }
+
 checkPrintHelp  args = Data.List.any (\arg -> arg == "-h" || arg == "--help") args
 checkCopyOutput args = Data.List.any (\arg -> arg == "-c" || arg == "--copy") args
 
@@ -27,13 +41,12 @@ main = do
   programName <- getProgName
   args        <- getArgs
   cwd         <- getCurrentDirectory
-  let doPrintHelp           = checkPrintHelp  args
-      doCopyOutput          = checkCopyOutput args
-      argPaths              = selectPaths     args
-      formatAndOutput paths = do output (formatPaths cwd paths) doCopyOutput
-    in if doPrintHelp
-      then putStr $ helpScreen programName
-      else if null argPaths
+  let options               = parseOptions args
+      argPaths              = selectPaths args
+      formatAndOutput paths = do output (formatPaths cwd paths) (shouldCopyOutput options)
+    in if printHelp options
+      then putStr (helpScreen programName)
+      else if null (argvPaths options)
         then do rawStdinLines <- getContents
                 formatAndOutput $ selectPaths (splitOn "\n" rawStdinLines)
         else do formatAndOutput argPaths
