@@ -3,9 +3,6 @@ import sys
 import os
 from subprocess import Popen, PIPE, STDOUT
 
-# sys.stdin
-# sys.stdout
-
 def normalize(paths):
     paths = map(lambda x:x.strip(), paths)
     paths = filter(lambda x : x != "", paths)

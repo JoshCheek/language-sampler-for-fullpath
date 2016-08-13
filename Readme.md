@@ -192,17 +192,7 @@ $ brew install kotlin
 
 Wound up at a polyglot meetup, quite a few humans there knew some Python,
 so I started writing it in Python. Went really smoothly,
-
-so [@mlarraz](https://github.com/mlarraz) and I sat down to try
-our hand at it. We got a reasonable bit figured out that night,
-and then I spent another couple of hours finishing / polishing today.
-
-I don't have any real insights into it as a language,
-other than I like the `it` thing within the blocks,
-I like the `val`/`var` thing, I dislike the startup time,
-my syntax highlighter needs to be better,
-I like the fn bodies that omit the curlies,
-Java is a little bit annoying.
+Python seems like a reasonable language.
 
 Install (I just ran with the version that was pre-installed, 2.7.10)
 
