@@ -50,6 +50,8 @@ cabal-version:       >=1.10
 
 
 executable Fullpath
+  ghc-options: -fwarn-incomplete-uni-patterns, -fwarn-incomplete-patterns
+
   -- .hs or .lhs file containing the Main module.
   main-is:             Main.hs
 

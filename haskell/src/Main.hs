@@ -40,7 +40,7 @@ main = do
   cwd         <- getCurrentDirectory
   let options               = parseOptions args
       argPaths              = selectPaths args
-      formatAndOutput paths = do output (formatPaths cwd paths) (copyOutput options)
+      formatAndOutput paths = output (formatPaths cwd paths) (copyOutput options)
     in if printHelp options
       then putStr (helpScreen programName)
       else if null (argvPaths options)
@@ -49,15 +49,17 @@ main = do
         else do formatAndOutput argPaths
 
 exactlyOne :: [a] -> Bool
-exactlyOne []        = False
-exactlyOne (head:[]) = True
-exactlyOne list      = False
+exactlyOne (_:[]) = True
+exactlyOne _      = False
 
 doCopyOutput :: String -> IO ()
 doCopyOutput str = do
-  (Just hin, _, _, _) <- createProcess (proc "pbcopy" []) { std_in = CreatePipe }
-  hPutStr hin str
-  hClose hin
+  (hin, _, _, _) <- createProcess (proc "pbcopy" []) { std_in = CreatePipe }
+  case hin of
+    Nothing -> return ()
+    Just hin -> do
+      hPutStr hin str
+      hClose hin
 
 output :: String -> Bool -> IO ()
 output toOutput copyOutput = do
