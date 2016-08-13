@@ -23,18 +23,16 @@ data Options = Options { printHelp :: Bool, shouldCopyOutput :: Bool, argvPaths 
 
 parseOptions :: [String] -> Options
 parseOptions argv =
-  foldr handleArg initialOptions argv
+  foldr handleArg defaults argv
   where
-    isHelp arg = "-h" == arg || "--help" == arg
-    isCopy arg = "-c" == arg || "--copy" == arg
-    initialOptions = Options { printHelp = False, shouldCopyOutput = False, argvPaths = [] }
-    handleArg arg options
-      | isHelp arg = options { printHelp  = True }
-      | isCopy arg = options { shouldCopyOutput = True }
-      | otherwise  = options { argvPaths  = arg : (argvPaths options) }
-
-checkPrintHelp  args = Data.List.any (\arg -> arg == "-h" || arg == "--help") args
-checkCopyOutput args = Data.List.any (\arg -> arg == "-c" || arg == "--copy") args
+    defaults = Options { printHelp = False, shouldCopyOutput = False, argvPaths = [] }
+    -- seems I have to duplicate bodies for now,
+    -- though there is a proposal for allowing multiple patterns to be matched https://wiki.haskell.org/MultiCase
+    handleArg "-h"     options = options { printHelp        = True }
+    handleArg "--help" options = options { printHelp        = True }
+    handleArg "-c"     options = options { shouldCopyOutput = True }
+    handleArg "--copy" options = options { shouldCopyOutput = True }
+    handleArg path     options = options { argvPaths        = path : argvPaths options }
 
 main :: IO ()
 main = do
