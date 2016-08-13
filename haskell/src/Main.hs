@@ -8,14 +8,16 @@ import Data.List (any, filter)
 import Data.List.Split (splitOn)
 
 helpScreen programName =
-  "usage: " ++ programName ++ " *[relative-paths] [-c]\n" ++
-  "\n" ++
-  "  Prints the fullpath of the paths\n" ++
-  "  If no paths are given as args, it will read them from stdin\n" ++
-  "\n" ++
-  "  If there is only one path, the trailing newline is omitted\n" ++
-  "\n" ++
-  "  The -c flag will copy the results into your pasteboard\n"
+  unlines
+    [ "usage: " ++ programName ++ " *[relative-paths] [-c]"
+    , ""
+    , "  Prints the fullpath of the paths"
+    , "  If no paths are given as args, it will read them from stdin"
+    , ""
+    , "  If there is only one path, the trailing newline is omitted"
+    , ""
+    , "  The -c flag will copy the results into your pasteboard"
+    ]
 
 checkPrintHelp  args = Data.List.any (\arg -> arg == "-h" || arg == "--help") args
 checkCopyOutput args = Data.List.any (\arg -> arg == "-c" || arg == "--copy") args
@@ -40,12 +42,6 @@ exactlyOne :: [a] -> Bool
 exactlyOne []        = False
 exactlyOne (head:[]) = True
 exactlyOne list      = False
-
-join :: [String] -> String -> String
-join list delim =
-  foldl append "" list
-  where
-    append joined toJoin = joined ++ toJoin ++ delim
 
 copyOutput :: String -> IO ()
 copyOutput str = do
@@ -73,7 +69,7 @@ formatPaths :: String -> [String] -> String
 formatPaths dir relativePaths =
   if exactlyOne relativePaths
     then pathFromDir $ head relativePaths
-    else join absolutePaths "\n"
+    else unlines absolutePaths
   where
     absolutePaths = map pathFromDir relativePaths
     pathFromDir path = dir ++ "/" ++ path
