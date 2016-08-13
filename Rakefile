@@ -160,7 +160,7 @@ task hs: :haskell
 
 desc 'Build / test fullpath in Haskell'
 task(haskell: 'haskell/fullpath') { cucumber 'haskell' }
-file 'haskell/fullpath' => 'haskell/src/Main.hs' do
+file 'haskell/fullpath' => ['haskell/src/Main.hs', 'haskell/Fullpath.cabal'] do
   chdir 'haskell' do
     sh 'cabal', 'install', '-j'
     cp '.cabal-sandbox/bin/Fullpath', '.'
