@@ -196,6 +196,13 @@ Python seems like a reasonable language.
 
 Install (I just ran with the version that was pre-installed, 2.7.10)
 
+REPL: `$ python`
+
+[here](http://stackoverflow.com/questions/1006169/how-do-i-look-inside-a-python-object)
+are some ways to introspect. In particular, `dir(obj)` returns an array of answers,
+`help(obj)` (at least in the REPL) prints a reasonably nice set of docs.
+
+
 
 
 ### [Java](https://docs.oracle.com/javase/8/)
