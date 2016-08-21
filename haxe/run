@@ -4,4 +4,4 @@ set -o pipefail
 
 haxe -main Fullpath -cpp cpp
 cp cpp/Fullpath fullpath
-
+./fullpath a b c
