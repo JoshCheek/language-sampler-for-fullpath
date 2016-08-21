@@ -1,11 +1,18 @@
 class Fullpath {
   static public function main() {
-    var dir = Sys.getCwd();
+    var args = Sys.args();
+
+    var dir  = Sys.getCwd();
     if(dir.charAt(dir.length-1) == "\n") {
       dir = dir.substr(0, dir.length-1);
     }
-    for(arg in Sys.args()) {
-      Sys.println(dir+arg);
+
+    if(args.length == 1) {
+      Sys.print(dir+args[0]);
+    } else {
+      for(arg in args) {
+        Sys.println(dir+arg);
+      }
     }
   }
 }
