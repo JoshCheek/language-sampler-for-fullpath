@@ -1,5 +1,5 @@
 class Fullpath {
   static public function main() {
-    trace("Hello World");
+    Sys.println(Sys.args());
   }
 }
