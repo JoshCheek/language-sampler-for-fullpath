@@ -21,6 +21,9 @@ class Fullpath {
   }
 
   static public function readLines(instream:haxe.io.Input) {
-    return [instream.readLine()];
+    var lines = [];
+    try { while(true) lines.push(instream.readLine()); }
+    catch(error:haxe.io.Eof) { /* noop */ }
+    return lines;
   }
 }
