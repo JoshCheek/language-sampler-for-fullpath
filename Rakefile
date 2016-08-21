@@ -167,3 +167,15 @@ file 'haskell/fullpath' => ['haskell/src/Main.hs', 'haskell/Fullpath.cabal'] do
   end
 end
 
+
+# =====  Haxe  =====
+task default: :haxe
+
+desc 'Build / test fullpath in Haxe'
+task(haxe: 'haxe/fullpath') { cucumber 'haxe' }
+file 'haxe/fullpath' => 'haxe/Fullpath.hx' do
+  chdir 'haxe' do
+    sh 'haxe', '-main', 'Fullpath', '-cpp', 'cpp'
+    sh 'cp', 'cpp/Fullpath', 'fullpath'
+  end
+end
