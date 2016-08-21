@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+haxe -main Fullpath --interp
