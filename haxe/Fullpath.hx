@@ -2,20 +2,20 @@ class Fullpath {
   static public function main() {
     var args = Sys.args();
 
-    var dir  = Sys.getCwd();
-    if(dir.charAt(dir.length-1) == "\n") {
-      dir = dir.substr(0, dir.length-1);
+    var cwd = Sys.getCwd();
+    if(cwd.charAt(cwd.length-1) == "\n") {
+      cwd = cwd.substr(0, cwd.length-1);
     }
 
-    if(args.length == 0) {
-      args = readLines(Sys.stdin());
-    }
+    var dirs = args;
+    if(args.length == 0)
+      dirs = readLines(Sys.stdin());
 
-    if(args.length == 1) {
-      Sys.stdout().writeString(dir+args[0]);
+    if(dirs.length == 1) {
+      Sys.stdout().writeString(cwd+dirs[0]);
     } else {
-      for(arg in args) {
-        Sys.stdout().writeString(dir+arg+"\n");
+      for(arg in dirs) {
+        Sys.stdout().writeString(cwd+arg+"\n");
       }
     }
   }
