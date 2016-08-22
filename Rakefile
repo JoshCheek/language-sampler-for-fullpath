@@ -193,7 +193,7 @@ task default: :rust
 
 desc 'Build / Test fullpath in Rust'
 task(rust: 'rust/fullpath')  { cucumber 'rust' }
-file 'rust/fullpath' => 'rust/Fullpath.rs' do
-  sh 'rustc', 'rust/Fullpath.rs', '-o', 'rust/fullpath'
+file 'rust/fullpath' => 'rust/fullpath.rs' do
+  sh 'rustc', 'rust/fullpath.rs', '-o', 'rust/fullpath'
 end
 

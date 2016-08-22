@@ -555,7 +555,7 @@ $ brew install rust
 Build:
 
 ```sh
-$ rustc Fullpath.rs -o ./fullpath
+$ rustc fullpath.rs -o ./fullpath
 ```
 
 REPL: Didn't try to find one
