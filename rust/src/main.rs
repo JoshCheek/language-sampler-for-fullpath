@@ -3,49 +3,6 @@ use std::process;
 use std::io;
 use std::io::prelude::*;
 
-fn write_paths(stream:&mut std::io::Write, paths:&Vec<String>) {
-    if paths.len() == 1 {
-        match stream.write(&paths[0].as_bytes()) {
-            Ok(_)    => (),
-            Err(err) => println!("{}", err),
-        }
-    } else {
-        for path in paths {
-            match stream.write(&path.as_bytes()) {
-                Ok(_)    => (),
-                Err(err) => println!("{}", err),
-            }
-            match stream.write(&"\n".as_bytes()) {
-                Ok(_) => (),
-                Err(err) => println!("{}", err),
-            }
-        }
-    }
-    match stream.flush() {
-        Ok(_)    => (),
-        Err(err) => println!("{}", err),
-    }
-}
-
-fn copy_paths(paths:&Vec<String>) {
-    let maybe_pbcopy = process::Command::new("/usr/bin/pbcopy")
-        .stdin(process::Stdio::piped())
-        .spawn();
-    match maybe_pbcopy {
-        Ok(mut pbcopy) => {
-            match pbcopy.stdin.as_mut() {
-                Some(pbcopy_stdin) => write_paths(pbcopy_stdin, &paths),
-                None => (),
-            }
-            match pbcopy.wait() {
-                Ok(_) => (),
-                Err(err) => println!("{}", err),
-            }
-        },
-        Err(err) => println!("{}", err),
-    }
-}
-
 fn main() {
     let pwd                   = get_pwd();
     let args                  = get_args();
@@ -71,9 +28,15 @@ fn main() {
             match maybe_line { Ok(line) => paths.push(line), Err(_) => (), }
         }
     }
-    paths = paths.into_iter().filter(|path| path != "" && !path.starts_with("-")).map(|path| format!("{}/{}", pwd, path)).collect();
+
+    paths = paths.into_iter()
+                 .filter(|path| path != "")
+                 .filter(|path| !path.starts_with("-"))
+                 .map(|path| format!("{}/{}", pwd, path))
+                 .collect();
 
     write_paths(&mut std::io::stdout(), &paths);
+
     if copy_output {
         copy_paths(&paths);
     }
@@ -91,3 +54,48 @@ fn get_args() -> Vec<String>  {
     argv.next(); // first arg in argv is the program name
     argv.collect()
 }
+
+fn write_paths(stream:&mut std::io::Write, paths:&Vec<String>) {
+    if paths.len() == 1 {
+        match stream.write(&paths[0].as_bytes()) {
+            Ok(_)    => (),
+            Err(err) => println!("{}", err),
+        }
+    } else {
+        for path in paths {
+            match stream.write(&path.as_bytes()) {
+                Ok(_)    => (),
+                Err(err) => println!("{}", err),
+            }
+            match stream.write(&"\n".as_bytes()) {
+                Ok(_) => (),
+                Err(err) => println!("{}", err),
+            }
+        }
+    }
+    match stream.flush() {
+        Ok(_)    => (),
+        Err(err) => println!("{}", err),
+    }
+}
+
+
+fn copy_paths(paths:&Vec<String>) {
+    let maybe_pbcopy = process::Command::new("/usr/bin/pbcopy")
+        .stdin(process::Stdio::piped())
+        .spawn();
+    match maybe_pbcopy {
+        Ok(mut pbcopy) => {
+            match pbcopy.stdin.as_mut() {
+                Some(pbcopy_stdin) => write_paths(pbcopy_stdin, &paths),
+                None => (),
+            }
+            match pbcopy.wait() {
+                Ok(_) => (),
+                Err(err) => println!("{}", err),
+            }
+        },
+        Err(err) => println!("{}", err),
+    }
+}
+
