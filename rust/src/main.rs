@@ -3,16 +3,19 @@ use std::process;
 use std::io;
 use std::io::prelude::*;
 
-fn write_string(pbcopy_stdin:&mut process::ChildStdin, string:&String) {
-    match pbcopy_stdin.write(string.as_bytes()) {
-        Ok(_)    => (),
-        Err(err) => println!("{}", err)
-    }
-}
-
 fn write_paths(pbcopy_stdin:&mut process::ChildStdin, paths:&Vec<String>) {
-    for path in paths {
-        write_string(pbcopy_stdin, path);
+    if paths.len() == 1 {
+        match pbcopy_stdin.write(&paths[0].as_bytes()) {
+            Ok(_)    => (),
+            Err(err) => println!("{}", err)
+        }
+    } else {
+        for path in paths {
+            match pbcopy_stdin.write(&path.as_bytes()) {
+                Ok(_)    => (),
+                Err(err) => println!("{}", err)
+            }
+        }
     }
     match pbcopy_stdin.flush() {
         Ok(_)    => (),
@@ -69,37 +72,7 @@ fn main() {
     if paths.len() == 1 {
         print!("{}", paths[0]);
         if copy_output {
-            // Ideally, this whole thing gets moved into a method, but that seems to smack into a
-            // brick wall quick in Rust. Also, I don't actually want it printing when it fails,
-            // that's just for now while I'm trying to figure out why things don't work.
-            // Also, some languages make pattern matching seem elegant, Rust doesn't seem to be one
-            // of them.
-            let maybe_pbcopy = process::Command::new("/usr/bin/pbcopy")
-                                .stdin(process::Stdio::piped())
-                                .spawn();
-
-            match maybe_pbcopy {
-                Ok(mut pbcopy) => {
-                    match pbcopy.stdin.as_mut() {
-                        Some(pbcopy_stdin) => {
-                            match pbcopy_stdin.write(&paths[0].as_bytes()) {
-                                Ok(_)  => {}
-                                Err(err) => println!("{}", err)
-                            }
-                            match pbcopy_stdin.flush() {
-                                Ok(_)  => {}
-                                Err(err) => println!("{}", err)
-                            }
-                        },
-                        None => {}
-                    }
-                    match pbcopy.wait() {
-                        Ok(_) => {},
-                        Err(err) => println!("{}", err)
-                    }
-                }
-                Err(err) => println!("{}", err)
-            }
+            copy_paths(&paths);
         }
     } else {
         for path in &paths {
