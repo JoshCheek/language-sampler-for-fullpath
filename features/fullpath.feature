@@ -72,10 +72,30 @@ Feature: fullpath
     Then stdout is exactly "{{pwd}}/from-stdin"
     And the clipboard now contains "{{pwd}}/from-stdin"
 
-    Given I previously copied "not-a-long"
-    When I run "fullpath a-long --copy"
-    Then stdout is exactly "{{pwd}}/a-long"
-    And the clipboard now contains "{{pwd}}/a-long"
+    Given I previously copied "not-a-long-flag"
+    When I run "fullpath a-long-flag --copy"
+    Then stdout is exactly "{{pwd}}/a-long-flag"
+    And the clipboard now contains "{{pwd}}/a-long-flag"
+
+    Given I previously copied "not-multilines"
+    And the stdin content:
+    """
+    a
+    b
+    """
+    When I run "fullpath -c"
+    Then stdout is exactly:
+    """
+    {{pwd}}/a
+    {{pwd}}/b
+
+    """
+    And the clipboard now contains:
+    """
+    {{pwd}}/a
+    {{pwd}}/b
+
+    """
 
   Scenario: does not copy when there is no -c / --copy flag
     Given I previously copied "not-a"

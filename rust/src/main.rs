@@ -4,10 +4,21 @@ use std::io;
 use std::io::prelude::*;
 
 fn write_paths(pbcopy_stdin:&mut process::ChildStdin, paths:&Vec<String>) {
-    for path in paths {
-        match pbcopy_stdin.write(&path.as_bytes()) {
+    if paths.len() == 1 {
+        match pbcopy_stdin.write(&paths[0].as_bytes()) {
             Ok(_)    => (),
-            Err(err) => println!("{}", err)
+            Err(err) => println!("{}", err),
+        }
+    } else {
+        for path in paths {
+            match pbcopy_stdin.write(&path.as_bytes()) {
+                Ok(_)    => (),
+                Err(err) => println!("{}", err),
+            }
+            match pbcopy_stdin.write(&"\n".as_bytes()) {
+                Ok(_) => (),
+                Err(err) => println!("{}", err),
+            }
         }
     }
     match pbcopy_stdin.flush() {
