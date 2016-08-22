@@ -4,6 +4,15 @@ use std::io;
 use std::io::prelude::*;
 
 fn main() {
+    let help_screen           =
+"usage: fullpath *[relative-paths] [-c]
+
+  Prints the fullpath of the paths
+  If no paths are given as args, it will read them from stdin
+
+  If there is only one path, the trailing newline is omitted
+
+  The -c flag will copy the results into your pasteboard";
     let pwd                   = get_pwd();
     let args                  = get_args();
     let print_help            = args.contains(&"-h".to_string()) || args.contains(&"--help".to_string());
@@ -11,14 +20,7 @@ fn main() {
     let mut paths:Vec<String> = args.into_iter().filter(|path| path != "" && !path.starts_with("-")).collect();
 
     if print_help {
-        println!("{}", "usage: fullpath *[relative-paths] [-c]");
-        println!("{}", "");
-        println!("{}", "  Prints the fullpath of the paths");
-        println!("{}", "  If no paths are given as args, it will read them from stdin");
-        println!("{}", "");
-        println!("{}", "  If there is only one path, the trailing newline is omitted");
-        println!("{}", "");
-        println!("{}", "  The -c flag will copy the results into your pasteboard");
+        println!("{}", help_screen);
         process::exit(0);
     }
 
