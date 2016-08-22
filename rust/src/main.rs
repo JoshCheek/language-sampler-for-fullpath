@@ -3,6 +3,14 @@ use std::process;
 use std::io;
 use std::io::prelude::*;
 
+fn f(pbcopy_stdin:&mut process::ChildStdin, path:&String)->() {
+    match pbcopy_stdin.write(&path.as_bytes()) {
+        Ok(_)  => {}
+        Err(err) => println!("{}", err)
+    }
+    ()
+}
+
 fn main() {
     let pwd                   = get_pwd();
     let args                  = get_args();
@@ -81,15 +89,13 @@ fn main() {
                                 .stdin(process::Stdio::piped())
                                 .spawn();
 
+
             match maybe_pbcopy {
                 Ok(mut pbcopy) => {
                     match pbcopy.stdin.as_mut() {
                         Some(pbcopy_stdin) => {
                             for path in &paths {
-                                match pbcopy_stdin.write(&path.as_bytes()) {
-                                    Ok(_)  => {}
-                                    Err(err) => println!("{}", err)
-                                }
+                                f(pbcopy_stdin, path);
                             }
                             match pbcopy_stdin.flush() {
                                 Ok(_)  => {}
