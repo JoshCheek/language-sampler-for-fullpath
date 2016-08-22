@@ -3,13 +3,13 @@
 # process args into these three vars
 set paths
 set printHelp false
-set copyOutput true
+set copyOutput false
 
 for arg in $argv
   if test $arg = "-h"; or test $arg = "--help"
     set printHelp true
   else if test $arg = "-c"; or test $arg = "--copy"
-    set copyOutput false
+    set copyOutput true
   else if test -n $arg
     set paths $paths $arg
   end
@@ -24,10 +24,18 @@ if test (count $paths) -eq 0
   end
 end
 
-if test (count $paths) -eq 1
-  echo -n $PWD/$paths[1]
-else
-  for arg in $paths
-    echo $PWD/$arg
+# print them to stdout / pbcopy
+function print_paths
+  if test (count $paths) -eq 1
+    echo -n $PWD/$paths[1]
+  else
+    for arg in $paths
+      echo $PWD/$arg
+    end
   end
+end
+
+print_paths
+if test true = $copyOutput
+  print_paths | pbcopy
 end
