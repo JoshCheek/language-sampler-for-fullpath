@@ -5,9 +5,8 @@ use std::process;
 fn main() {
     // let pwd:collections::string::String = "".to_string();
     let pwd = get_pwd();
-    println!("{}", pwd);
     for argument in env::args() {
-        println!("{}", argument);
+        println!("{}/{}", pwd, argument);
     }
 }
 
