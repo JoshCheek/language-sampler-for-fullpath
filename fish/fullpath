@@ -15,6 +15,19 @@ for arg in $argv
   end
 end
 
+# maybe print help
+if test $printHelp = true
+  echo "usage: fullpath *[relative-paths] [-c]"
+  echo
+  echo "  Prints the fullpath of the paths"
+  echo "  If no paths are given as args, it will read them from stdin"
+  echo
+  echo "  If there is only one path, the trailing newline is omitted"
+  echo
+  echo "  The -c flag will copy the results into your pasteboard"
+  exit 0
+end
+
 # read paths from stdin if none were provided
 if test (count $paths) -eq 0
   while read -l line
