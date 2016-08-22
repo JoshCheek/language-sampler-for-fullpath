@@ -5,3 +5,4 @@ set -o pipefail
 haxe -main Fullpath -cpp cpp
 cp cpp/Fullpath fullpath
 ./fullpath a b c
+ruby -e 'puts 1, "", 2' | ./fullpath

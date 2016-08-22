@@ -3,9 +3,9 @@ class Fullpath {
     var args = Sys.args();
     var cwd  = chomp(Sys.getCwd());
 
-    var dirs = args;
+    var dirs = selectPaths(args);
     if(args.length == 0)
-      dirs = readLines(Sys.stdin());
+      dirs = selectPaths(readLines(Sys.stdin()));
 
     if(dirs.length == 1) {
       Sys.stdout().writeString(cwd+dirs[0]);
@@ -18,14 +18,30 @@ class Fullpath {
 
   static public function readLines(instream:haxe.io.Input) {
     var lines = [];
-    try { while(true) lines.push(instream.readLine()); }
+    try { while(true) lines.push(chomp(instream.readLine())); }
     catch(error:haxe.io.Eof) { /* noop */ }
     return lines;
   }
 
   static public function chomp(string:String) {
+    if(string.length == 0)
+      return string;
     if(string.charAt(string.length-1) != "\n")
       return string;
     return string.substr(0, string.length-1);
+  }
+
+  static public function selectPaths(potentials:Array<String>) {
+    var actuals = [];
+    for(potential in potentials)
+      if(isDir(potential))
+        actuals.push(potential);
+    return actuals;
+  }
+
+  static public function isDir(maybeDir:String) {
+    if(maybeDir.length == 0)      return false;
+    if(maybeDir.charAt(0) == "-") return false;
+    return true;
   }
 }
