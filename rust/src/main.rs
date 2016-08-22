@@ -16,13 +16,21 @@ fn write_paths(pbcopy_stdin:&mut process::ChildStdin, paths:&Vec<String>) {
     }
 }
 
-fn f(pbcopy:&mut process::Child, paths:&Vec<String>) {
-    match pbcopy.stdin.as_mut() {
-        Some(pbcopy_stdin) => write_paths(pbcopy_stdin, &paths),
-        None => (),
-    }
-    match pbcopy.wait() {
-        Ok(_) => (),
+fn f(paths:&Vec<String>) {
+    let maybe_pbcopy = process::Command::new("/usr/bin/pbcopy")
+        .stdin(process::Stdio::piped())
+        .spawn();
+    match maybe_pbcopy {
+        Ok(mut pbcopy) => {
+            match pbcopy.stdin.as_mut() {
+                Some(pbcopy_stdin) => write_paths(pbcopy_stdin, &paths),
+                None => (),
+            }
+            match pbcopy.wait() {
+                Ok(_) => (),
+                Err(err) => println!("{}", err),
+            }
+        },
         Err(err) => println!("{}", err),
     }
 }
@@ -96,20 +104,7 @@ fn main() {
         // copy / pasted here because I'm not smart enough to figure out how to extract code into a
         // method in Rust.
         if copy_output {
-            // Ideally, this whole thing gets moved into a method, but that seems to smack into a
-            // brick wall quick in Rust. Also, I don't actually want it printing when it fails,
-            // that's just for now while I'm trying to figure out why things don't work.
-            // Also, some languages make pattern matching seem elegant, Rust doesn't seem to be one
-            // of them.
-            let maybe_pbcopy = process::Command::new("/usr/bin/pbcopy")
-                                .stdin(process::Stdio::piped())
-                                .spawn();
-
-
-            match maybe_pbcopy {
-                Ok(mut pbcopy) => f(&mut pbcopy, &paths),
-                Err(err) => println!("{}", err),
-            }
+            f(&paths);
         }
     }
 }

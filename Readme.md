@@ -527,13 +527,21 @@ But still, if the language wasn't so opaque, it wouldn't need to rely so heavily
 (really, documentation is a code smell because it's a crutch you lean on when the UX doesn't make it
 obvious what you need to do -- if Rust were better in some way that IDK what it is, then I wouldn't
 need to fallback to docs so heavily). The docs site is pretty good, but there seems to be a lot of duplicate
-entries.  The pattern matching is annoying.
+entries. The pattern matching is annoying.
 
 It's a bit verbose, the syntax is kind of annoying, I'm not smart enough, apparently, to understand
 the type system (even after having read about it, and often times knowing what I wanted to say, I either
 couldn't figure out how to say it, or didn't understand why it didn't like my code,
 or what some annotation I might add would wind up doing). Opening the process and writing to its standard
 input was incredibly difficult to figure out, and led to like a core dump or something for a long time.
+Here's an example of the difficulty of the type system, I wanted to take the output value of `spawn`,
+which is defined [here](https://github.com/rust-lang/rust/blob/3c5a0fa45b5e2786b6e64e27f48cd129e7aefdbd/src/libstd/process.rs#L459),
+and pass it to a function. Spawn's signature looks like this: `pub fn spawn(&mut self) -> io::Result<Child>`,
+but I just could not figure out how to get the function to take that `io::Result<Child>`.
+It would say things like: `expected type \`&mut std::result::Result<&mut std::process::Child, std::io::Error>\`, found type \`std::result::Result<_, _>\``
+I know I got `Child` to expand to the correct value, but they kept wanting two values for `io::Result`,
+or I would think they were considering it to be some other class, IDK.
+In the end, it meant I had to skip that step of the refactoring I was doing.
 
 It's a way better language than C, and probably worth just gritting my teeth
 and bearing through the vertical learning curve so that I don't ever have to write C again.
