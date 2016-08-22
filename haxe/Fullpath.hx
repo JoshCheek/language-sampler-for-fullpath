@@ -1,19 +1,41 @@
 class Fullpath {
-  static public function main() {
-    var args = Sys.args();
-    var cwd  = chomp(Sys.getCwd());
+  static var helpScreen =
+"usage: fullpath *[relative-paths] [-c]
 
+  Prints the fullpath of the paths
+  If no paths are given as args, it will read them from stdin
+
+  If there is only one path, the trailing newline is omitted
+
+  The -c flag will copy the results into your pasteboard
+";
+
+  static public function main() {
+    var stdout = Sys.stdout();
+    var stdin  = Sys.stdin();
+    var args   = Sys.args();
+    var cwd    = chomp(Sys.getCwd());
+    var dirs   = getDirs(args, stdin);
+
+    if(hasArg(args, "-h") || hasArg(args, "--help"))
+      stdout.writeString(helpScreen);
+    else {
+      // if arg is -c
+      // then print the output to pbcopy
+
+      if(dirs.length == 1)
+        stdout.writeString(cwd+dirs[0]);
+      else
+        for(arg in dirs)
+          stdout.writeString(cwd+arg+"\n");
+    }
+  }
+
+  static public function getDirs(args:Array<String>, stdin:haxe.io.Input) {
     var dirs = selectPaths(args);
     if(args.length == 0)
       dirs = selectPaths(readLines(Sys.stdin()));
-
-    if(dirs.length == 1) {
-      Sys.stdout().writeString(cwd+dirs[0]);
-    } else {
-      for(arg in dirs) {
-        Sys.stdout().writeString(cwd+arg+"\n");
-      }
-    }
+    return dirs;
   }
 
   static public function readLines(instream:haxe.io.Input) {
@@ -43,5 +65,9 @@ class Fullpath {
     if(maybeDir.length == 0)      return false;
     if(maybeDir.charAt(0) == "-") return false;
     return true;
+  }
+
+  static public function hasArg(args:Array<String>, maybePresent:String) {
+    return -1 != args.indexOf(maybePresent);
   }
 }
