@@ -7,6 +7,7 @@ Language Sampler For Fullpath
 [Clojure](#clojure),
 [Common Lisp](#common-lisp),
 [Elixir](#elixir),
+[Fish](#fish),
 [Go](#go),
 [Haskell](#haskell),
 [Haxe](#haxe),
@@ -498,6 +499,16 @@ $ haxelib install ihx # interactive hax
 $ haxelib run ihx
 ```
 
+### [Fish](https://fishshell.com)
+
+This was fun and went pretty smoothly.
+I'm not super stoked about the conditionals, but they're not terrible, either.
+
+REPL:
+
+```sh
+$ fish
+```
 
 
 
