@@ -6,8 +6,12 @@ fn main() {
     // let pwd:collections::string::String = "".to_string();
     let pwd  = get_pwd();
     let args = get_args();
-    for argument in args {
-        println!("{}/{}", pwd, argument);
+    if args.len() == 1 {
+        print!("{}/{}", pwd, args[0]);
+    } else {
+        for argument in args {
+            println!("{}/{}", pwd, argument);
+        }
     }
 }
 
