@@ -5,3 +5,4 @@ set -o pipefail
 rustc Fullpath.rs -o fullpath
 ./fullpath a b c
 seq 3 | ./fullpath
+./fullpath a -c

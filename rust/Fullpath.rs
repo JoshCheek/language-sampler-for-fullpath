@@ -6,9 +6,10 @@ use std::io::prelude::*;
 // This code is editable and runnable!
 fn main() {
     // let pwd:collections::string::String = "".to_string();
-    let pwd = get_pwd();
-    let mut paths = get_args();
-    let print_help = paths.contains(&"-h".to_string()) || paths.contains(&"--help".to_string());
+    let pwd         = get_pwd();
+    let mut paths   = get_args();
+    let print_help  = paths.contains(&"-h".to_string()) || paths.contains(&"--help".to_string());
+    let copy_output = paths.contains(&"-c".to_string()) || paths.contains(&"--copy".to_string());
 
     if print_help {
         println!("{}", "usage: fullpath *[relative-paths] [-c]");
@@ -35,8 +36,33 @@ fn main() {
     if paths.len() == 1 {
         print!("{}", paths[0]);
     } else {
-        for path in paths {
+        for path in &paths {
             println!("{}", path);
+        }
+        if copy_output {
+            let mut pbcopy = process::Command::new("/usr/bin/pbcopy")
+                .stdin(process::Stdio::piped())
+                .spawn()
+                .ok()
+                .expect("Failed to execute.");
+
+            match pbcopy.stdin.as_mut() {
+                Some(pbcopy_stdin) => {
+                    for path in &paths {
+                        println!("{}", path);
+                        match pbcopy_stdin.write(&path.as_bytes()) {
+                            Ok(_)  => {}
+                            Err(err) => println!("{}", err)
+                        }
+                    }
+                    match pbcopy_stdin.flush() {
+                        Ok(_)  => {}
+                        Err(err) => println!("{}", err)
+                    }
+                },
+                None => {}
+            }
+            pbcopy.wait().expect("Command wasn't running");
         }
     }
 }
