@@ -6,11 +6,11 @@ set printHelp false
 set copyOutput true
 
 for arg in $argv
-  if test $arg = "-h" -o $arg = "--help"
+  if test $arg = "-h"; or test $arg = "--help"
     set printHelp true
-  else if test $arg = "-c" -o $arg = "--copy"
+  else if test $arg = "-c"; or test $arg = "--copy"
     set copyOutput false
-  else
+  else if test -n $arg
     set paths $paths $arg
   end
 end
@@ -18,7 +18,9 @@ end
 # read paths from stdin if none were provided
 if test (count $paths) -eq 0
   while read -l line
-    set paths $paths $line
+    if test -n $line
+      set paths $paths $line
+    end
   end
 end
 
