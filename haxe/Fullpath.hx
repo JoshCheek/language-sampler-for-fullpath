@@ -21,14 +21,19 @@ class Fullpath {
 
     if(printHelp)
       stdout.writeString(helpScreen);
-    else {
-      printDirs(dirs, stdout);
-      if(copyOutput) {
-        var pbcopy = new sys.io.Process('pbcopy', []);
+    else if(copyOutput)
+      open('pbcopy', function(pbcopy) {
         printDirs(dirs, pbcopy.stdin);
-        pbcopy.close();
-      }
-    }
+        printDirs(dirs, stdout);
+      });
+    else
+      printDirs(dirs, stdout);
+  }
+
+  static public function open(programName:String, callback:sys.io.Process->Void) {
+    var pbcopy = new sys.io.Process('pbcopy', []);
+    callback(pbcopy);
+    pbcopy.close();
   }
 
   static public function printDirs(dirs:Array<String>, stdout:haxe.io.Output) {
