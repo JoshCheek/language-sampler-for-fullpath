@@ -1,0 +1,5 @@
+[package]
+
+name = "fullpath"
+version = "0.0.1"
+authors = [ "Josh Cheek <josh.cheek@gmail.com>" ]

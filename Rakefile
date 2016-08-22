@@ -193,7 +193,13 @@ task default: :rust
 
 desc 'Build / Test fullpath in Rust'
 task(rust: 'rust/fullpath')  { cucumber 'rust' }
-file 'rust/fullpath' => 'rust/fullpath.rs' do
-  sh 'rustc', 'rust/fullpath.rs', '-o', 'rust/fullpath'
+file 'rust/fullpath' => 'rust/src/main.rs' do
+  chdir 'rust' do
+    sh 'cargo', 'build'
+    cp 'target/debug/fullpath', 'fullpath'
+    # # this is how to build the release version (takes longer to compile, but more optimized code)
+    # sh 'cargo', 'build', '--release'
+    # cp 'target/release/fullpath', 'fullpath'
+  end
 end
 

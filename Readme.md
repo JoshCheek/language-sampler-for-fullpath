@@ -558,6 +558,15 @@ Build:
 $ rustc fullpath.rs -o ./fullpath
 ```
 
+Build with cargo:
+
+```sh
+$ cargo build
+```
+
+(Read here if yoou want to know more: https://doc.rust-lang.org/book/getting-started.html)
+
+
 REPL: Didn't try to find one
 
 
