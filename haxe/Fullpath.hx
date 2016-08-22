@@ -1,11 +1,7 @@
 class Fullpath {
   static public function main() {
     var args = Sys.args();
-
-    var cwd = Sys.getCwd();
-    if(cwd.charAt(cwd.length-1) == "\n") {
-      cwd = cwd.substr(0, cwd.length-1);
-    }
+    var cwd  = chomp(Sys.getCwd());
 
     var dirs = args;
     if(args.length == 0)
@@ -25,5 +21,11 @@ class Fullpath {
     try { while(true) lines.push(instream.readLine()); }
     catch(error:haxe.io.Eof) { /* noop */ }
     return lines;
+  }
+
+  static public function chomp(string:String) {
+    if(string.charAt(string.length-1) != "\n")
+      return string;
+    return string.substr(0, string.length-1);
   }
 }
