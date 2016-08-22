@@ -1,5 +1,9 @@
 #!/usr/bin/env fish
 
-for arg in $argv
-  echo $PWD/$arg
+if test 1 -eq (count $argv)
+  echo -n $PWD/$argv[1]
+else
+  for arg in $argv
+    echo $PWD/$arg
+  end
 end
