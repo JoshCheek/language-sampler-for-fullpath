@@ -504,6 +504,12 @@ $ haxelib run ihx
 This was fun and went pretty smoothly.
 I'm not super stoked about the conditionals, but they're not terrible, either.
 
+Install:
+
+```sh
+$ brew install fish
+```
+
 REPL:
 
 ```sh
