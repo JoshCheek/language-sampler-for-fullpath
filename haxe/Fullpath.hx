@@ -67,17 +67,11 @@ class Fullpath {
   }
 
   static public function selectPaths(potentials:Array<String>) {
-    var actuals = [];
-    for(potential in potentials)
-      if(isDir(potential))
-        actuals.push(potential);
-    return actuals;
+    return potentials.filter(isDir);
   }
 
   static public function isDir(maybeDir:String) {
-    if(maybeDir.length == 0)      return false;
-    if(maybeDir.charAt(0) == "-") return false;
-    return true;
+    return maybeDir.length != 0 && maybeDir.charAt(0) != "-";
   }
 
   static public function hasArg(args:Array<String>, maybePresent:String) {
