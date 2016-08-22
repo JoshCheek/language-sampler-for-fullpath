@@ -56,13 +56,11 @@ fn get_args() -> Vec<String>  {
 }
 
 fn write_paths(stream:&mut std::io::Write, paths:&Vec<String>) {
-    if paths.len() == 1 {
-        ignore_result(stream.write(&paths[0].as_bytes()));
-    } else {
-        for path in paths {
-            ignore_result(stream.write(&path.as_bytes()));
-            ignore_result(stream.write(&"\n".as_bytes()));
-        }
+    match paths.len() {
+        1 => ignore_result(stream.write(&paths[0].as_bytes())),
+        _ => for path in paths {
+                 ignore_result(stream.write(&format!("{}\n", path).as_bytes()));
+             },
     }
     ignore_result(stream.flush());
 }
