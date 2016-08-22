@@ -32,7 +32,7 @@ fn main() {
             }
         }
     }
-    paths = paths.into_iter().map(|path| format!("{}/{}", pwd, path)).collect();
+    paths = paths.into_iter().filter(|path| path != "" && !path.starts_with("-")).map(|path| format!("{}/{}", pwd, path)).collect();
     if paths.len() == 1 {
         print!("{}", paths[0]);
     } else {
