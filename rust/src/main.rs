@@ -3,25 +3,25 @@ use std::process;
 use std::io;
 use std::io::prelude::*;
 
-fn write_paths(pbcopy_stdin:&mut process::ChildStdin, paths:&Vec<String>) {
+fn write_paths(stream:&mut std::io::Write, paths:&Vec<String>) {
     if paths.len() == 1 {
-        match pbcopy_stdin.write(&paths[0].as_bytes()) {
+        match stream.write(&paths[0].as_bytes()) {
             Ok(_)    => (),
             Err(err) => println!("{}", err),
         }
     } else {
         for path in paths {
-            match pbcopy_stdin.write(&path.as_bytes()) {
+            match stream.write(&path.as_bytes()) {
                 Ok(_)    => (),
                 Err(err) => println!("{}", err),
             }
-            match pbcopy_stdin.write(&"\n".as_bytes()) {
+            match stream.write(&"\n".as_bytes()) {
                 Ok(_) => (),
                 Err(err) => println!("{}", err),
             }
         }
     }
-    match pbcopy_stdin.flush() {
+    match stream.flush() {
         Ok(_)    => (),
         Err(err) => println!("{}", err),
     }
@@ -73,18 +73,9 @@ fn main() {
     }
     paths = paths.into_iter().filter(|path| path != "" && !path.starts_with("-")).map(|path| format!("{}/{}", pwd, path)).collect();
 
-    if paths.len() == 1 {
-        print!("{}", paths[0]);
-        if copy_output {
-            copy_paths(&paths);
-        }
-    } else {
-        for path in &paths {
-            println!("{}", path);
-        }
-        if copy_output {
-            copy_paths(&paths);
-        }
+    write_paths(&mut std::io::stdout(), &paths);
+    if copy_output {
+        copy_paths(&paths);
     }
 }
 
