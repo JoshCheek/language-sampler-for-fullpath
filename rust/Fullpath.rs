@@ -2,25 +2,13 @@ use std::env;
 
 // This code is editable and runnable!
 fn main() {
-    // A simple integer calculator:
-    // `+` or `-` means add or subtract by 1
-    // `*` or `/` means multiply or divide by 2
-
-    let program = "+ + * - /";
-    let mut accumulator = 0;
-
-    for token in program.chars() {
-        match token {
-            '+' => accumulator += 1,
-            '-' => accumulator -= 1,
-            '*' => accumulator *= 2,
-            '/' => accumulator /= 2,
-            _ => { /* ignore everything else */ }
-        }
+    // let pwd:collections::string::String = "".to_string();
+    let mut pwd = "".to_string();
+    match env::current_dir() {
+        Ok(_pwd) => pwd = format!("{}", _pwd.display()),
+        Err(err) => println!("{}", err)
     }
-
-    println!("The program \"{}\" calculates the value {}",
-              program, accumulator);
+    println!("{}", pwd);
     for argument in env::args() {
         println!("{}", argument);
     }
