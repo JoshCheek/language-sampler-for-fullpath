@@ -17,7 +17,10 @@ fn main() {
     let args                  = get_args();
     let print_help            = args.contains(&"-h".to_string()) || args.contains(&"--help".to_string());
     let copy_output           = args.contains(&"-c".to_string()) || args.contains(&"--copy".to_string());
-    let mut paths:Vec<String> = args.into_iter().filter(|path| path != "" && !path.starts_with("-")).collect();
+    let mut paths:Vec<String> = args.into_iter()
+                                    .filter(|path| path != "")
+                                    .filter(|path| !path.starts_with("-"))
+                                    .collect();
 
     if print_help {
         println!("{}", help_screen);
@@ -31,6 +34,7 @@ fn main() {
         }
     }
 
+    // duplicating the above code because I can't figure out how to pull it out into a function
     paths = paths.into_iter()
                  .filter(|path| path != "")
                  .filter(|path| !path.starts_with("-"))
