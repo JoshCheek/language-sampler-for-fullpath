@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+set -eu
+set -o pipefail
+
+rustc Fullpath.rs -o fullpath
