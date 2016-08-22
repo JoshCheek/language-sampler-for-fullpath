@@ -5,7 +5,9 @@ use std::process;
 fn main() {
     // let pwd:collections::string::String = "".to_string();
     let pwd = get_pwd();
-    for argument in env::args() {
+    let mut args = env::args();
+    args.next(); // first arg is the program name
+    for argument in args {
         println!("{}/{}", pwd, argument);
     }
 }
