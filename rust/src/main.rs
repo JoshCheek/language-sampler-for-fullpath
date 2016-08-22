@@ -10,6 +10,10 @@ fn f(pbcopy_stdin:&mut process::ChildStdin, paths:&Vec<String>)->() {
             Err(err) => println!("{}", err)
         }
     }
+    match pbcopy_stdin.flush() {
+        Ok(_)  => {}
+        Err(err) => println!("{}", err)
+    }
     ()
 }
 
@@ -97,10 +101,6 @@ fn main() {
                     match pbcopy.stdin.as_mut() {
                         Some(pbcopy_stdin) => {
                             f(pbcopy_stdin, &paths);
-                            match pbcopy_stdin.flush() {
-                                Ok(_)  => {}
-                                Err(err) => println!("{}", err)
-                            }
                         },
                         None => {}
                     }
