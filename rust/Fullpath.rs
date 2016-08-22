@@ -3,13 +3,28 @@ use std::process;
 use std::io;
 use std::io::prelude::*;
 
-// This code is editable and runnable!
+fn get_paths<'a>(pwd:&'a String, args:&'a Vec<&'a String>, stdin:std::io::Stdin) -> &'a Vec<&'a String> {
+    if args.is_empty() {
+        let paths:&'a mut Vec<&'a String> = vec![];
+        for maybe_line in stdin.lock().lines() {
+            match maybe_line {
+                Ok(line) => paths.push(&line),
+                Err(_)   => {}
+            }
+        }
+        return paths;
+    } else {
+        return args;
+    }
+    // return &paths;//.into_iter().filter(|path| path != "" && !path.starts_with("-")).map(|path| format!("{}/{}", pwd, path)).collect();
+}
+
 fn main() {
-    // let pwd:collections::string::String = "".to_string();
     let pwd         = get_pwd();
-    let mut paths   = get_args();
-    let print_help  = paths.contains(&"-h".to_string()) || paths.contains(&"--help".to_string());
-    let copy_output = paths.contains(&"-c".to_string()) || paths.contains(&"--copy".to_string());
+    let args        = get_args();
+    let paths       = get_paths(&pwd, &args, io::stdin());
+    let print_help  = args.contains(&"-h".to_string()) || args.contains(&"--help".to_string());
+    let copy_output = args.contains(&"-c".to_string()) || args.contains(&"--copy".to_string());
 
     if print_help {
         println!("{}", "usage: fullpath *[relative-paths] [-c]");
@@ -23,20 +38,10 @@ fn main() {
         process::exit(0);
     }
 
-    if paths.is_empty() {
-        let stdin = io::stdin();
-        for maybe_line in stdin.lock().lines() {
-            match maybe_line {
-                Ok(line) => paths.push(line),
-                Err(_)   => {}
-            }
-        }
-    }
-    paths = paths.into_iter().filter(|path| path != "" && !path.starts_with("-")).map(|path| format!("{}/{}", pwd, path)).collect();
     if paths.len() == 1 {
         print!("{}", paths[0]);
     } else {
-        for path in &paths {
+        for path in paths {
             println!("{}", path);
         }
         if copy_output {
@@ -48,7 +53,7 @@ fn main() {
 
             match pbcopy.stdin.as_mut() {
                 Some(pbcopy_stdin) => {
-                    for path in &paths {
+                    for path in paths {
                         println!("{}", path);
                         match pbcopy_stdin.write(&path.as_bytes()) {
                             Ok(_)  => {}
