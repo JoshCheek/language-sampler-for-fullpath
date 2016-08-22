@@ -7,13 +7,11 @@ doHelp=false
 doCopy=false
 paths=()
 for arg in "$@"; do
-  if   [[ "$arg" == "-h" || "$arg" == "--help" ]]; then
-    doHelp=true
-  elif [[ "$arg" == "-c" || "$arg" == "--copy" ]]; then
-    doCopy=true
-  elif [[ "$arg" != "" ]]; then
-    paths+=("$arg")
-  fi
+  case "$arg" in
+  -h) ;& --help) doHelp=true;;
+  -c) ;& --copy) doCopy=true;;
+  ?*)            paths+=("$arg");;
+  esac
 done
 
 # Print help and quit
