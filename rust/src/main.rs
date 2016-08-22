@@ -3,7 +3,7 @@ use std::process;
 use std::io;
 use std::io::prelude::*;
 
-fn f(pbcopy_stdin:&mut process::ChildStdin, paths:&Vec<String>)->() {
+fn write_paths(pbcopy_stdin:&mut process::ChildStdin, paths:&Vec<String>)->() {
     for path in paths {
         match pbcopy_stdin.write(&path.as_bytes()) {
             Ok(_)  => {}
@@ -99,9 +99,7 @@ fn main() {
             match maybe_pbcopy {
                 Ok(mut pbcopy) => {
                     match pbcopy.stdin.as_mut() {
-                        Some(pbcopy_stdin) => {
-                            f(pbcopy_stdin, &paths);
-                        },
+                        Some(pbcopy_stdin) => write_paths(pbcopy_stdin, &paths),
                         None => {}
                     }
                     match pbcopy.wait() {
