@@ -36,13 +36,12 @@ class Fullpath {
     pbcopy.close();
   }
 
-  static public function printDirs(dirs:Array<String>, stdout:haxe.io.Output) {
+  static public function printDirs(dirs:Array<String>, stdout:haxe.io.Output)
     if(dirs.length == 1)
       stdout.writeString(dirs[0]);
     else
       for(arg in dirs)
         stdout.writeString(arg+"\n");
-  }
 
   static public function getDirs(cwd:String, args:Array<String>, stdin:haxe.io.Input) {
     var dirs = selectPaths(args);
@@ -66,15 +65,12 @@ class Fullpath {
     return string.substr(0, string.length-1);
   }
 
-  static public function selectPaths(potentials:Array<String>) {
+  static public function selectPaths(potentials:Array<String>)
     return potentials.filter(isDir);
-  }
 
-  static public function isDir(maybeDir:String) {
+  static public function isDir(maybeDir:String)
     return maybeDir.length != 0 && maybeDir.charAt(0) != "-";
-  }
 
-  static public function hasArg(args:Array<String>, maybePresent:String) {
+  static public function hasArg(args:Array<String>, maybePresent:String)
     return -1 != args.indexOf(maybePresent);
-  }
 }
