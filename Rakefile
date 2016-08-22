@@ -186,3 +186,14 @@ task default: :fish
 
 desc 'Test fullpath in Fish'
 task(:fish) { cucumber 'fish' }
+
+
+# =====  Rust  =====
+task default: :rust
+
+desc 'Build / Test fullpath in Rust'
+task(rust: 'rust/fullpath')  { cucumber 'rust' }
+file 'rust/fullpath' => 'rust/Fullpath.rs' do
+  sh 'rustc', 'rust/Fullpath.rs', '-o', 'rust/fullpath'
+end
+
