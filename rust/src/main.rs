@@ -3,12 +3,16 @@ use std::process;
 use std::io;
 use std::io::prelude::*;
 
+fn write_string(pbcopy_stdin:&mut process::ChildStdin, string:&String) {
+    match pbcopy_stdin.write(string.as_bytes()) {
+        Ok(_)    => (),
+        Err(err) => println!("{}", err)
+    }
+}
+
 fn write_paths(pbcopy_stdin:&mut process::ChildStdin, paths:&Vec<String>) {
     for path in paths {
-        match pbcopy_stdin.write(&path.as_bytes()) {
-            Ok(_)    => (),
-            Err(err) => println!("{}", err)
-        }
+        write_string(pbcopy_stdin, path);
     }
     match pbcopy_stdin.flush() {
         Ok(_)    => (),
@@ -16,7 +20,7 @@ fn write_paths(pbcopy_stdin:&mut process::ChildStdin, paths:&Vec<String>) {
     }
 }
 
-fn f(paths:&Vec<String>) {
+fn copy_paths(paths:&Vec<String>) {
     let maybe_pbcopy = process::Command::new("/usr/bin/pbcopy")
         .stdin(process::Stdio::piped())
         .spawn();
@@ -101,10 +105,8 @@ fn main() {
         for path in &paths {
             println!("{}", path);
         }
-        // copy / pasted here because I'm not smart enough to figure out how to extract code into a
-        // method in Rust.
         if copy_output {
-            f(&paths);
+            copy_paths(&paths);
         }
     }
 }
