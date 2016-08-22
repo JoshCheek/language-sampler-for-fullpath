@@ -4,7 +4,7 @@ use std::process;
 // This code is editable and runnable!
 fn main() {
     // let pwd:collections::string::String = "".to_string();
-    let mut pwd = "".to_string();
+    let pwd;
     match env::current_dir() {
         Ok(_pwd) =>
             pwd = format!("{}", _pwd.display()),
