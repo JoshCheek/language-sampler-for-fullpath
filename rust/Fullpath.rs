@@ -3,28 +3,12 @@ use std::process;
 use std::io;
 use std::io::prelude::*;
 
-fn get_paths<'a>(pwd:&'a String, args:&'a Vec<&'a String>, stdin:std::io::Stdin) -> &'a Vec<&'a String> {
-    if args.is_empty() {
-        let paths:&'a mut Vec<&'a String> = vec![];
-        for maybe_line in stdin.lock().lines() {
-            match maybe_line {
-                Ok(line) => paths.push(&line),
-                Err(_)   => {}
-            }
-        }
-        return paths;
-    } else {
-        return args;
-    }
-    // return &paths;//.into_iter().filter(|path| path != "" && !path.starts_with("-")).map(|path| format!("{}/{}", pwd, path)).collect();
-}
-
 fn main() {
-    let pwd         = get_pwd();
-    let args        = get_args();
-    let paths       = get_paths(&pwd, &args, io::stdin());
-    let print_help  = args.contains(&"-h".to_string()) || args.contains(&"--help".to_string());
-    let copy_output = args.contains(&"-c".to_string()) || args.contains(&"--copy".to_string());
+    let pwd                   = get_pwd();
+    let args                  = get_args();
+    let print_help            = args.contains(&"-h".to_string()) || args.contains(&"--help".to_string());
+    let copy_output           = args.contains(&"-c".to_string()) || args.contains(&"--copy".to_string());
+    let mut paths:Vec<String> = args.into_iter().filter(|path| path != "" && !path.starts_with("-")).collect();
 
     if print_help {
         println!("{}", "usage: fullpath *[relative-paths] [-c]");
@@ -38,36 +22,92 @@ fn main() {
         process::exit(0);
     }
 
+    if paths.is_empty() {
+        let stdin = io::stdin();
+        for maybe_line in stdin.lock().lines() {
+            match maybe_line {
+                Ok(line) => paths.push(line),
+                Err(_)   => {}
+            }
+        }
+    }
+    paths = paths.into_iter().filter(|path| path != "" && !path.starts_with("-")).map(|path| format!("{}/{}", pwd, path)).collect();
+
     if paths.len() == 1 {
         print!("{}", paths[0]);
-    } else {
-        for path in paths {
-            println!("{}", path);
-        }
         if copy_output {
-            let mut pbcopy = process::Command::new("/usr/bin/pbcopy")
-                .stdin(process::Stdio::piped())
-                .spawn()
-                .ok()
-                .expect("Failed to execute.");
+            // Ideally, this whole thing gets moved into a method, but that seems to smack into a
+            // brick wall quick in Rust. Also, I don't actually want it printing when it fails,
+            // that's just for now while I'm trying to figure out why things don't work.
+            // Also, some languages make pattern matching seem elegant, Rust doesn't seem to be one
+            // of them.
+            let maybe_pbcopy = process::Command::new("/usr/bin/pbcopy")
+                                .stdin(process::Stdio::piped())
+                                .spawn();
 
-            match pbcopy.stdin.as_mut() {
-                Some(pbcopy_stdin) => {
-                    for path in paths {
-                        println!("{}", path);
-                        match pbcopy_stdin.write(&path.as_bytes()) {
-                            Ok(_)  => {}
-                            Err(err) => println!("{}", err)
-                        }
+            match maybe_pbcopy {
+                Ok(mut pbcopy) => {
+                    match pbcopy.stdin.as_mut() {
+                        Some(pbcopy_stdin) => {
+                            match pbcopy_stdin.write(&paths[0].as_bytes()) {
+                                Ok(_)  => {}
+                                Err(err) => println!("{}", err)
+                            }
+                            match pbcopy_stdin.flush() {
+                                Ok(_)  => {}
+                                Err(err) => println!("{}", err)
+                            }
+                        },
+                        None => {}
                     }
-                    match pbcopy_stdin.flush() {
-                        Ok(_)  => {}
+                    match pbcopy.wait() {
+                        Ok(_) => {},
                         Err(err) => println!("{}", err)
                     }
-                },
-                None => {}
+                }
+                Err(err) => println!("{}", err)
             }
-            pbcopy.wait().expect("Command wasn't running");
+        }
+    } else {
+        for path in &paths {
+            println!("{}", path);
+        }
+        // copy / pasted here because I'm not smart enough to figure out how to extract code into a
+        // method in Rust.
+        if copy_output {
+            // Ideally, this whole thing gets moved into a method, but that seems to smack into a
+            // brick wall quick in Rust. Also, I don't actually want it printing when it fails,
+            // that's just for now while I'm trying to figure out why things don't work.
+            // Also, some languages make pattern matching seem elegant, Rust doesn't seem to be one
+            // of them.
+            let maybe_pbcopy = process::Command::new("/usr/bin/pbcopy")
+                                .stdin(process::Stdio::piped())
+                                .spawn();
+
+            match maybe_pbcopy {
+                Ok(mut pbcopy) => {
+                    match pbcopy.stdin.as_mut() {
+                        Some(pbcopy_stdin) => {
+                            for path in &paths {
+                                match pbcopy_stdin.write(&path.as_bytes()) {
+                                    Ok(_)  => {}
+                                    Err(err) => println!("{}", err)
+                                }
+                            }
+                            match pbcopy_stdin.flush() {
+                                Ok(_)  => {}
+                                Err(err) => println!("{}", err)
+                            }
+                        },
+                        None => {}
+                    }
+                    match pbcopy.wait() {
+                        Ok(_) => {},
+                        Err(err) => println!("{}", err)
+                    }
+                }
+                Err(err) => println!("{}", err)
+            }
         }
     }
 }
