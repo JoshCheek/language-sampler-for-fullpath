@@ -4,4 +4,4 @@ set -o pipefail
 
 rustc Fullpath.rs -o fullpath
 ./fullpath a b c
-echo a | ./fullpath
+seq 3 | ./fullpath

@@ -1,6 +1,7 @@
 use std::env;
 use std::process;
-use std::io::{self, Read};
+use std::io;
+use std::io::prelude::*;
 
 // This code is editable and runnable!
 fn main() {
@@ -9,12 +10,11 @@ fn main() {
     let mut paths:Vec<String> =
         get_args().map(|path| format!("{}/{}", pwd, path)).collect();
     if paths.len() == 0 {
-        let mut buffer = String::new();
-        match io::stdin().read_to_string(&mut buffer) {
-            Ok(_)    => paths = vec![buffer],
-            Err(err) => {
-                println!("{}", err);
-                process::exit(1);
+        let stdin = io::stdin();
+        for maybe_line in stdin.lock().lines() {
+            match maybe_line {
+                Ok(line) => paths.push(line),
+                Err(_)   => {}
             }
         }
     }
