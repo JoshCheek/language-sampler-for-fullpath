@@ -125,6 +125,6 @@ fn get_pwd() -> String {
 
 fn get_args() -> Vec<String>  {
     let mut argv = env::args();
-    argv.next(); // first arg is the program name
-    return argv.collect();
+    argv.next(); // first arg in argv is the program name
+    argv.collect()
 }
