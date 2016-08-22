@@ -30,19 +30,6 @@ class Fullpath {
       printDirs(dirs, Sys.stdout());
   }
 
-  static public function run(programName:String, callback:sys.io.Process->Void) {
-    var pbcopy = new sys.io.Process(programName, []);
-    callback(pbcopy);
-    pbcopy.close();
-    return pbcopy.exitCode();
-  }
-
-  static public function printDirs(dirs:Array<String>, stdout:haxe.io.Output)
-    if(dirs.length == 1)
-      stdout.writeString(dirs[0]);
-    else for(arg in dirs)
-      stdout.writeString(arg+"\n");
-
   static public function getDirs(cwd:String, args:Array<String>, stdin:haxe.io.Input) {
     var dirs = args.filter(isDir);
     if(dirs.empty())
@@ -59,5 +46,18 @@ class Fullpath {
 
   static inline public function isDir(maybeDir:String)
     return 0 != maybeDir.length && !maybeDir.startsWith("-");
+
+  static public function printDirs(dirs:Array<String>, stdout:haxe.io.Output)
+    if(dirs.length == 1)
+      stdout.writeString(dirs[0]);
+    else for(arg in dirs)
+      stdout.writeString(arg+"\n");
+
+  static public function run(programName:String, callback:sys.io.Process->Void) {
+    var pbcopy = new sys.io.Process(programName, []);
+    callback(pbcopy);
+    pbcopy.close();
+    return pbcopy.exitCode();
+  }
 
 }
