@@ -3,10 +3,12 @@ use std::process;
 use std::io;
 use std::io::prelude::*;
 
-fn f(pbcopy_stdin:&mut process::ChildStdin, path:&String)->() {
-    match pbcopy_stdin.write(&path.as_bytes()) {
-        Ok(_)  => {}
-        Err(err) => println!("{}", err)
+fn f(pbcopy_stdin:&mut process::ChildStdin, paths:&Vec<String>)->() {
+    for path in paths {
+        match pbcopy_stdin.write(&path.as_bytes()) {
+            Ok(_)  => {}
+            Err(err) => println!("{}", err)
+        }
     }
     ()
 }
@@ -94,9 +96,7 @@ fn main() {
                 Ok(mut pbcopy) => {
                     match pbcopy.stdin.as_mut() {
                         Some(pbcopy_stdin) => {
-                            for path in &paths {
-                                f(pbcopy_stdin, path);
-                            }
+                            f(pbcopy_stdin, &paths);
                             match pbcopy_stdin.flush() {
                                 Ok(_)  => {}
                                 Err(err) => println!("{}", err)
