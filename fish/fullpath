@@ -1,7 +1,21 @@
 #!/usr/bin/env fish
 
-set paths $argv
+# process args into these three vars
+set paths
+set printHelp false
+set copyOutput true
 
+for arg in $argv
+  if test $arg = "-h" -o $arg = "--help"
+    set printHelp true
+  else if test $arg = "-c" -o $arg = "--copy"
+    set copyOutput false
+  else
+    set paths $paths $arg
+  end
+end
+
+# read paths from stdin if none were provided
 if test (count $paths) -eq 0
   while read -l line
     set paths $paths $line
