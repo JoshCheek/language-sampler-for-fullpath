@@ -25,10 +25,7 @@ fn main() {
     if paths.is_empty() {
         let stdin = io::stdin();
         for maybe_line in stdin.lock().lines() {
-            match maybe_line {
-                Ok(line) => paths.push(line),
-                Err(_)   => {}
-            }
+            match maybe_line { Ok(line) => paths.push(line), Err(_) => (), }
         }
     }
     paths = paths.into_iter().filter(|path| path != "" && !path.starts_with("-")).map(|path| format!("{}/{}", pwd, path)).collect();
@@ -114,12 +111,8 @@ fn main() {
 
 fn get_pwd() -> String {
     match env::current_dir() {
-        Ok(pwd) =>
-            return format!("{}", pwd.display()),
-        Err(err) => {
-            println!("{}", err);
-            process::exit(1);
-        }
+        Ok(pwd)  => format!("{}", pwd.display()),
+        Err(err) => panic!(err),
     }
 }
 
