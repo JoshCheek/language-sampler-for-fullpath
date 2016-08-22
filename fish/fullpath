@@ -6,13 +6,12 @@ set printHelp false
 set copyOutput false
 
 for arg in $argv
-  if [ $arg = "-h" ]
-  or [ $arg = "--help" ]
+  switch $arg
+  case -h --help
     set printHelp true
-  else if [ $arg = "-c" ]
-       or [ $arg = "--copy" ]
+  case -c --copy
     set copyOutput true
-  else if [ -n $arg ]
+  case '?*'
     set paths $paths $arg
   end
 end
