@@ -6,17 +6,19 @@ set printHelp false
 set copyOutput false
 
 for arg in $argv
-  if test $arg = "-h"; or test $arg = "--help"
+  if [ $arg = "-h" ]
+  or [ $arg = "--help" ]
     set printHelp true
-  else if test $arg = "-c"; or test $arg = "--copy"
+  else if [ $arg = "-c" ]
+       or [ $arg = "--copy" ]
     set copyOutput true
-  else if test -n $arg
+  else if [ -n $arg ]
     set paths $paths $arg
   end
 end
 
 # maybe print help
-if test $printHelp = true
+if [ $printHelp = true ]
   echo "usage: fullpath *[relative-paths] [-c]"
   echo
   echo "  Prints the fullpath of the paths"
@@ -29,7 +31,7 @@ if test $printHelp = true
 end
 
 # read paths from stdin if none were provided
-if test (count $paths) -eq 0
+if [ (count $paths) = 0 ]
   while read -l line
     if test -n $line
       set paths $paths $line
@@ -39,16 +41,16 @@ end
 
 # print them to stdout / pbcopy
 function print_paths
-  if test (count $paths) -eq 1
-    echo -n $PWD/$paths[1]
+  if [ (count $argv) = 1 ]
+    echo -n $PWD/$argv[1]
   else
-    for arg in $paths
+    for arg in $argv
       echo $PWD/$arg
     end
   end
 end
 
-print_paths
-if test true = $copyOutput
-  print_paths | pbcopy
+if [ $copyOutput = true ]
+  print_paths $paths | pbcopy
 end
+print_paths $paths
