@@ -14,6 +14,7 @@ Language Sampler For Fullpath
 [Java](#java),
 [JavaScript](#javascript),
 [Kotlin](#kotlin),
+[Rust](#rust),
 [PHP](#php),
 [Python](#python),
 [Ruby](#ruby)
@@ -516,6 +517,48 @@ REPL:
 $ fish
 ```
 
+
+### [Rust](https://www.rust-lang.org)
+
+Painful. This required a lot of focus, so any little thing (eg the dogs feeling antsy) took a big toll.
+Eventually I had to go read the Rust book, which did do a good job of explaining the issues I was hitting,
+and the error messages are trying really hard to be helpful, which I absolutely love.
+But still, if the language wasn't so opaque, it wouldn't need to rely so heavily on documentation
+(really, documentation is a code smell because it's a crutch you lean on when the UX doesn't make it
+obvious what you need to do -- if Rust were better in some way that IDK what it is, then I wouldn't
+need to fallback to docs so heavily). The docs site is pretty good, but there seems to be a lot of duplicate
+entries.  The pattern matching is annoying.
+
+It's a bit verbose, the syntax is kind of annoying, I'm not smart enough, apparently, to understand
+the type system (even after having read about it, and often times knowing what I wanted to say, I either
+couldn't figure out how to say it, or didn't understand why it didn't like my code,
+or what some annotation I might add would wind up doing). Opening the process and writing to its standard
+input was incredibly difficult to figure out, and led to like a core dump or something for a long time.
+
+It's a way better language than C, and probably worth just gritting my teeth
+and bearing through the vertical learning curve so that I don't ever have to write C again.
+
+The compiler is fast, and it starts up very fast, both of these are of extreme importance,
+so huge props on that one, that goes a long way (allows me to just try out 10 different things
+in the span of a minute, encourages me to run my code often, etc).
+
+Go was way easier to learn, but I feel like their type system is a bit gimped, and I have no desire to
+constantly reimplement map/filter/reduce/etc, Rust seems promising in these areas. I suspect Rust is a
+better language than Go, but that learning curve is harsh.
+
+Install:
+
+```sh
+$ brew install rust
+```
+
+Build:
+
+```sh
+$ rustc Fullpath.rs -o ./fullpath
+```
+
+REPL: Didn't try to find one
 
 
 
