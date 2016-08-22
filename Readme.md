@@ -9,6 +9,7 @@ Language Sampler For Fullpath
 [Elixir](#elixir),
 [Go](#go),
 [Haskell](#haskell),
+[Haxe](#haxe),
 [Java](#java),
 [JavaScript](#javascript),
 [Kotlin](#kotlin),
@@ -448,6 +449,56 @@ $ cabal install -j    # this one builds it, but there's got to be a better way t
 ```
 
 Then add dependencies to the file `MyProj.cabal` in the `build-depends` key.
+
+
+### [Haxe](http://haxe.org)
+
+This was pretty fun, and pretty quick. Haxe is a pretty cool language.
+The semicolons are annoying as fuck, I constantly forgot to put them in.
+I **really** like the `using` feature, which takes functions and makes
+them methods on their first argument. A nice way to provide a minimal interface
+on the object, but allow it to be expanded on as if it had a larger interface,
+but without actually polluting the object.
+
+I compiled the backend to C++ since that compiles down to an executable,
+saving me from having to deal with shebangs or that ridiculous JVM hack I'm using.
+C++ is also very fast, so after compiling, it takes very little time to run.
+
+Download the haxe installer (mine is v3.3): https://haxe.org/download/
+
+Set up haxelib (you only have to do this once), which is their package manager:
+
+```sh
+$ haxelib setup         # hit enter to accept the default location
+```
+
+Download the C++ backend:
+
+```sh
+$ haxelib install hxcpp # install the c++ backend
+```
+
+Compile for C++
+
+```sh
+$ haxe -main Fullpath -cpp cpp
+$ cpp/Fullpath a b c
+```
+
+Run in interpreted mode (unfortunately, doesn't work well with our command-line args):
+
+```sh
+$ haxe --interp -main Fullpath
+```
+
+REPL:
+
+```sh
+$ haxelib install ihx # interactive hax
+$ haxelib run ihx
+```
+
+
 
 
 
