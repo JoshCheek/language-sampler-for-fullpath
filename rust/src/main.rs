@@ -3,21 +3,20 @@ use std::process;
 use std::io;
 use std::io::prelude::*;
 
-fn write_paths(pbcopy_stdin:&mut process::ChildStdin, paths:&Vec<String>)->() {
+fn write_paths(pbcopy_stdin:&mut process::ChildStdin, paths:&Vec<String>) {
     for path in paths {
         match pbcopy_stdin.write(&path.as_bytes()) {
-            Ok(_)  => {}
+            Ok(_)    => (),
             Err(err) => println!("{}", err)
         }
     }
     match pbcopy_stdin.flush() {
-        Ok(_)  => {}
-        Err(err) => println!("{}", err)
+        Ok(_)    => (),
+        Err(err) => println!("{}", err),
     }
-    ()
 }
 
-fn f(pbcopy:&mut process::Child, paths:&Vec<String>)->() {
+fn f(pbcopy:&mut process::Child, paths:&Vec<String>) {
     match pbcopy.stdin.as_mut() {
         Some(pbcopy_stdin) => write_paths(pbcopy_stdin, &paths),
         None => (),
