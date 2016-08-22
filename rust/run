@@ -3,3 +3,4 @@ set -eu
 set -o pipefail
 
 rustc Fullpath.rs -o fullpath
+./fullpath a b c

@@ -1,3 +1,5 @@
+use std::env;
+
 // This code is editable and runnable!
 fn main() {
     // A simple integer calculator:
@@ -19,5 +21,8 @@ fn main() {
 
     println!("The program \"{}\" calculates the value {}",
               program, accumulator);
+    for argument in env::args() {
+        println!("{}", argument);
+    }
 }
 
