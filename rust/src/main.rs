@@ -57,26 +57,14 @@ fn get_args() -> Vec<String>  {
 
 fn write_paths(stream:&mut std::io::Write, paths:&Vec<String>) {
     if paths.len() == 1 {
-        match stream.write(&paths[0].as_bytes()) {
-            Ok(_)    => (),
-            Err(err) => println!("{}", err),
-        }
+        ignore_result(stream.write(&paths[0].as_bytes()));
     } else {
         for path in paths {
-            match stream.write(&path.as_bytes()) {
-                Ok(_)    => (),
-                Err(err) => println!("{}", err),
-            }
-            match stream.write(&"\n".as_bytes()) {
-                Ok(_) => (),
-                Err(err) => println!("{}", err),
-            }
+            ignore_result(stream.write(&path.as_bytes()));
+            ignore_result(stream.write(&"\n".as_bytes()));
         }
     }
-    match stream.flush() {
-        Ok(_)    => (),
-        Err(err) => println!("{}", err),
-    }
+    ignore_result(stream.flush());
 }
 
 
@@ -90,12 +78,15 @@ fn copy_paths(paths:&Vec<String>) {
                 Some(pbcopy_stdin) => write_paths(pbcopy_stdin, &paths),
                 None => (),
             }
-            match pbcopy.wait() {
-                Ok(_) => (),
-                Err(err) => println!("{}", err),
-            }
+            ignore_result(pbcopy.wait());
         },
-        Err(err) => println!("{}", err),
+        Err(_) => (),
     }
 }
 
+fn ignore_result<X, Y>(result:std::result::Result<X, Y>) {
+    match result {
+        Ok(_)  => (),
+        Err(_) => (),
+    }
+}
