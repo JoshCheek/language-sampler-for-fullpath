@@ -57,13 +57,8 @@ class Fullpath {
     return lines;
   }
 
-  static public function chomp(string:String) {
-    if(string.length == 0)
-      return string;
-    if(string.charAt(string.length-1) != "\n")
-      return string;
-    return string.substr(0, string.length-1);
-  }
+  static public function chomp(string:String)
+    return "\n"!=string.charAt(string.length-1) ? string : string.substr(0, string.length-1);
 
   static public function selectPaths(potentials:Array<String>)
     return potentials.filter(isDir);
