@@ -7,8 +7,7 @@ use std::io::prelude::*;
 fn main() {
     // let pwd:collections::string::String = "".to_string();
     let pwd = get_pwd();
-    let mut paths:Vec<String> =
-        get_args().map(|path| format!("{}/{}", pwd, path)).collect();
+    let mut paths = get_args();
     if paths.len() == 0 {
         let stdin = io::stdin();
         for maybe_line in stdin.lock().lines() {
@@ -18,8 +17,7 @@ fn main() {
             }
         }
     }
-
-
+    paths = paths.into_iter().map(|path| format!("{}/{}", pwd, path)).collect();
     if paths.len() == 1 {
         print!("{}", paths[0]);
     } else {
@@ -40,8 +38,8 @@ fn get_pwd() -> String {
     }
 }
 
-fn get_args() -> env::Args {
+fn get_args() -> Vec<String>  {
     let mut argv = env::args();
     argv.next(); // first arg is the program name
-    return argv;
+    return argv.collect();
 }
