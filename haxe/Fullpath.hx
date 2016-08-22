@@ -22,9 +22,12 @@ class Fullpath {
     if(printHelp)
       stdout.writeString(helpScreen);
     else {
-      // if arg is -c
-      // then print the output to pbcopy
       printDirs(dirs, stdout);
+      if(copyOutput) {
+        var pbcopy = new sys.io.Process('pbcopy', []);
+        printDirs(dirs, pbcopy.stdin);
+        pbcopy.close();
+      }
     }
   }
 
@@ -38,7 +41,7 @@ class Fullpath {
 
   static public function getDirs(cwd:String, args:Array<String>, stdin:haxe.io.Input) {
     var dirs = selectPaths(args);
-    if(args.length == 0)
+    if(dirs.length == 0)
       dirs = selectPaths(readLines(Sys.stdin()));
     return dirs.map(function(dir) { return cwd + dir; });
   }
