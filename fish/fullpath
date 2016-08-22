@@ -1,9 +1,17 @@
 #!/usr/bin/env fish
 
-if test 1 -eq (count $argv)
-  echo -n $PWD/$argv[1]
+set paths $argv
+
+if test (count $paths) -eq 0
+  while read -l line
+    set paths $paths $line
+  end
+end
+
+if test (count $paths) -eq 1
+  echo -n $PWD/$paths[1]
 else
-  for arg in $argv
+  for arg in $paths
     echo $PWD/$arg
   end
 end
