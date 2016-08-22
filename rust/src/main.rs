@@ -20,9 +20,12 @@ fn write_paths(pbcopy_stdin:&mut process::ChildStdin, paths:&Vec<String>)->() {
 fn f(pbcopy:&mut process::Child, paths:&Vec<String>)->() {
     match pbcopy.stdin.as_mut() {
         Some(pbcopy_stdin) => write_paths(pbcopy_stdin, &paths),
-        None => {}
+        None => (),
     }
-    ()
+    match pbcopy.wait() {
+        Ok(_) => (),
+        Err(err) => println!("{}", err),
+    }
 }
 
 fn main() {
@@ -105,14 +108,8 @@ fn main() {
 
 
             match maybe_pbcopy {
-                Ok(mut pbcopy) => {
-                    f(&mut pbcopy, &paths);
-                    match pbcopy.wait() {
-                        Ok(_) => {},
-                        Err(err) => println!("{}", err)
-                    }
-                }
-                Err(err) => println!("{}", err)
+                Ok(mut pbcopy) => f(&mut pbcopy, &paths),
+                Err(err) => println!("{}", err),
             }
         }
     }
