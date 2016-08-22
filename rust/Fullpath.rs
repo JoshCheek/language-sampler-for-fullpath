@@ -8,7 +8,21 @@ fn main() {
     // let pwd:collections::string::String = "".to_string();
     let pwd = get_pwd();
     let mut paths = get_args();
-    if paths.len() == 0 {
+    let print_help = paths.contains(&"-h".to_string()) || paths.contains(&"--help".to_string());
+
+    if print_help {
+        println!("{}", "usage: fullpath *[relative-paths] [-c]");
+        println!("{}", "");
+        println!("{}", "  Prints the fullpath of the paths");
+        println!("{}", "  If no paths are given as args, it will read them from stdin");
+        println!("{}", "");
+        println!("{}", "  If there is only one path, the trailing newline is omitted");
+        println!("{}", "");
+        println!("{}", "  The -c flag will copy the results into your pasteboard");
+        process::exit(0);
+    }
+
+    if paths.is_empty() {
         let stdin = io::stdin();
         for maybe_line in stdin.lock().lines() {
             match maybe_line {
