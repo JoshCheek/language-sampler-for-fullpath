@@ -39,8 +39,8 @@ class Fullpath {
 
   static public function readLines(instream:haxe.io.Input) {
     var lines = [];
-    try { while(true) lines.push(instream.readLine().rtrim()); }
-    catch(error:haxe.io.Eof) { /* noop */ }
+    try while(true) lines.push(instream.readLine().rtrim())
+    catch(error:haxe.io.Eof) null;
     return lines;
   }
 
