@@ -179,3 +179,10 @@ file 'haxe/fullpath' => 'haxe/Fullpath.hx' do
     sh 'cp', 'cpp/Fullpath', 'fullpath'
   end
 end
+
+
+# =====  Fish  =====
+task default: :fish
+
+desc 'Test fullpath in Fish'
+task(:fish) { cucumber 'fish' }

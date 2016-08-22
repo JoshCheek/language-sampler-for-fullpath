@@ -1,0 +1,5 @@
+#!/usr/bin/env fish
+
+for arg in $argv
+  echo $PWD/$arg
+end
