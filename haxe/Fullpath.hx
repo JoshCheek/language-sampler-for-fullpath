@@ -1,3 +1,6 @@
+using Lambda;
+using StringTools;
+
 class Fullpath {
   static var helpScreen =
 "usage: fullpath *[relative-paths] [-c]
@@ -11,61 +14,50 @@ class Fullpath {
 ";
 
   static public function main() {
-    var stdout     = Sys.stdout();
-    var stdin      = Sys.stdin();
     var args       = Sys.args();
-    var cwd        = chomp(Sys.getCwd());
-    var dirs       = getDirs(cwd, args, stdin);
-    var printHelp  = hasArg(args, "-h") || hasArg(args, "--help");
-    var copyOutput = hasArg(args, "-c") || hasArg(args, "--copy");
+    var dirs       = getDirs(Sys.getCwd(), args, Sys.stdin());
+    var printHelp  = args.has("-h") || args.has("--help");
+    var copyOutput = args.has("-c") || args.has("--copy");
 
     if(printHelp)
-      stdout.writeString(helpScreen);
+      Sys.print(helpScreen);
     else if(copyOutput)
-      open('pbcopy', function(pbcopy) {
+      run('pbcopy', function(pbcopy) {
         printDirs(dirs, pbcopy.stdin);
-        printDirs(dirs, stdout);
+        printDirs(dirs, Sys.stdout());
       });
     else
-      printDirs(dirs, stdout);
+      printDirs(dirs, Sys.stdout());
   }
 
-  static public function open(programName:String, callback:sys.io.Process->Void) {
-    var pbcopy = new sys.io.Process('pbcopy', []);
+  static public function run(programName:String, callback:sys.io.Process->Void) {
+    var pbcopy = new sys.io.Process(programName, []);
     callback(pbcopy);
     pbcopy.close();
+    return pbcopy.exitCode();
   }
 
   static public function printDirs(dirs:Array<String>, stdout:haxe.io.Output)
     if(dirs.length == 1)
       stdout.writeString(dirs[0]);
-    else
-      for(arg in dirs)
-        stdout.writeString(arg+"\n");
+    else for(arg in dirs)
+      stdout.writeString(arg+"\n");
 
   static public function getDirs(cwd:String, args:Array<String>, stdin:haxe.io.Input) {
-    var dirs = selectPaths(args);
-    if(dirs.length == 0)
-      dirs = selectPaths(readLines(Sys.stdin()));
+    var dirs = args.filter(isDir);
+    if(dirs.empty())
+      dirs = readLines(Sys.stdin()).filter(isDir);
     return dirs.map(function(dir) { return cwd + dir; });
   }
 
   static public function readLines(instream:haxe.io.Input) {
     var lines = [];
-    try { while(true) lines.push(chomp(instream.readLine())); }
+    try { while(true) lines.push(instream.readLine().rtrim()); }
     catch(error:haxe.io.Eof) { /* noop */ }
     return lines;
   }
 
-  static public function chomp(string:String)
-    return "\n"!=string.charAt(string.length-1) ? string : string.substr(0, string.length-1);
+  static inline public function isDir(maybeDir:String)
+    return 0 != maybeDir.length && !maybeDir.startsWith("-");
 
-  static public function selectPaths(potentials:Array<String>)
-    return potentials.filter(isDir);
-
-  static public function isDir(maybeDir:String)
-    return maybeDir.length != 0 && maybeDir.charAt(0) != "-";
-
-  static public function hasArg(args:Array<String>, maybePresent:String)
-    return -1 != args.indexOf(maybePresent);
 }
