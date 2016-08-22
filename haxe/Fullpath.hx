@@ -11,31 +11,36 @@ class Fullpath {
 ";
 
   static public function main() {
-    var stdout = Sys.stdout();
-    var stdin  = Sys.stdin();
-    var args   = Sys.args();
-    var cwd    = chomp(Sys.getCwd());
-    var dirs   = getDirs(args, stdin);
+    var stdout     = Sys.stdout();
+    var stdin      = Sys.stdin();
+    var args       = Sys.args();
+    var cwd        = chomp(Sys.getCwd());
+    var dirs       = getDirs(cwd, args, stdin);
+    var printHelp  = hasArg(args, "-h") || hasArg(args, "--help");
+    var copyOutput = hasArg(args, "-c") || hasArg(args, "--copy");
 
-    if(hasArg(args, "-h") || hasArg(args, "--help"))
+    if(printHelp)
       stdout.writeString(helpScreen);
     else {
       // if arg is -c
       // then print the output to pbcopy
-
-      if(dirs.length == 1)
-        stdout.writeString(cwd+dirs[0]);
-      else
-        for(arg in dirs)
-          stdout.writeString(cwd+arg+"\n");
+      printDirs(dirs, stdout);
     }
   }
 
-  static public function getDirs(args:Array<String>, stdin:haxe.io.Input) {
+  static public function printDirs(dirs:Array<String>, stdout:haxe.io.Output) {
+    if(dirs.length == 1)
+      stdout.writeString(dirs[0]);
+    else
+      for(arg in dirs)
+        stdout.writeString(arg+"\n");
+  }
+
+  static public function getDirs(cwd:String, args:Array<String>, stdin:haxe.io.Input) {
     var dirs = selectPaths(args);
     if(args.length == 0)
       dirs = selectPaths(readLines(Sys.stdin()));
-    return dirs;
+    return dirs.map(function(dir) { return cwd + dir; });
   }
 
   static public function readLines(instream:haxe.io.Input) {
