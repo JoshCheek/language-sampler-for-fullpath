@@ -14,10 +14,10 @@ Language Sampler For Fullpath
 [Java](#java),
 [JavaScript](#javascript),
 [Kotlin](#kotlin),
-[Rust](#rust),
 [PHP](#php),
 [Python](#python),
-[Ruby](#ruby)
+[Ruby](#ruby),
+[Rust](#rust)
 </strong>
 
 Fullpath is a program I initially wrote in Ruby
