@@ -527,7 +527,7 @@ But still, if the language wasn't so opaque, it wouldn't need to rely so heavily
 (really, documentation is a code smell because it's a crutch you lean on when the UX doesn't make it
 obvious what you need to do -- if Rust were better in some way that IDK what it is, then I wouldn't
 need to fallback to docs so heavily). The docs site is pretty good, but there seems to be a lot of duplicate
-entries. The pattern matching is annoying.
+entries. Also, I swear the types kept shifting out from underneath me. The pattern matching is annoying.
 
 It's a bit verbose, the syntax is kind of annoying, I'm not smart enough, apparently, to understand
 the type system (even after having read about it, and often times knowing what I wanted to say, I either
@@ -552,7 +552,8 @@ in the span of a minute, encourages me to run my code often, etc).
 
 Go was way easier to learn, but I feel like their type system is a bit gimped, and I have no desire to
 constantly reimplement map/filter/reduce/etc, Rust seems promising in these areas. I suspect Rust is a
-better language than Go, but that learning curve is harsh.
+better language than Go, but that learning curve is harsh, I think there's more to
+be done with it, but working with it is just exhausting.
 
 Install:
 
