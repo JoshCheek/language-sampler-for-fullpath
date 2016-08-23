@@ -3,6 +3,13 @@ use std::process;
 use std::io;
 use std::io::prelude::*;
 
+fn select_paths(paths: Vec<String>) -> Vec<String> {
+    paths.into_iter()
+         .filter(|path| path != "")
+         .filter(|path| !path.starts_with("-"))
+         .collect()
+}
+
 fn main() {
     let help_screen           =
 "usage: fullpath *[relative-paths] [-c]
@@ -13,14 +20,11 @@ fn main() {
   If there is only one path, the trailing newline is omitted
 
   The -c flag will copy the results into your pasteboard";
-    let pwd                   = get_pwd();
-    let args                  = get_args();
-    let print_help            = args.contains(&"-h".to_string()) || args.contains(&"--help".to_string());
-    let copy_output           = args.contains(&"-c".to_string()) || args.contains(&"--copy".to_string());
-    let mut paths:Vec<String> = args.into_iter()
-                                    .filter(|path| path != "")
-                                    .filter(|path| !path.starts_with("-"))
-                                    .collect();
+    let pwd         = get_pwd();
+    let args        = get_args();
+    let print_help  = args.contains(&"-h".to_string()) || args.contains(&"--help".to_string());
+    let copy_output = args.contains(&"-c".to_string()) || args.contains(&"--copy".to_string());
+    let mut paths   = select_paths(args);
 
     if print_help {
         println!("{}", help_screen);
@@ -34,12 +38,15 @@ fn main() {
         }
     }
 
-    // duplicating the above code because I can't figure out how to pull it out into a function
-    paths = paths.into_iter()
-                 .filter(|path| path != "")
-                 .filter(|path| !path.starts_with("-"))
-                 .map(|path| format!("{}/{}", pwd, path))
-                 .collect();
+    // Sigh, it's apparently not smart enough to let me return the iter,
+    // so I have to convert back and forth.
+    // Also tried making it a macro, but it doesn't have a way to tell me
+    // if the iterator is empty or not, so in order to ask the size, (eg is_empty())
+    // I have to convert back to a vector, too >.<
+    paths = select_paths(paths)
+                .into_iter()
+                .map(|path| format!("{}/{}", pwd, path))
+                .collect();
 
     write_paths(&mut std::io::stdout(), &paths);
 
