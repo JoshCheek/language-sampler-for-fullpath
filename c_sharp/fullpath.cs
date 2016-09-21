@@ -2,20 +2,46 @@ using System;
 using System.IO;
 using System.Collections.Generic;
 
-public class HelloWorld {
+public class Fullpath {
   static public void Main (String[] args) {
     string       cwd   = Directory.GetCurrentDirectory();
-    List<String> paths = new List<String>(args);
+    bool         copy  = false;
+    bool         help  = false;
+    List<String> paths = new List<String>();
+
+    foreach(string arg in args)
+      if(arg == "-c" || arg == "--copy")
+        copy = true;
+      else if(arg == "-h" || arg == "--help")
+        help = true;
+      else
+        paths.Add(arg);
+
+    if(help) {
+      Console.WriteLine("usage: fullpath *[relative-paths] [-c]");
+      Console.WriteLine("");
+      Console.WriteLine("  Prints the fullpath of the paths");
+      Console.WriteLine("  If no paths are given as args, it will read them from stdin");
+      Console.WriteLine("");
+      Console.WriteLine("  If there is only one path, the trailing newline is omitted");
+      Console.WriteLine("");
+      Console.WriteLine("  The -c flag will copy the results into your pasteboard");
+      return;
+    }
 
     if(paths.Count == 0)
       paths = ReadLines();
 
     paths = Expand(cwd, paths);
 
-    if(paths.Count == 1)
-      Console.Write(paths[0]);
-    else foreach(string fullpath in paths)
-      Console.WriteLine(fullpath);
+    if(copy) {
+      Console.WriteLine("copying");
+    } else {
+      if(paths.Count == 1)
+        Console.Write(paths[0]);
+      else foreach(string fullpath in paths)
+        Console.WriteLine(fullpath);
+    }
   }
 
   static public List<String> Expand(String cwd, List<String> paths) {
