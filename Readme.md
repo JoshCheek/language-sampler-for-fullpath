@@ -4,6 +4,7 @@ Language Sampler For Fullpath
 <strong>
 [Bash](#bash),
 [C](#c),
+[C Sharp](#c-sharp),
 [Clojure](#clojure),
 [Common Lisp](#common-lisp),
 [Elixir](#elixir),
