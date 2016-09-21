@@ -7,6 +7,7 @@ Language Sampler For Fullpath
 [C Sharp](#c-sharp),
 [Clojure](#clojure),
 [Common Lisp](#common-lisp),
+[Crystal](#crystal),
 [Elixir](#elixir),
 [Fish](#fish),
 [Go](#go),
@@ -606,7 +607,7 @@ $ brew install mono
 ```
 
 
-hello_world.cs:
+`hello_world`.cs:
 
 ```cs
 using System;
@@ -627,6 +628,41 @@ $ mcs hello_world.cs
 $ mono hello_world.exe
 ```
 
+
+### [Crystal](https://crystal-lang.org)
+
+This went smoothly and was a lot of fun.
+The binary executes quickly, which is nice.
+The docs were hard to get the information I wanted from,
+but once I cloned the repo, was able to quickly find the things I was looking for.
+Their tests were really helpful for figuring out how to use some of the less obvious features.
+I wouldn't mind writing more crystal in the future :)
+
+
+Install
+
+```sh
+$ brew install crystal-lang
+```
+
+
+`hello_world.cr`:
+
+```cs
+puts "hello world"
+```
+
+Interpret:
+
+```sh
+$ crystal run hello_world.cr
+```
+
+Compile:
+
+```sh
+$ crystal build hello_world.cr --release
+```
 
 <a href="http://www.wtfpl.net/"><img src="http://www.wtfpl.net/wp-content/uploads/2012/12/wtfpl.svg" height="20" alt="WTFPL" /></a> License
 -------------------------------------------------------------------------------------------------------------------------------------------
