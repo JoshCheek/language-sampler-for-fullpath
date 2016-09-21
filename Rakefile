@@ -215,3 +215,8 @@ end
 file 'c_sharp/fullpath.exe' => 'c_sharp/fullpath.cs' do
   sh 'mcs', '-out:c_sharp/fullpath.exe', 'c_sharp/fullpath.cs'
 end
+
+
+# =====  Crystal  =====
+desc 'Test fullpath for Crystal'
+task(:crystal) { cucumber 'crystal' }
