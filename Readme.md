@@ -581,6 +581,15 @@ REPL: Didn't try to find one
 
 ### [C Sharp](http://www.mono-project.com)
 
+Overall, this was a good experience. Nothing stood out as wonderful or horrible,
+but the whole thing took about 2 hours, I never got really stuck, nothing in the language
+really annoyed me. I didn't figure out the rules for when to use capital letters and
+when not to. To some extent, it seemed like whatever I guessed would work most of the time.
+I feel like there's some nice support for functional collection methods (map, reduce, etc)
+that would have been cool to play with, but didn't try that hard to figure them out sicne
+I mostly fetl like just getting through it.
+
+
 Install
 
 ```sh
