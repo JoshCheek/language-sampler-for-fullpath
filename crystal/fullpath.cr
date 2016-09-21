@@ -18,14 +18,19 @@ if help
   exit
 end
 
+
+def print_paths(paths, stream)
+  if paths.size == 1
+    stream.print paths[0]
+  else
+    paths.each { |p| stream.puts p }
+  end
+end
+
 paths = ARGV.reject { |p| p.empty? }
 paths = STDIN.each_line.to_a if paths.empty?
 paths = paths.map    { |p| p.chomp }
              .reject { |p| p.empty? }
              .map    { |p| File.join cwd, p }
 
-if paths.size == 1
-  print paths[0]
-else
-  paths.each { |p| puts p }
-end
+print_paths paths, STDOUT
