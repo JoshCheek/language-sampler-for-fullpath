@@ -13,10 +13,16 @@ cwd   = Dir.current
 help  = ARGV.delete("-h") || ARGV.delete("--help")
 copy  = ARGV.delete("-c") || ARGV.delete("--copy")
 
-if help
-  puts help_screen
-  exit
+help && (puts help_screen; exit)
+
+paths = ARGV.reject &.empty?
+paths = STDIN.each_line.to_a if paths.empty?
+paths = paths.map(&.chomp).reject(&.empty?).map { |p| File.join cwd, p }
+
+copy && Process.run "pbcopy" do |pbcopy|
+  print_paths paths, pbcopy.input
 end
+print_paths paths, STDOUT
 
 
 def print_paths(paths, stream)
@@ -26,16 +32,3 @@ def print_paths(paths, stream)
     paths.each { |p| stream.puts p }
   end
 end
-
-paths = ARGV.reject { |p| p.empty? }
-paths = STDIN.each_line.to_a if paths.empty?
-paths = paths.map    { |p| p.chomp }
-             .reject { |p| p.empty? }
-             .map    { |p| File.join cwd, p }
-
-if copy
-  # Their tests have been repeatedly helpful!
-  # https://github.com/crystal-lang/crystal/blob/9156f797ec18bfdc6c5a8575c8d681d40b5e1a12/spec/std/process_spec.cr#L70
-  Process.run("pbcopy") { |pbcopy| print_paths paths, pbcopy.input }
-end
-print_paths paths, STDOUT
