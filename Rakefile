@@ -218,5 +218,10 @@ end
 
 
 # =====  Crystal  =====
-desc 'Test fullpath for Crystal'
-task(:crystal) { cucumber 'crystal' }
+desc 'Build / Test fullpath for Crystal'
+task(crystal: 'crystal/fullpath') { cucumber 'crystal' }
+task 'crystal/fullpath' => 'crystal/fullpath.cr' do
+  sh 'crystal', 'build', 'crystal/fullpath.cr',
+                         '-o', 'crystal/fullpath',
+                         '--release'
+end
