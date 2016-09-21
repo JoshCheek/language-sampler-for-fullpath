@@ -21,7 +21,8 @@ public class HelloWorld {
   static public List<String> Expand(String cwd, List<String> paths) {
     List<String> expanded = new List<String>();
     foreach(string path in paths)
-      expanded.Add(cwd+"/"+path);
+      if(path != "")
+        expanded.Add(cwd+"/"+path);
     return expanded;
   }
 
