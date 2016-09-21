@@ -1,5 +1,8 @@
 #!/usr/bin/env crystal
 
+cwd = Dir.current
+
 ARGV.each do |arg|
-  puts arg
+  fullpath = File.join(cwd, arg)
+  puts fullpath
 end
