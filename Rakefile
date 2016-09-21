@@ -203,3 +203,15 @@ file 'rust/fullpath' => 'rust/src/main.rs' do
   end
 end
 
+
+# =====  C Sharp  =====
+task default: :c_sharp
+
+desc 'Build / Test fullpath in C Sharp'
+task(c_sharp: 'c_sharp/fullpath')  { cucumber 'c_sharp' }
+file 'c_sharp/fullpath' => 'c_sharp/fullpath.exe' do
+  touch 'c_sharp/fullpath'
+end
+file 'c_sharp/fullpath.exe' => 'c_sharp/fullpath.cs' do
+  sh 'mcs', '-out:c_sharp/fullpath.exe', 'c_sharp/fullpath.cs'
+end

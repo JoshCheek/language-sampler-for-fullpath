@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+exe_path="$(dirname $0)/fullpath.exe"
+mono "$exe_path" "$@"
