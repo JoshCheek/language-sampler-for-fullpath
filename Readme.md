@@ -64,6 +64,14 @@ See which language tests you can run:
 $ rake -T
 ```
 
+Potential Future Languages
+--------------------------
+
+Assembly (I've already got this partially working, but it's a pita -.-),
+Dart, Erlang, Rubinius Bytecode, Groovy, OCaml, CoffeeScript, Scala, Julia,
+Crystal, C++, Objective-C, VB.net, Swift, Perl, R, Cobol, D, Fortran, F#,
+Lua, Ada, Prolog, Scheme, Awk, Delphi/Object Pascal
+
 
 Languages
 ---------
