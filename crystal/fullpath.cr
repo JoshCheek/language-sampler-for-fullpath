@@ -33,4 +33,9 @@ paths = paths.map    { |p| p.chomp }
              .reject { |p| p.empty? }
              .map    { |p| File.join cwd, p }
 
+if copy
+  # Their tests have been repeatedly helpful!
+  # https://github.com/crystal-lang/crystal/blob/9156f797ec18bfdc6c5a8575c8d681d40b5e1a12/spec/std/process_spec.cr#L70
+  Process.run("pbcopy") { |pbcopy| print_paths paths, pbcopy.input }
+end
 print_paths paths, STDOUT
