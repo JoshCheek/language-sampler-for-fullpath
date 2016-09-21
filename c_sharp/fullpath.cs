@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 public class Fullpath {
   static public void Main (String[] args) {
@@ -34,14 +35,19 @@ public class Fullpath {
 
     paths = Expand(cwd, paths);
 
-    if(copy) {
-      Console.WriteLine("copying");
-    } else {
-      Stream       stream = Console.OpenStandardOutput();
-      StreamWriter writer = new StreamWriter(stream);
-      PrintPaths(paths, writer);
-      writer.Dispose();
+    if(copy) using (Process process = new Process()) {
+      ProcessStartInfo info = new ProcessStartInfo("pbcopy");
+      info.RedirectStandardInput = true;
+      info.UseShellExecute = false;
+      process.StartInfo = info;
+      process.Start();
+      PrintPaths(paths, process.StandardInput);
     }
+
+    Stream       stream = Console.OpenStandardOutput();
+    StreamWriter writer = new StreamWriter(stream);
+    PrintPaths(paths, writer);
+    writer.Dispose();
   }
 
   static public List<String> Expand(String cwd, List<String> paths) {
