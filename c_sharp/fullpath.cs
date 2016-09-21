@@ -44,10 +44,8 @@ public class Fullpath {
       PrintPaths(paths, process.StandardInput);
     }
 
-    Stream       stream = Console.OpenStandardOutput();
-    StreamWriter writer = new StreamWriter(stream);
-    PrintPaths(paths, writer);
-    writer.Dispose();
+    using (StreamWriter writer = new StreamWriter(Console.OpenStandardOutput()))
+      PrintPaths(paths, writer);
   }
 
   static public List<String> Expand(String cwd, List<String> paths) {
