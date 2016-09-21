@@ -1,0 +1,4 @@
+#!/bin/sh
+
+mcs fullpath.cs
+mono fullpath.exe

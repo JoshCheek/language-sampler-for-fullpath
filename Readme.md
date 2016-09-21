@@ -579,6 +579,36 @@ $ cargo build
 REPL: Didn't try to find one
 
 
+### [C Sharp](http://www.mono-project.com)
+
+Install
+
+```sh
+$ brew install mono
+```
+
+
+hello_world.cs:
+
+```cs
+using System;
+
+public class HelloWorld {
+    static public void Main () {
+        Console.WriteLine ("Hello Mono World");
+    }
+}
+```
+
+
+```sh
+# compile
+$ mcs hello_world.cs
+
+# run
+$ mono hello_world.exe
+```
+
 
 <a href="http://www.wtfpl.net/"><img src="http://www.wtfpl.net/wp-content/uploads/2012/12/wtfpl.svg" height="20" alt="WTFPL" /></a> License
 -------------------------------------------------------------------------------------------------------------------------------------------
