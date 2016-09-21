@@ -26,10 +26,12 @@ defmodule Fullpath do
 
   def includes?(haystack, needle),      do: find haystack, &needle==&1
   def flag?(string),                    do: String.starts_with? string, "-"
+  def chomp(str),                       do: String.trim_trailing str
   def empty_string?(string),            do: 0 == String.length(string)
   def empty_list?(list),                do: 0 == length list
   def expand_paths(paths, working_dir), do: map paths, &Path.expand(&1, working_dir)
   def to_paths(potential_paths),        do: potential_paths
+                                            |> map(&chomp &1)
                                             |> filter(&!empty_string? &1)
                                             |> filter(&!flag? &1)
 
@@ -37,8 +39,10 @@ defmodule Fullpath do
     paths = to_paths args
     if empty_list? paths do
       paths = to_paths io.stream(:stdio, :line)
+      expand_paths paths, cwd
+    else
+      expand_paths paths, cwd
     end
-    expand_paths paths, cwd
   end
 
   def copy_to_pasteboard(string) do
@@ -50,8 +54,9 @@ defmodule Fullpath do
   def format(paths) do
     toPrint = join paths, "\n"
     if 1 < length paths do
-      toPrint = toPrint <> "\n"
+      toPrint <> "\n"
+    else
+      toPrint
     end
-    toPrint
   end
 end
