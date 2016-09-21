@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Collections.Generic;
 
 public class HelloWorld {
   static public void Main (String[] args) {
@@ -12,14 +13,15 @@ public class HelloWorld {
         Console.WriteLine("{0}/{1}", cwd, args[i]);
       }
     } else {
-      /* List<int> lines = new List<String>(); */
-      /* integers.Add(line); */
-      string line = Console.ReadLine();
-      Console.WriteLine("("+line+")");
-      if(line == null) {
-        Console.WriteLine("t("+line+")");
-      } else {
-        Console.WriteLine("f("+line+")");
+      List<String> lines = new List<String>();
+      while(true) {
+        string line = Console.ReadLine();
+        if(line == null)
+          break;
+        lines.Add(line);
+      }
+      foreach(string line in lines) {
+        Console.WriteLine("{0}/{1}", cwd, line);
       }
     }
   }

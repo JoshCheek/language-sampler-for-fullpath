@@ -2,4 +2,4 @@
 
 mcs fullpath.cs
 mono fullpath.exe abc def ghi
-echo -n | mono fullpath.exe
+echo xyz| mono fullpath.exe
