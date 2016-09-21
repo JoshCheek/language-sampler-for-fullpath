@@ -1,8 +1,18 @@
 #!/usr/bin/env crystal
 
-cwd = Dir.current
 
-ARGV.each do |arg|
-  fullpath = File.join(cwd, arg)
-  puts fullpath
+cwd   = Dir.current
+help  = ARGV.delete("-h") || ARGV.delete("--help")
+copy  = ARGV.delete("-c") || ARGV.delete("--copy")
+
+paths = ARGV.reject { |p| p.empty? }
+paths = STDIN.each_line.to_a if paths.empty?
+paths = paths.map    { |p| p.chomp }
+             .reject { |p| p.empty? }
+             .map    { |p| File.join cwd, p }
+
+if paths.size == 1
+  print paths[0]
+else
+  paths.each { |p| puts p }
 end
