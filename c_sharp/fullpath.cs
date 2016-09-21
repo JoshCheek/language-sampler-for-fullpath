@@ -37,10 +37,10 @@ public class Fullpath {
     if(copy) {
       Console.WriteLine("copying");
     } else {
-      if(paths.Count == 1)
-        Console.Write(paths[0]);
-      else foreach(string fullpath in paths)
-        Console.WriteLine(fullpath);
+      Stream       stream = Console.OpenStandardOutput();
+      StreamWriter writer = new StreamWriter(stream);
+      PrintPaths(paths, writer);
+      writer.Dispose();
     }
   }
 
@@ -60,5 +60,13 @@ public class Fullpath {
       lines.Add(line);
     }
     return lines;
+  }
+
+  static public void PrintPaths(List<String> paths, TextWriter writer) {
+    if(paths.Count == 1)
+      writer.Write(paths[0]);
+    else foreach(string fullpath in paths) {
+      writer.WriteLine(fullpath);
+    }
   }
 }
