@@ -1,4 +1,4 @@
 #!/bin/sh
 
 mcs fullpath.cs
-mono fullpath.exe
+mono fullpath.exe abc def ghi
