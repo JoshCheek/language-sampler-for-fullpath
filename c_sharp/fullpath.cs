@@ -4,37 +4,34 @@ using System.Collections.Generic;
 
 public class HelloWorld {
   static public void Main (String[] args) {
-    string cwd = Directory.GetCurrentDirectory();
-    List<String> paths = new List<String>();
+    string       cwd   = Directory.GetCurrentDirectory();
+    List<String> paths = new List<String>(args);
 
-    foreach(string arg in args) {
-      paths.Add(arg);
-    }
-
-    if(paths.Count == 0) {
-      while(true) {
-        string line = Console.ReadLine();
-        if(line == null)
-          break;
-        paths.Add(line);
-      }
-    }
+    if(paths.Count == 0)
+      paths = ReadLines();
 
     paths = Expand(cwd, paths);
-    foreach(string fullpath in paths) {
-      Console.Write(fullpath);
-    }
+
+    if(paths.Count == 1)
+      Console.Write(paths[0]);
+    else foreach(string fullpath in paths)
+      Console.WriteLine(fullpath);
   }
 
   static public List<String> Expand(String cwd, List<String> paths) {
     List<String> expanded = new List<String>();
-    if(paths.Count == 1) {
-      expanded.Add(cwd+"/"+paths[0]);
-    } else {
-      foreach(string path in paths) {
-        expanded.Add(cwd+"/"+path+"\n");
-      }
-    }
+    foreach(string path in paths)
+      expanded.Add(cwd+"/"+path);
     return expanded;
+  }
+
+  static public List<String> ReadLines() {
+    List<String> lines = new List<String>();
+    while(true) {
+      string line = Console.ReadLine();
+      if(line == null) break;
+      lines.Add(line);
+    }
+    return lines;
   }
 }
