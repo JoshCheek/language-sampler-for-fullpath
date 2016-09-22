@@ -2,6 +2,11 @@
 require 'haiti'
 require 'open3'
 
+COPY_INVOCATION = [%w[pbcopy], %w[xsel], %w[xclip]].find do |program_name|
+  _out, _err, status = Open3.capture3('which', program_name)
+  status.success?
+end
+
 PASTE_INVOCATION = [%w[pbpaste], %w[xsel], %w[xclip -o]].find do |invocation|
   _out, _err, status = Open3.capture3('which', *invocation)
   status.success?
@@ -37,7 +42,7 @@ define_steps.call(
   'I previously copied "$text"',
   "I previously copied '$text'",
   "I previously copied:",
-) { |to_add| Open3.popen3("pbcopy") { |stdin, *| stdin.write eval_curlies(to_add) } }
+) { |to_add| Open3.popen3(*COPY_INVOCATION) { |stdin, *| stdin.write eval_curlies(to_add) } }
 
 define_steps.call(
   'the clipboard now contains "$text"',
