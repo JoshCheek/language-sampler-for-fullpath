@@ -2,8 +2,8 @@
 require 'haiti'
 require 'open3'
 
-COPY_INVOCATION = [%w[pbcopy], %w[xsel], %w[xclip]].find do |program_name|
-  _out, _err, status = Open3.capture3('which', program_name)
+COPY_INVOCATION = [%w[pbcopy], %w[xsel], %w[xclip]].find do |invocation|
+  _out, _err, status = Open3.capture3('which', *invocation)
   status.success?
 end
 
