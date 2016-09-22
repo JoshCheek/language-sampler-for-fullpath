@@ -2,15 +2,19 @@
 require 'haiti'
 require 'open3'
 
-COPY_INVOCATION = [%w[pbcopy], %w[xclip]].find do |invocation|
-  _out, _err, status = Open3.capture3('which', *invocation)
+def self.command?(name)
+  _out, _err, status = Open3.capture3('which', name)
   status.success?
 end
 
-PASTE_INVOCATION = [%w[pbpaste], %w[xclip -o]].find do |invocation|
-  _out, _err, status = Open3.capture3('which', *invocation)
-  status.success?
+if command? 'pbcopy'
+  COPY_INVOCATION  = %w[pbcopy]
+  PASTE_INVOCATION = %w[pbpaste]
+else
+  COPY_INVOCATION  = %w[xclip]
+  PASTE_INVOCATION = %w[xclip -o]
 end
+
 
 Haiti.configure do |config|
   config.proving_grounds_dir = File.expand_path '../../proving_grounds', __FILE__ # dotfiles/test/proving_grounds
