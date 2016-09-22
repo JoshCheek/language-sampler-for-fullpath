@@ -1,5 +1,11 @@
 # Copied and modified from https://raw.githubusercontent.com/JoshCheek/dotfiles/3cabefef72d2d97639f213726b8cd2550740ea7b/test/support/env.rb
 require 'haiti'
+require 'open3'
+
+PASTE_INVOCATION = [%w[pbpaste], %w[xsel], %w[xclip -o]].find do |invocation|
+  _out, _err, status = Open3.capture3('which', *invocation)
+  status.success?
+end
 
 Haiti.configure do |config|
   config.proving_grounds_dir = File.expand_path '../../proving_grounds', __FILE__ # dotfiles/test/proving_grounds
@@ -38,7 +44,7 @@ define_steps.call(
   "the clipboard now contains '$text'",
   "the clipboard now contains:",
 ) { |to_add|
-  out, error, status = Open3.capture3("pbpaste")
+  out, error, status = Open3.capture3(*PASTE_INVOCATION)
   raise "Failed: #{error.inspect}" unless status.success?
   expect(out).to eq eval_curlies(to_add)
 }
