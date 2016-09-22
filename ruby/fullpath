@@ -1,66 +1,45 @@
 #!/usr/bin/env ruby
+require 'open3'
 
-def self.parse(argv)
-  args = argv.dup
-  { help_screen: <<-HELP_SCREEN.gsub(/^      /, ''),
-      usage: fullpath *[relative-paths] [-c]
+def self.relative_dirs(argv, stdin)
+  return argv if argv.any? # if we have args, they are considered relative paths
+  return stdin.read.lines  # otherwise assume we're piping paths through the program
+end
 
-        Prints the fullpath of the paths
-        If no paths are given as args, it will read them from stdin
+def self.copy_program
+  return @copy_program if defined? @copy_program
+  @copy_program = %w[pbcopy xsel xclip].find do |program_name|
+    _out, _err, status = Open3.capture3('which', program_name)
+    status.success?
+  end
+end
 
-        If there is only one path, the trailing newline is omitted
-
-        The -c flag will copy the results into your pasteboard
-    HELP_SCREEN
-    print_help:     !!(args.delete("-h")||args.delete("--help")),
-    copy_result:    !!(args.delete("-c")||args.delete("--copy")),
-    relative_paths: args,
+def self.copy_to_clipboard(str)
+  Open3.popen3(copy_program) { |stdin, stdout, stderr, wait_thr|
+    stdin.write str
   }
 end
 
-def self.run(invocation)
-  stream = invocation[:stream]
-  invocation[:relative_paths]
-    .lazy
-    .map(&:chomp)
-    .reject(&:empty?)
-    .map { |path| File.expand_path path }
-    .each_with_index { |path, index|
-      stream << "\n" if 1 == index
-      stream << path
-      stream << "\n" if 1 <= index
-    }
-end
-
-class MultiStream
-  def initialize(*streams)
-    @streams = streams
-  end
-  def <<(str)
-    @streams.each { |stream| stream << str }
-    self
-  end
-end
-
-invocation = parse(ARGV)
-
-if invocation[:print_help]
-  puts invocation[:help_screen]
+if ARGV.include?('-h') || ARGV.include?('--help')
+  puts "usage: fullpath *[relative-paths] [-c]"
+  puts
+  puts "  Prints the fullpath of the paths"
+  puts "  If no paths are given as args, it will read them from stdin"
+  puts
+  puts "  If there is only one path, the trailing newline is omitted"
+  puts
+  puts "  The -c flag will copy the results into your pasteboard"
   exit
 end
 
-if invocation[:relative_paths].none?
-  invocation[:relative_paths] = $stdin.each_line
-end
+# arg processing
+should_copy   = ARGV.delete('-c') || ARGV.delete('--copy')
 
-invocation[:stream] = $stdout
+# normalizing dirs
+absolute_dirs = relative_dirs(ARGV, $stdin).map(&:chomp).reject(&:empty?).map { |path| File.expand_path path }
+absolute_dirs.each { |dir| dir << "\n" } unless absolute_dirs.one?
+dir_string = absolute_dirs.join("")
 
-if invocation[:copy_result]
-  require 'open3'
-  Open3.popen3("pbcopy") do |stream, *|
-    invocation[:stream] = MultiStream.new(invocation[:stream], stream)
-    run invocation
-  end
-else
-  run invocation
-end
+# output
+print dir_string
+copy_to_clipboard dir_string if should_copy

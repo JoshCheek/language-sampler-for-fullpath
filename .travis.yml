@@ -1,0 +1,10 @@
+language: ruby
+install:
+  - gem install bundler && bundle install
+script: bundle exec rake ruby
+rvm:
+  - 2.3.1
+addons:
+  apt:
+    packages:
+    - xsel
