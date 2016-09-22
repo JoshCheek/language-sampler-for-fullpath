@@ -11,4 +11,4 @@ rvm:
 addons:
   apt:
     packages:
-    - xsel
+    - xclip

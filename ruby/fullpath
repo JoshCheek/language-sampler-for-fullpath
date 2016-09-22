@@ -8,7 +8,7 @@ end
 
 def self.copy_program
   return @copy_program if defined? @copy_program
-  @copy_program = %w[pbcopy xsel xclip].find do |program_name|
+  @copy_program = %w[pbcopy xclip].find do |program_name|
     _out, _err, status = Open3.capture3('which', program_name)
     status.success?
   end

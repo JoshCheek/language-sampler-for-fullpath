@@ -2,12 +2,12 @@
 require 'haiti'
 require 'open3'
 
-COPY_INVOCATION = [%w[pbcopy], %w[xsel], %w[xclip]].find do |invocation|
+COPY_INVOCATION = [%w[pbcopy], %w[xclip]].find do |invocation|
   _out, _err, status = Open3.capture3('which', *invocation)
   status.success?
 end
 
-PASTE_INVOCATION = [%w[pbpaste], %w[xsel], %w[xclip -o]].find do |invocation|
+PASTE_INVOCATION = [%w[pbpaste], %w[xclip -o]].find do |invocation|
   _out, _err, status = Open3.capture3('which', *invocation)
   status.success?
 end
