@@ -60,7 +60,15 @@ printPaths () {
   fi
 }
 
+copy() {
+  if which pbcopy >/dev/null; then
+    pbcopy
+  else
+    xclip
+  fi
+}
+
 if $doCopy; then
-  printPaths "${paths[@]}" | pbcopy
+  printPaths "${paths[@]}" | copy
 fi
 printPaths "${paths[@]}"

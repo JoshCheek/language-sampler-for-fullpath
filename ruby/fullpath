@@ -15,9 +15,9 @@ def self.copy_program
 end
 
 def self.copy_to_clipboard(str)
-  Open3.popen3(copy_program) { |stdin, stdout, stderr, wait_thr|
+  Open3.popen3 copy_program do |stdin, stdout, stderr, wait_thr|
     stdin.write str
-  }
+  end
 end
 
 if ARGV.include?('-h') || ARGV.include?('--help')
@@ -33,7 +33,7 @@ if ARGV.include?('-h') || ARGV.include?('--help')
 end
 
 # arg processing
-should_copy   = ARGV.delete('-c') || ARGV.delete('--copy')
+should_copy = ARGV.delete('-c') || ARGV.delete('--copy')
 
 # normalizing dirs
 absolute_dirs = relative_dirs(ARGV, $stdin).map(&:chomp).reject(&:empty?).map { |path| File.expand_path path }
