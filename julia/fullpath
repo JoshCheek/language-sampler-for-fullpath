@@ -35,11 +35,15 @@ if length(paths) == 0
   paths = map(chomp, readlines())
 end
 
-if length(paths) == 1
-  path = paths[1]
-  print("$dir/$path")
-else
-  for path = paths
-    println("$dir/$path")
+function print_paths(stream, paths)
+  if length(paths) == 1
+    path = paths[1]
+    print("$dir/$path")
+  else
+    for path = paths
+      println("$dir/$path")
+    end
   end
 end
+
+print_paths(STDOUT, paths)
