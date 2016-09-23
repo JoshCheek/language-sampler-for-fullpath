@@ -15,6 +15,7 @@ Language Sampler For Fullpath
 [Haxe](#haxe),
 [Java](#java),
 [JavaScript](#javascript),
+[Julia](#julia),
 [Kotlin](#kotlin),
 [PHP](#php),
 [Python](#python),
@@ -69,7 +70,7 @@ Potential Future Languages
 --------------------------
 
 Assembly (I've already got this partially working, but it's a pita -.-),
-Dart, Erlang, Rubinius Bytecode, Groovy, OCaml, CoffeeScript, Scala, Julia,
+Dart, Erlang, Rubinius Bytecode, Groovy, OCaml, CoffeeScript, Scala,
 C++, Objective-C, VB.net, Swift, Perl, R, Cobol, D, Fortran, F#,
 Lua, Ada, Prolog, Scheme, Awk, Delphi/Object Pascal
 
@@ -663,6 +664,56 @@ Compile:
 ```sh
 $ crystal build hello_world.cr --release
 ```
+
+
+### [Julia](http://julialang.org/)
+
+This went super smoothly, super quickly, and I enjoyed it!
+Alltogether, I think it was about an hour from figuring out how to install it to getting it running.
+That's a really short rampup time, IMO.
+Biggest hurdle was I'd get the args backwards to things like `map`,
+and the error message wasn't very helpful.
+I didn't find the docs to be super helpful, but the REPL was really nice,
+the `?` form of the repl was good enough most of the time.
+I was able to look at their tests to figure out things like the `readandwrite` function.
+I was pretty tired as I started this, I think I even dozed off for 5ish minutes in the middle of it,
+so for me to succeed while doing it is a good sign.
+
+Downside is it's a bit slow to startup, Cucumber reports the tests for Julia took 11.8 seconds,
+Crystal took 0.8s by comparison. I mention that one because is Julia's most obvious competitor
+from my perspective (they're very similar in my brain, at least, though that's probably unfair
+to both languages since I put about 0 effort into understanding what makes them special).
+C took 0.8s, as well.
+
+
+Install
+
+```sh
+$ brew cask install julia
+```
+
+
+`hello_world.jl`:
+
+```cs
+println("hello world")
+```
+
+
+Interpret:
+
+```sh
+$ julia hello_world.jl
+```
+
+
+REPL
+
+```sh
+$ julia
+```
+
+
 
 <a href="http://www.wtfpl.net/"><img src="http://www.wtfpl.net/wp-content/uploads/2012/12/wtfpl.svg" height="20" alt="WTFPL" /></a> License
 -------------------------------------------------------------------------------------------------------------------------------------------
