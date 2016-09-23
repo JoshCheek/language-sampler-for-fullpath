@@ -225,3 +225,8 @@ task 'crystal/fullpath' => 'crystal/fullpath.cr' do
                          '-o', 'crystal/fullpath',
                          '--release'
 end
+
+
+# =====  Julia  =====
+desc 'Test fullpath for Julia'
+task(:julia) { cucumber 'julia' }
