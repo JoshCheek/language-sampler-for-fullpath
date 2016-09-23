@@ -3,6 +3,10 @@
 paths = ARGS
 dir   = pwd()
 
+if length(paths) == 0
+  paths = map(chomp, readlines())
+end
+
 if length(paths) == 1
   path = paths[1]
   print("$dir/$path")
