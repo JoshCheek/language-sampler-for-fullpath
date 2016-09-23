@@ -1,7 +1,19 @@
 #!/usr/bin/env julia
 
-paths = ARGS
+help  = false
+copy  = false
 dir   = pwd()
+paths = []
+
+for arg = ARGS
+  if arg == "-h" || arg == "--help"
+    help = true
+  elseif arg == "-c" || arg == "--copy"
+    copy = true
+  else
+    push!(paths, arg)
+  end
+end
 
 if length(paths) == 0
   paths = map(chomp, readlines())
