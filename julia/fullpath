@@ -21,7 +21,7 @@ for arg = ARGS
     help = true
   elseif arg == "-c" || arg == "--copy"
     copy = true
-  else
+  elseif arg != ""
     push!(paths, arg)
   end
 end
@@ -31,8 +31,12 @@ if help
   exit()
 end
 
+function notempty(string)
+  return !isempty(string)
+end
+
 if length(paths) == 0
-  paths = map(chomp, readlines())
+  paths = filter(notempty, map(chomp, readlines()))
 end
 
 function print_paths(stream, paths)
