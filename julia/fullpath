@@ -1,2 +1,7 @@
 #!/usr/bin/env julia
-println("hello")
+
+paths = ARGS
+dir   = pwd()
+for path = paths
+  println("$dir/$path")
+end
