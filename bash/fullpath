@@ -50,7 +50,7 @@ if [[ 0 == "${#paths[@]}" ]]; then
 fi
 
 # Print / copy the paths
-printPaths () {
+print_paths () {
   if [[ 1 == "$#" ]]; then
     echo -n "${PWD}/${paths[0]}"
   else
@@ -60,15 +60,15 @@ printPaths () {
   fi
 }
 
-copy() {
+copy_program() {
   if which pbcopy >/dev/null; then
-    pbcopy
+    echo pbcopy
   else
-    xclip
+    echo xclip
   fi
 }
 
 if $doCopy; then
-  printPaths "${paths[@]}" | copy
+  print_paths "${paths[@]}" | "$(copy_program)"
 fi
-printPaths "${paths[@]}"
+print_paths "${paths[@]}"
