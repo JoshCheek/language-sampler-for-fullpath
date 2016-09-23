@@ -2,6 +2,12 @@
 
 paths = ARGS
 dir   = pwd()
-for path = paths
-  println("$dir/$path")
+
+if length(paths) == 1
+  path = paths[1]
+  print("$dir/$path")
+else
+  for path = paths
+    println("$dir/$path")
+  end
 end
