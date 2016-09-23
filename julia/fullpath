@@ -38,12 +38,18 @@ end
 function print_paths(stream, paths)
   if length(paths) == 1
     path = paths[1]
-    print("$dir/$path")
+    print(stream, "$dir/$path")
   else
     for path = paths
-      println("$dir/$path")
+      println(stream, "$dir/$path")
     end
   end
+end
+
+if copy
+  read, write, process = readandwrite(`pbcopy`)
+  print_paths(write, paths)
+  close(write)
 end
 
 print_paths(STDOUT, paths)
