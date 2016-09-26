@@ -69,10 +69,14 @@ $ rake -T
 Potential Future Languages
 --------------------------
 
-Assembly (I've already got this partially working, but it's a pita -.-),
-Dart, Erlang, Rubinius Bytecode, Groovy, OCaml, CoffeeScript, Scala,
-C++, Objective-C, VB.net, Swift, Perl, R, Cobol, D, Fortran, F#,
-Lua, Ada, Prolog, Scheme, Awk, Delphi/Object Pascal
+ActionScript, Ada, Assembly (I've already got this partially working, but it's a pita -.-),
+APL, AppleScript, Befunge, Brainfuck, CoffeeScript, ColdFusion, Coq,
+D, Dart, Dogescript, Eiffel, Erlang, F#, FORTRAN, Forth, Rubinius Bytecode,
+Groovy, Idris, J, LLVM, Lua, Mirah, Modula-2, MoonScript, OCaml, CoffeeScript,
+Scala, C++, Objective-C, VB.net, Swift, Perl, R, Cobol, D, Fortran, F#,
+Lua, Prolog, Scheme, Ada, Awk, Delphi/Object Pascal, PureScript, Opal, Oz,
+Perl, Prolog, Pure Data, R, Racket, Rebol, Scala, Scheme, Self, Smalltalk,
+SuperCollider, Swift, Tcl, TypeScript, VimL, Visual Basic
 
 
 Languages
