@@ -28,10 +28,16 @@
 
         ! Print the paths
         CALL getcwd(dir)
-        DO ipath=0, num_paths-1
-          path = paths(ipath)
-          WRITE (*,'(aaa)') TRIM(dir), "/", TRIM(path)
-        END DO
+
+        IF (num_paths == 1) THEN
+          path = paths(0)
+          WRITE(*, '(3a)',advance="no") TRIM(dir), "/", TRIM(path)
+        ELSE
+          DO ipath=0, num_paths-1
+            path = paths(ipath)
+            WRITE (*,'(3a)') TRIM(dir), "/", TRIM(path)
+          END DO
+        END IF
 
         ! Clean up memory
         deallocate(paths)
