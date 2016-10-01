@@ -55,7 +55,7 @@ PROGRAM Fullpath
     DO WHILE (.TRUE.)
       ! Reset the path
       DO i=1, strlen
-        path(i:i) = achar(0)
+        path(i:i) = achar(32)
       END DO
 
       ! Read one path
@@ -68,7 +68,7 @@ PROGRAM Fullpath
         END IF
         ! break if we found a newline
         IF (path(i:i) == achar(10)) THEN
-          path(i:i) = achar(0) ! remove the newline
+          path(i:i) = achar(32) ! remove the newline
           EXIT
         END IF
         i = i + 1
