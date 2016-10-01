@@ -10,13 +10,31 @@ PROGRAM Fullpath
   ! Dynamically allocated arrays for holding the paths as we build them up
   CHARACTER(len=strlen), DIMENSION(:), POINTER :: paths, tmp
 
+  LOGICAL :: printHelp = .FALSE., copyOutput = .FALSE.
+
   ! Analyze ARGV
   DO i = 1, iargc()
     CALL getarg(i, arg)
-    IF (LEN_TRIM(arg) /= 0) THEN
+    IF (TRIM(arg) == "-h" .OR. TRIM(arg) == "--help") THEN
+      printHelp = .TRUE.
+    ELSE IF (TRIM(arg) == "-c" .OR. TRIM(arg) == "--copy") THEN
+      copyOutput = .TRUE.
+    ELSE IF (LEN_TRIM(arg) /= 0) THEN
       num_paths = num_paths + 1
     END IF
   END DO
+
+  IF (printHelp) THEN
+    WRITE (*, '(a)') "usage: fullpath *[relative-paths] [-c]"
+    WRITE (*, '(a)') ""
+    WRITE (*, '(a)') "  Prints the fullpath of the paths"
+    WRITE (*, '(a)') "  If no paths are given as args, it will read them from stdin"
+    WRITE (*, '(a)') ""
+    WRITE (*, '(a)') "  If there is only one path, the trailing newline is omitted"
+    WRITE (*, '(a)') ""
+    WRITE (*, '(a)') "  The -c flag will copy the results into your pasteboard"
+    RETURN
+  END IF
 
   ! Get the paths
   IF (num_paths /= 0) THEN
