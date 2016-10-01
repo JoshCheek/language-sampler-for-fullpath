@@ -1,3 +1,13 @@
-       program Fullpath
-          print *, "Hello World!"
-       end program Fullpath
+      PROGRAM test_get_command_argument
+        INTEGER :: i
+        CHARACTER(len=1024) :: arg
+
+        i = 0
+        DO
+          CALL get_command_argument(i, arg)
+          IF (LEN_TRIM(arg) == 0) EXIT
+
+          WRITE (*,*) TRIM(arg)
+          i = i+1
+        END DO
+      END PROGRAM
