@@ -6,6 +6,7 @@
 
         DO i = 1, iargc()
           CALL getarg(i, arg)
-          WRITE (*,*) TRIM(arg)
+          ! the (a) means its printing a string
+          WRITE (*,'(a)') TRIM(arg)
         END DO
       END PROGRAM
