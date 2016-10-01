@@ -69,6 +69,8 @@ $ rake -T
 Potential Future Languages
 --------------------------
 
+Probably next up: CoffeeScript, IO, Fortran, Scheme
+
 ActionScript, Ada, Assembly (I've already got this partially working, but it's a pita -.-),
 APL, AppleScript, Befunge, Brainfuck, CoffeeScript, ColdFusion, Coq,
 D, Dart, Dogescript, Eiffel, Erlang, F#, FORTRAN, Forth, Rubinius Bytecode,
