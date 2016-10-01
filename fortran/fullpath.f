@@ -1,13 +1,11 @@
       PROGRAM test_get_command_argument
         INTEGER :: i
-        CHARACTER(len=1024) :: arg
+        ! Apparently I can't jave a string of unknown length, so I'm
+        ! just making it large enough to hold most things it could see
+        CHARACTER(len=2048) :: arg
 
-        i = 0
-        DO
-          CALL get_command_argument(i, arg)
-          IF (LEN_TRIM(arg) == 0) EXIT
-
+        DO i = 1, iargc()
+          CALL getarg(i, arg)
           WRITE (*,*) TRIM(arg)
-          i = i+1
         END DO
       END PROGRAM
