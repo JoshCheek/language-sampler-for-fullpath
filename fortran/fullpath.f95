@@ -7,7 +7,7 @@ PROGRAM Fullpath
   ! just making it large enough to hold most things it could see
   CHARACTER(len=strlen) :: arg, path, dir
 
-  ! A dynamically sized array
+  ! Dynamically allocated arrays for holding the paths as we build them up
   CHARACTER(len=strlen), DIMENSION(:), POINTER :: paths, tmp
 
   ! Analyze ARGV

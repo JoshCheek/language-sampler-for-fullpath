@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-gfortran -o fullpath fullpath.f90 &&
+gfortran -o fullpath fullpath.f95 &&
   ./fullpath abc def g '' h &&
   ./fullpath single-line &&
   echo &&
