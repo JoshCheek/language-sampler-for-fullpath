@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
-gfortran -o fullpath fullpath.f
-./fullpath abc def g '' h
+gfortran -o fullpath fullpath.f &&
+  ./fullpath abc def g '' h
