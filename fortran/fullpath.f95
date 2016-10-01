@@ -6,25 +6,26 @@ PROGRAM Fullpath
   ! Apparently I can't have a string of unknown length, so I'm
   ! just making it large enough to hold most things it could see
   CHARACTER(len=strlen) :: arg, path, dir
+  CHARACTER, POINTER :: to_print
 
   ! Dynamically allocated arrays for holding the paths as we build them up
   CHARACTER(len=strlen), DIMENSION(:), POINTER :: paths, tmp
 
-  LOGICAL :: printHelp = .FALSE., copyOutput = .FALSE.
+  LOGICAL :: print_help = .FALSE., copy_output = .FALSE.
 
   ! Analyze ARGV
   DO i = 1, iargc()
     CALL getarg(i, arg)
     IF (TRIM(arg) == "-h" .OR. TRIM(arg) == "--help") THEN
-      printHelp = .TRUE.
+      print_help = .TRUE.
     ELSE IF (TRIM(arg) == "-c" .OR. TRIM(arg) == "--copy") THEN
-      copyOutput = .TRUE.
+      copy_output = .TRUE.
     ELSE IF (LEN_TRIM(arg) /= 0) THEN
       num_paths = num_paths + 1
     END IF
   END DO
 
-  IF (printHelp) THEN
+  IF (print_help) THEN
     WRITE (*, '(a)') "usage: fullpath *[relative-paths] [-c]"
     WRITE (*, '(a)') ""
     WRITE (*, '(a)') "  Prints the fullpath of the paths"
@@ -111,6 +112,9 @@ PROGRAM Fullpath
   IF (num_paths == 1) THEN
     path = paths(1)
     WRITE(*, '(3a)',advance="no") TRIM(dir), "/", TRIM(path)
+    IF (copy_output) THEN
+      call execute_command_line("printf %s '"//TRIM(dir)//"/"//TRIM(path)//"' | pbcopy")
+    END IF
   ELSE
     DO ipath=1, num_paths
       path = paths(ipath)
