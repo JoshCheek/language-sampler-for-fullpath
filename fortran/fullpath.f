@@ -1,7 +1,7 @@
       PROGRAM test_get_command_argument
         IMPLICIT NONE
         INTEGER, PARAMETER :: strlen=2048
-        INTEGER :: i, j, status=0, ipath=0, num_paths=0
+        INTEGER :: i, j, status=0, ipath=1, num_paths=0
 
         ! Apparently I can't have a string of unknown length, so I'm
         ! just making it large enough to hold most things it could see
@@ -22,6 +22,7 @@
         IF (num_paths /= 0) THEN
           ! Copy paths from argv
           allocate(paths(num_paths))
+          ipath = 1
           DO i = 1, iargc()
             CALL getarg(i, arg)
             IF (LEN_TRIM(arg) /= 0) THEN
@@ -81,7 +82,7 @@
           path = paths(0)
           WRITE(*, '(3a)',advance="no") TRIM(dir), "/", TRIM(path)
         ELSE
-          DO ipath=0, num_paths-1
+          DO ipath=1, num_paths
             path = paths(ipath)
             WRITE (*,'(3a)') TRIM(dir), "/", TRIM(path)
           END DO
