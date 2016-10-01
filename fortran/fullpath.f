@@ -1,14 +1,16 @@
       PROGRAM test_get_command_argument
         IMPLICIT NONE
-        INTEGER :: i, ipath=0, num_paths=0
-        ! Apparently I can't jave a string of unknown length, so I'm
+        INTEGER, PARAMETER :: strlen=2048
+        INTEGER :: i, j, status=0, ipath=0, num_paths=0
+
+        ! Apparently I can't have a string of unknown length, so I'm
         ! just making it large enough to hold most things it could see
-        CHARACTER(len=2048) :: arg, path, dir
+        CHARACTER(len=strlen) :: arg, path, dir
 
         ! A dynamically sized array
-        CHARACTER(len=2048), ALLOCATABLE, DIMENSION(:):: paths
+        CHARACTER(len=strlen), ALLOCATABLE, DIMENSION(:):: paths
 
-        ! Categorize arguments (path, flag, etc)
+        ! Analyze argv
         DO i = 1, iargc()
           CALL getarg(i, arg)
           IF (LEN_TRIM(arg) /= 0) THEN
@@ -17,14 +19,60 @@
         END DO
 
         ! Get the paths
-        allocate(paths(num_paths))
-        DO i = 1, iargc()
-          CALL getarg(i, arg)
-          IF (LEN_TRIM(arg) /= 0) THEN
-            paths(ipath) = arg
+        IF (num_paths /= 0) THEN
+          ! Copy paths from argv
+          allocate(paths(num_paths))
+          DO i = 1, iargc()
+            CALL getarg(i, arg)
+            IF (LEN_TRIM(arg) /= 0) THEN
+              paths(ipath) = arg
+              ipath = ipath + 1
+            END IF
+          END DO
+        ELSE
+          ! Read paths from stdin
+          ipath = 0
+          num_paths = 0
+          DO WHILE (.TRUE.)
+            ! wipe path variable
+            DO i=1, strlen
+              path(i:i) = achar(0)
+            END DO
+
+            ! Read one path
+            i=1
+            DO WHILE(.TRUE.)
+              call fget(path(i:i), status)
+              IF (status /= 0) THEN
+                EXIT
+              END IF
+              ! break if we found a newline
+              IF (path(i:i) == achar(10)) THEN
+                path(i:i) = achar(0) ! remove the newline
+                EXIT
+              END IF
+              i = i + 1
+            END DO
+
+            ! Copy it into paths
+            ! DO j = 1, strlen
+              ! paths(ipath:j) = path(j:j)
+            ! END DO
             ipath = ipath + 1
-          END IF
-        END DO
+            num_paths = num_paths + 1
+
+            ! No more paths
+            IF (status /= 0) THEN
+              EXIT
+            END IF
+          END DO
+
+          num_paths = 1
+          allocate(paths(num_paths))
+          ! Need to read them from stdin,
+          ! increasing the size of paths and copying them over as
+          ! necessary
+        END IF
 
         ! Print the paths
         CALL getcwd(dir)

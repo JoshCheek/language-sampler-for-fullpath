@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
 gfortran -o fullpath fullpath.f &&
   ./fullpath abc def g '' h &&
-  ./fullpath single-line
+  ./fullpath single-line &&
+  echo &&
+  ruby -e 'puts "abc\ndef"' | ./fullpath
