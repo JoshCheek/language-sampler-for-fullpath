@@ -33,5 +33,6 @@
           WRITE (*,'(aaa)') TRIM(dir), "/", TRIM(path)
         END DO
 
+        ! Clean up memory
         deallocate(paths)
       END PROGRAM

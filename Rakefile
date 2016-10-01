@@ -230,3 +230,11 @@ end
 # =====  Julia  =====
 desc 'Test fullpath for Julia'
 task(:julia) { cucumber 'julia' }
+
+
+# =====  Fortran  =====
+desc 'Build / Test fullpath for Fortran'
+task(fortran: 'fortran/fullpath') { cucumber 'fortran' }
+task 'fortran/fullpath' => 'fortran/fullpath.f' do
+  sh 'gfortran', '-o', 'fortran/fullpath', 'fortran/fullpath.f'
+end
