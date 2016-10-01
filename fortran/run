@@ -3,4 +3,4 @@ gfortran -o fullpath fullpath.f90 &&
   ./fullpath abc def g '' h &&
   ./fullpath single-line &&
   echo &&
-  ruby -e 'puts "abc\ndef"' | ./fullpath
+  ruby -e 'puts "123\n456\n789"' | ./fullpath
