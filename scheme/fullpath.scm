@@ -15,7 +15,6 @@
     "\n"
     "  The -c flag will copy the results into your pasteboard\n"))
 
-; (print (read-line))
 (define (any? fn lst)
   (if (null? lst)
     #f
@@ -42,6 +41,20 @@
                      (copy-output-arg? potential))))
           potentials))
 
+(define (prepend-lines-to lines)
+  (let ((line (read-line)))
+    (if (eof-object? line)
+      lines
+      (prepend-lines-to (cons line lines)))))
+
+(define (read-lines)
+    (reverse (prepend-lines-to '())))
+
+(define (display-paths dir paths)
+  (if (= 1 (length paths))
+      (display (string-append dir "/" (car paths)))
+      (for-each (lambda (path) (print dir "/" path)) paths)))
+
 (let* ((dir         (current-directory))
        (argv        (command-line-arguments))
        (show-help   (show-help? argv))
@@ -49,6 +62,7 @@
        (paths       (select-paths argv)))
   (if show-help
       (display (help-screen))
-      (if (= 1 (length paths))
-          (display (string-append dir "/" (car paths)))
-          (for-each (lambda (path) (print dir "/" path)) paths))))
+      (let ((paths (if (= 0 (length paths))
+                       (read-lines)
+                       paths)))
+        (display-paths dir paths))))
