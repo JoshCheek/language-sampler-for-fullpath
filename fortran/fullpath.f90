@@ -14,7 +14,7 @@ PROGRAM Fullpath
   LOGICAL :: print_help = .FALSE., copy_output = .FALSE.
 
   ! Analyze ARGV
-  DO i = 1, iargc()
+  DO i = 1, command_argument_count()
     CALL getarg(i, arg)
     IF (TRIM(arg) == "-h" .OR. TRIM(arg) == "--help") THEN
       print_help = .TRUE.
@@ -43,7 +43,7 @@ PROGRAM Fullpath
     allocate(paths(num_paths))
     ipath = 1
     DO i = 1, iargc()
-      CALL getarg(i, arg)
+      CALL get_command_argument(i, arg)
       IF (LEN_TRIM(arg) /= 0) THEN
         paths(ipath) = arg
         ipath = ipath + 1
