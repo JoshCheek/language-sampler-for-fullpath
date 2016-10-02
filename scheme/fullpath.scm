@@ -2,8 +2,18 @@
 
 (import posix)
 (use posix)
-(use srfi-1)
+(use srfi-1) ; filter
 
+(define (help-screen)
+  (string-append
+    "usage: fullpath *[relative-paths] [-c]\n"
+    "\n"
+    "  Prints the fullpath of the paths\n"
+    "  If no paths are given as args, it will read them from stdin\n"
+    "\n"
+    "  If there is only one path, the trailing newline is omitted\n"
+    "\n"
+    "  The -c flag will copy the results into your pasteboard\n"))
 
 ; (print (read-line))
 (define (any? fn lst)
@@ -37,6 +47,8 @@
        (show-help   (show-help? argv))
        (copy-output (copy-output? argv))
        (paths       (select-paths argv)))
-    (if (= 1 (length paths))
-      (display (string-append dir "/" (car paths)))
-      (for-each (lambda (path) (print dir "/" path)) paths)))
+  (if show-help
+      (display (help-screen))
+      (if (= 1 (length paths))
+          (display (string-append dir "/" (car paths)))
+          (for-each (lambda (path) (print dir "/" path)) paths))))
