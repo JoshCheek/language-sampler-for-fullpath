@@ -21,6 +21,7 @@ Language Sampler For Fullpath
 [Python](#python),
 [Ruby](#ruby),
 [Rust](#rust)
+[Scheme](scheme/Readme.md)
 </strong>
 
 Fullpath is a program I initially wrote in Ruby
