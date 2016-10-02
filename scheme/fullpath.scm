@@ -35,10 +35,14 @@
 (define (copy-output? argv)
   (any? copy-output-arg? argv))
 
+(define (string-empty? string)
+  (string=? "" string))
+
 (define (select-paths potentials)
   (filter (lambda (potential)
-            (not (or (help-arg? potential)
-                     (copy-output-arg? potential))))
+            (not (or (help-arg?        potential)
+                     (copy-output-arg? potential)
+                     (string-empty?    potential))))
           potentials))
 
 (define (prepend-lines-to lines)
@@ -63,6 +67,6 @@
   (if show-help
       (display (help-screen))
       (let ((paths (if (= 0 (length paths))
-                       (read-lines)
+                       (select-paths (read-lines))
                        paths)))
         (display-paths dir paths))))
