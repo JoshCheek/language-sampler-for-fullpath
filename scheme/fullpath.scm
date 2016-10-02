@@ -54,10 +54,17 @@
 (define (read-lines)
     (reverse (prepend-lines-to '())))
 
-(define (display-paths dir paths)
+(define (display-paths fileno dir paths)
   (if (= 1 (length paths))
-      (display (string-append dir "/" (car paths)))
-      (for-each (lambda (path) (print dir "/" path)) paths)))
+      (file-write fileno (string-append dir "/" (car paths)))
+      (for-each (lambda (path)
+                  (file-write
+                    fileno
+                    (string-append dir "/" path "\n")))
+                paths)))
+
+(define (output-paths fileno dir paths copy-output)
+  (display-paths fileno dir paths))
 
 (let* ((dir         (current-directory))
        (argv        (command-line-arguments))
@@ -66,7 +73,7 @@
        (paths       (select-paths argv)))
   (if show-help
       (display (help-screen))
-      (let ((paths (if (= 0 (length paths))
-                       (select-paths (read-lines))
-                       paths)))
-        (display-paths dir paths))))
+      (let* ((paths (if (= 0 (length paths))
+                        (select-paths (read-lines))
+                        paths)))
+        (output-paths fileno/stdout dir paths copy-output))))
