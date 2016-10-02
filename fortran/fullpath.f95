@@ -131,7 +131,7 @@ PROGRAM Fullpath
     ! FIXME: I cannot fucking figure out how to pull this off.
     ! Why doesn't execute_command_line allow me to pass stdin?
     ! (eg allowing me to pass a file descriptor for a pipe would be enough)
-    IF (copy_output) THEn
+    IF (copy_output) THEN
       allocate(to_print(print_len))
       i = 0
       DO ipath=1, num_paths
