@@ -10,6 +10,7 @@ Language Sampler For Fullpath
 [Crystal](#crystal),
 [Elixir](#elixir),
 [Fish](#fish),
+[Fortran](#fortran/Readme.md),
 [Go](#go),
 [Haskell](#haskell),
 [Haxe](#haxe),

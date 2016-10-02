@@ -1,12 +1,12 @@
 PROGRAM Fullpath
   IMPLICIT NONE
   INTEGER, PARAMETER :: strlen=2048
-  INTEGER :: i, j, status=0, ipath=1, num_paths=0
+  INTEGER :: i, j, print_len, status=0, ipath=1, num_paths=0
 
   ! Apparently I can't have a string of unknown length, so I'm
   ! just making it large enough to hold most things it could see
   CHARACTER(len=strlen) :: arg, path, dir
-  CHARACTER, POINTER :: to_print
+  CHARACTER, ALLOCATABLE, DIMENSION(:) :: to_print
 
   ! Dynamically allocated arrays for holding the paths as we build them up
   CHARACTER(len=strlen), DIMENSION(:), POINTER :: paths, tmp
@@ -109,17 +109,44 @@ PROGRAM Fullpath
 
   ! Print the paths
   CALL getcwd(dir)
+
   IF (num_paths == 1) THEN
+    ! Print one path, copy it if we're supposed to
     path = paths(1)
     WRITE(*, '(3a)',advance="no") TRIM(dir), "/", TRIM(path)
     IF (copy_output) THEN
+      ! Note that this doesn't work when input has a single-quote in it -.-
       call execute_command_line("printf %s '"//TRIM(dir)//"/"//TRIM(path)//"' | pbcopy")
     END IF
   ELSE
+    ! Print all the paths, count how much we printed
+    print_len = 0
     DO ipath=1, num_paths
-      path = paths(ipath)
-      WRITE (*,'(3a)') TRIM(dir), "/", TRIM(path)
+      path = TRIM(dir)//"/"//TRIM(paths(ipath))
+      WRITE (*,'(3a)') TRIM(path)
+      print_len = LEN_TRIM(path) + 1 ! 1 for the newline
     END DO
+
+    ! Copy the paths if we're supposed to
+    ! FIXME: I cannot fucking figure out how to pull this off.
+    ! Why doesn't execute_command_line allow me to pass stdin?
+    ! (eg allowing me to pass a file descriptor for a pipe would be enough)
+    IF (copy_output) THEn
+      allocate(to_print(print_len))
+      i = 0
+      DO ipath=1, num_paths
+        path = TRIM(dir)//"/"//TRIM(paths(ipath))//achar(10)
+        DO j=1, LEN_TRIM(path)
+          to_print(i+j:i+j) = path(j:j)
+        END DO
+        i = i + j
+      END DO
+      ! print_len = num_paths*(dirlen+2+strlen) ! dir, slash, path, newline
+      ! call execute_command_line("ruby -e 'File.write %(tmp) ARGV[0]'"//to_print//"' | pbcopy")
+      ! call execute_command_line("printf %s '"//to_print//"' | pbcopy")
+      deallocate(to_print)
+    END IF
+
   END IF
 
   ! Clean up memory
