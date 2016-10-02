@@ -232,5 +232,8 @@ desc 'Test fullpath for Julia'
 task(:julia) { cucumber 'julia' }
 
 # =====  Scheme  =====
-desc 'Test fullpath for scheme'
-task(:scheme) { cucumber 'scheme' }
+desc 'Build / Test fullpath for Scheme'
+task(scheme: 'scheme/fullpath') { cucumber 'scheme' }
+task 'scheme/fullpath' => 'scheme/fullpath.scm' do
+  sh 'csc', 'scheme/fullpath.scm'
+end
