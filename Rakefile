@@ -230,3 +230,7 @@ end
 # =====  Julia  =====
 desc 'Test fullpath for Julia'
 task(:julia) { cucumber 'julia' }
+
+# =====  Scheme  =====
+desc 'Test fullpath for scheme'
+task(:scheme) { cucumber 'scheme' }
