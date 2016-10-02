@@ -7,8 +7,9 @@
 (if #t 1 2) ; 1
 (if #f 1 2) ; 2
 
-(if (= 1 (length (command-line-arguments)))
-  (display (string-append (current-directory) "/" (car (command-line-arguments))))
-  (for-each
-    (lambda (arg) (print (current-directory) "/" arg))
-    (command-line-arguments)))
+(let ((dir (current-directory)))
+  (if (= 1 (length (command-line-arguments)))
+    (display (string-append dir "/" (car (command-line-arguments))))
+    (for-each
+      (lambda (arg) (print dir "/" arg))
+      (command-line-arguments))))
