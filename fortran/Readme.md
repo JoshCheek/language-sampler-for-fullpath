@@ -4,6 +4,7 @@ Fortran
 * Apparently Fortran programs have to begin with 6 leading spaces b/c they used to be written on punch cards or smth.
 * Functions are called procedures
 * A list of intrinsic (builtin) [procedures](https://gcc.gnu.org/onlinedocs/gfortran/Intrinsic-Procedures.html#Intrinsic-Procedures)
+* [Cheatsheet](http://www.training.prace-ri.eu/uploads/tx_pracetmo/AdvFTN_handout.pdf)
 
 Sigh, this language is miserable. It can't handle things that it doesn't
 know the size of. So I just made the strings 2048 chars long, hoping that
