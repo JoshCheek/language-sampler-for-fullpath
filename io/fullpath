@@ -1,6 +1,6 @@
 #!/usr/bin/env io
 
-dir        := System launchPath asMutable rstrip(".")
+dir        := Directory currentWorkingDirectory .. "/"
 paths      := list()
 printHelp  := false
 copyOutput := false
