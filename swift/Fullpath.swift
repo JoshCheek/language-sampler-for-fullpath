@@ -2,7 +2,7 @@ import Foundation
 import Darwin
 
 // First dir is the program name
-let args       = ProcessInfo.processInfo.arguments.dropFirst()
+var args       = Array(ProcessInfo.processInfo.arguments.dropFirst())
 let dir        = FileManager.default.currentDirectoryPath
 let printHelp  = args.contains("-h") || args.contains("--help")
 let copyOutput = args.contains("-c") || args.contains("--copy")
@@ -20,27 +20,49 @@ if printHelp {
   exit(0)
 }
 
+// remove blank lines
+args = args.filter({$0 != "" && $0 != "-c" && $0 != "--copy"})
+
 // Paths come from args or stdin
 if args.count == 0 {
   while let line = readLine() {
-    paths.append(line)
+    if line != "" {
+      paths.append(line)
+    }
   }
 } else {
   for arg in args {
-    paths.append(arg)
+    if arg != "" {
+      paths.append(arg)
+    }
   }
 }
 
-// remove blank lines
-paths = paths.filter({$0 != ""})
+let task = Process()
+task.launchPath = "/usr/bin/pbcopy"
+
+let pipe = Pipe()
+task.standardInput = pipe
+if copyOutput {
+  task.launch()
+}
+
 
 // print the paths
 if paths.count == 1 {
   if let path = paths.first {
-    print("\(dir)/\(path)", terminator: "")
+    let fullpath = "\(dir)/\(path)"
+    print(fullpath, terminator: "")
+    pipe.fileHandleForWriting.write(fullpath.data(using: .utf8)!)
   }
 } else {
   for path in paths {
-    print("\(dir)/\(path)")
+    let fullpath = "\(dir)/\(path)"
+    print(fullpath)
+    pipe.fileHandleForWriting.write((fullpath+"\n").data(using: .utf8)!)
   }
 }
+
+pipe.fileHandleForWriting.closeFile()
+task.waitUntilExit()
+// pipe.fileHandleForReading.closeFile()
