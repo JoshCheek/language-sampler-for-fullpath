@@ -64,7 +64,12 @@
                 paths)))
 
 (define (output-paths fileno dir paths copy-output)
-  (display-paths fileno dir paths))
+  (if copy-output
+    (call-with-output-pipe
+      "pbcopy"
+      (lambda (pipe) (display-paths (port->fileno pipe) dir paths))))
+  (display-paths fileno dir paths)
+  )
 
 (let* ((dir         (current-directory))
        (argv        (command-line-arguments))
