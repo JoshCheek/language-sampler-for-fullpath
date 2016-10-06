@@ -1,12 +1,30 @@
 import Foundation
 import Darwin
 
+func isCopy(_ arg:String) -> Bool {
+  return arg == "-c" || arg == "--copy"
+}
+
+func isHelp(_ arg:String) -> Bool {
+  return arg == "-h" || arg == "--help"
+}
+
 // First dir is the program name
 var args       = Array(ProcessInfo.processInfo.arguments.dropFirst())
 let dir        = FileManager.default.currentDirectoryPath
-let printHelp  = args.contains("-h") || args.contains("--help")
-let copyOutput = args.contains("-c") || args.contains("--copy")
+var printHelp  = false
+var copyOutput = false
 var paths: [String] = []
+
+for arg in args {
+  if isCopy(arg) {
+    copyOutput = true
+  } else if isHelp(arg) {
+    printHelp  = true
+  } else if arg != "" {
+    paths.append(arg)
+  }
+}
 
 if printHelp {
   print("usage: fullpath *[relative-paths] [-c]")
@@ -20,35 +38,26 @@ if printHelp {
   exit(0)
 }
 
-// remove blank lines
-args = args.filter({$0 != "" && $0 != "-c" && $0 != "--copy"})
 
 // Paths come from args or stdin
-if args.count == 0 {
+if paths.count == 0 {
   while let line = readLine() {
     if line != "" {
       paths.append(line)
     }
   }
-} else {
-  for arg in args {
-    if arg != "" {
-      paths.append(arg)
-    }
-  }
 }
 
+// the pbcopy task
 let task = Process()
-task.launchPath = "/usr/bin/pbcopy"
-
 let pipe = Pipe()
+task.launchPath = "/usr/bin/pbcopy" // <-- uhm, how do I not hard code the path?
 task.standardInput = pipe
 if copyOutput {
   task.launch()
 }
 
-
-// print the paths
+// print the paths (we can write to the pipe regardless of whether we've invoked the copy task)
 if paths.count == 1 {
   if let path = paths.first {
     let fullpath = "\(dir)/\(path)"
@@ -65,4 +74,3 @@ if paths.count == 1 {
 
 pipe.fileHandleForWriting.closeFile()
 task.waitUntilExit()
-// pipe.fileHandleForReading.closeFile()
