@@ -15,11 +15,11 @@
     "\n"
     "  The -c flag will copy the results into your pasteboard\n"))
 
-(define (any? fn lst)
+(define (any-match? fn lst)
   (if (null? lst)
     #f
     (or (fn (car lst))
-        (any? fn (cdr lst)))))
+        (any-match? fn (cdr lst)))))
 
 (define (help-arg? arg)
   (or (string=? "-h"     arg)
@@ -30,10 +30,10 @@
       (string=? "--copy" arg)))
 
 (define (show-help? argv)
-  (any? help-arg? argv))
+  (any-match? help-arg? argv))
 
 (define (copy-output? argv)
-  (any? copy-output-arg? argv))
+  (any-match? copy-output-arg? argv))
 
 (define (string-empty? string)
   (string=? "" string))
