@@ -1,4 +1,4 @@
 #!/usr/bin/env io
 
-// "a" print()
-System args foreach(k, v, write("'", v, "'\n"))
+dir := System launchPath asMutable rstrip(".")
+System args rest map(index, arg, dir .. arg) foreach(index, path, path println())
