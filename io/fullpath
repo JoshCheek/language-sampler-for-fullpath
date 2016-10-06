@@ -1,4 +1,27 @@
 #!/usr/bin/env io
 
-dir := System launchPath asMutable rstrip(".")
-System args rest map(index, arg, dir .. arg) foreach(index, path, path println())
+dir        := System launchPath asMutable rstrip(".")
+paths      := list()
+printHelp  := false
+copyOutput := false
+
+// System args rest map(index, arg, dir .. arg) foreach(index, path, path println())
+System args rest foreach(index, arg,
+  (arg == "-h" or arg == "--help") ifTrue(
+    printHelp = true
+  ) ifFalse(
+    (arg == "-c" or arg == "--copy") ifTrue(
+      copyOutput = true
+    ) ifFalse (
+      paths append(arg)
+    )
+  )
+)
+
+paths = paths map(index, arg, dir .. arg)
+
+(paths size == 1) ifTrue(
+  paths first print
+) ifFalse (
+  paths foreach(index, path, path println)
+)
