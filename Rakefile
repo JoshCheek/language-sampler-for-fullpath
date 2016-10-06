@@ -250,3 +250,7 @@ task 'swift/fullpath' => 'swift/fullpath.swift' do
                '-sdk', macosx_sdk_path,
                'swift/Fullpath.swift'
 end
+
+# =====  IO  =====
+desc 'Test fullpath for IO'
+task(:io) { cucumber 'io' }
