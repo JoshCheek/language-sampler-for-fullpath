@@ -237,3 +237,16 @@ task(scheme: 'scheme/fullpath') { cucumber 'scheme' }
 task 'scheme/fullpath' => 'scheme/fullpath.scm' do
   sh 'csc', 'scheme/fullpath.scm'
 end
+
+# =====  Swift  =====
+def self.macosx_sdk_path
+  @macosx_sdk_path ||= `xcrun --show-sdk-path --sdk macosx`.chomp
+end
+
+desc 'Build / Test fullpath for Swift'
+task(swift: 'swift/fullpath') { cucumber 'swift' }
+task 'swift/fullpath' => 'swift/fullpath.swift' do
+  sh 'swiftc', '-o', 'swift/fullpath',
+               '-sdk', macosx_sdk_path,
+               'swift/Fullpath.swift'
+end
