@@ -1,0 +1,4 @@
+#!/usr/bin/env io
+
+// "a" print()
+System args foreach(k, v, write("'", v, "'\n"))
