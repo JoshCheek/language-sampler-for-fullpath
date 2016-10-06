@@ -4,5 +4,6 @@ set -eu
 set -o pipefail
 
 sdk_path=`xcrun --show-sdk-path --sdk macosx`
-swiftc -o fullpath -sdk "$sdk_path" Fullpath.swift
-./fullpath a b c
+swiftc -o fullpath -sdk "$sdk_path" Fullpath.swift &&
+  ./fullpath a b c &&
+  ./fullpath single

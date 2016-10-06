@@ -4,6 +4,12 @@ import Foundation
 let args = ProcessInfo.processInfo.arguments.dropFirst()
 let dir  = FileManager.default.currentDirectoryPath
 
-for arg in args {
-  print("\(dir)/\(arg)")
+if args.count == 1 {
+  if let arg = args.first {
+    print("\(dir)/\(arg)", terminator: "")
+  }
+} else {
+  for arg in args {
+    print("\(dir)/\(arg)")
+  }
 }
