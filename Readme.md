@@ -22,6 +22,7 @@ Language Sampler For Fullpath
 [Ruby](#ruby),
 [Rust](#rust)
 [Scheme](scheme/Readme.md)
+[Swift](swift/Readme.md)
 </strong>
 
 Fullpath is a program I initially wrote in Ruby
@@ -70,16 +71,14 @@ $ rake -T
 Potential Future Languages
 --------------------------
 
-Probably next up: CoffeeScript, IO, Fortran, Scheme
+Probably next up: CoffeeScript, IO, Fortran
 
-ActionScript, Ada, Algol, Assembly (I've already got this partially working, but it's a pita -.-),
-APL, AppleScript, Befunge, Brainfuck, Cobol, CoffeeScript, ColdFusion, Coq,
-D, Dart, Dogescript, Eiffel, Erlang, F#, FORTRAN, Forth, Rubinius Bytecode,
-Groovy, Idris, J, LLVM, Lua, Mirah, Modula-2, MoonScript, OCaml, CoffeeScript,
-Scala, C++, Objective-C, VB.net, Swift, Perl, R, Cobol, D, Fortran, F#,
-Lua, Prolog, Scheme, Ada, Awk, Delphi/Object Pascal, PureScript, Opal, Oz,
-Perl, Prolog, Pure Data, R, Racket, Rebol, Scala, Scheme, Self, Smalltalk,
-SuperCollider, Swift, Tcl, TypeScript, VimL, Visual Basic
+APL, ActionScript, Ada, Algol, AppleScript, Assembly (I've already got this partially working, but it's a pita -.-),
+Awk, Befunge, Brainfuck, C++, Cobol, CoffeeScript, ColdFusion, Coq, D, Dart,
+Delphi/Object Pascal, Dogescript, Eiffel, Erlang, F#, FORTRAN, Forth,
+Groovy, Idris, IO, J, LLVM, Lua, Mirah, Modula-2, MoonScript, OCaml, Objective-C,
+Opal, Oz, Perl, Prolog, Pure Data, PureScript, R, Racket, Rebol, Rubinius Bytecode,
+Scala, Self, Smalltalk, SuperCollider, Tcl, TypeScript, VB.net / Visual Basic, VimL
 
 
 Languages
