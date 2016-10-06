@@ -72,8 +72,8 @@ Potential Future Languages
 
 Probably next up: CoffeeScript, IO, Fortran, Scheme
 
-ActionScript, Ada, Assembly (I've already got this partially working, but it's a pita -.-),
-APL, AppleScript, Befunge, Brainfuck, CoffeeScript, ColdFusion, Coq,
+ActionScript, Ada, Algol, Assembly (I've already got this partially working, but it's a pita -.-),
+APL, AppleScript, Befunge, Brainfuck, Cobol, CoffeeScript, ColdFusion, Coq,
 D, Dart, Dogescript, Eiffel, Erlang, F#, FORTRAN, Forth, Rubinius Bytecode,
 Groovy, Idris, J, LLVM, Lua, Mirah, Modula-2, MoonScript, OCaml, CoffeeScript,
 Scala, C++, Objective-C, VB.net, Swift, Perl, R, Cobol, D, Fortran, F#,
