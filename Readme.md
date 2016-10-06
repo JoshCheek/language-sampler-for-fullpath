@@ -20,9 +20,9 @@ Language Sampler For Fullpath
 [PHP](#php),
 [Python](#python),
 [Ruby](#ruby),
-[Rust](#rust)
-[Scheme](scheme/Readme.md)
-[Swift](swift/Readme.md)
+[Rust](#rust),
+[Scheme](scheme),
+[Swift](swift)
 </strong>
 
 Fullpath is a program I initially wrote in Ruby
