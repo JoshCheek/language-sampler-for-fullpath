@@ -6,7 +6,7 @@ set -o pipefail
 sdk_path=`xcrun --show-sdk-path --sdk macosx`
 swiftc -o fullpath -sdk "$sdk_path" Fullpath.swift &&
   echo &&
-  ./fullpath a b c &&
+  ./fullpath a b '' c &&
   echo &&
   printf stdin1\\nstdin2 | ./fullpath &&
   echo &&

@@ -2,11 +2,13 @@ import Foundation
 import Darwin
 
 // First dir is the program name
-let args = ProcessInfo.processInfo.arguments.dropFirst()
-let dir  = FileManager.default.currentDirectoryPath
-var paths: ArraySlice<String> = []
+let args       = ProcessInfo.processInfo.arguments.dropFirst()
+let dir        = FileManager.default.currentDirectoryPath
+let printHelp  = args.contains("-h") || args.contains("--help")
+let copyOutput = args.contains("-c") || args.contains("--copy")
+var paths: [String] = []
 
-if args.contains("-h") || args.contains("--help") {
+if printHelp {
   print("usage: fullpath *[relative-paths] [-c]")
   print("")
   print("  Prints the fullpath of the paths")
@@ -18,6 +20,7 @@ if args.contains("-h") || args.contains("--help") {
   exit(0)
 }
 
+// Paths come from args or stdin
 if args.count == 0 {
   while let line = readLine() {
     paths.append(line)
@@ -28,6 +31,10 @@ if args.count == 0 {
   }
 }
 
+// remove blank lines
+paths = paths.filter({$0 != ""})
+
+// print the paths
 if paths.count == 1 {
   if let path = paths.first {
     print("\(dir)/\(path)", terminator: "")
