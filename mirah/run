@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
 
-chruby-exec jruby-9.1.2.0 -- ruby -S mirah fullpath
+chruby-exec jruby-9.1.2.0 -- jruby -S fullpath a b c
