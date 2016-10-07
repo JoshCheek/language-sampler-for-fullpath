@@ -22,23 +22,28 @@ class Fullpath
 
   def call
     if help?
-      puts "usage: fullpath *[relative-paths] [-c]"
-      puts
-      puts "  Prints the fullpath of the paths"
-      puts "  If no paths are given as args, it will read them from stdin"
-      puts
-      puts "  If there is only one path, the trailing newline is omitted"
-      puts
-      puts "  The -c flag will copy the results into your pasteboard"
+      print_help
+      return
+    end
+
+    if @paths.size == 1
+      print "#{@dir}/#{@paths[0]}"
     else
-      if @paths.size == 1
-        print "#{@dir}/#{@paths[0]}"
-      else
-        @paths.each do |path|
-          puts "#{@dir}/#{path}"
-        end
+      @paths.each do |path|
+        puts "#{@dir}/#{path}"
       end
     end
+  end
+
+  def print_help
+    puts "usage: fullpath *[relative-paths] [-c]"
+    puts
+    puts "  Prints the fullpath of the paths"
+    puts "  If no paths are given as args, it will read them from stdin"
+    puts
+    puts "  If there is only one path, the trailing newline is omitted"
+    puts
+    puts "  The -c flag will copy the results into your pasteboard"
   end
 
   def help?
