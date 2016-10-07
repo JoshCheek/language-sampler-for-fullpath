@@ -12,6 +12,20 @@ System args rest foreach(arg,
   (arg isEmpty)                    ifFalse(paths append(arg))
 )
 
+printHelp ifTrue(
+  list(
+    "usage: fullpath *[relative-paths] [-c]",
+    "",
+    "  Prints the fullpath of the paths",
+    "  If no paths are given as args, it will read them from stdin",
+    "",
+    "  If there is only one path, the trailing newline is omitted",
+    "",
+    "  The -c flag will copy the results into your pasteboard"
+  ) foreach(line, line println)
+  System exit
+)
+
 (paths size == 0) ifTrue(paths = File standardInput readLines select(line, line isEmpty not))
 paths = paths map(index, arg, dir .. arg)
 
