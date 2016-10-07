@@ -3,11 +3,14 @@
 import java.util.ArrayList
 import java.io.BufferedReader
 import java.io.InputStreamReader
+import java.io.PrintStream
+import java.io.InputStream
 
 class Fullpath
-  def initialize(dir:String, argv:ArrayList)
+  def initialize(dir:String, argv:ArrayList, instream:InputStream, outstream:PrintStream)
     @dir         = dir
-    @argv        = argv
+    @instream    = instream
+    @outstream   = outstream
     @print_help  = false
     @copy_output = false
     @paths       = ArrayList.new
@@ -24,32 +27,36 @@ class Fullpath
 
   def call
     if help?
-      print_help
+      print_help @outstream
       return
     end
 
     if @paths.size == 0
-      @paths = read_lines
+      @paths = read_lines @instream
     end
 
+    print_paths @outstream
+  end
+
+  def print_paths(outstream:PrintStream)
     if @paths.size == 1
-      print "#{@dir}/#{@paths[0]}"
+      outstream.print "#{@dir}/#{@paths[0]}"
     else
       @paths.each do |path|
-        puts "#{@dir}/#{path}"
+        outstream.puts "#{@dir}/#{path}"
       end
     end
   end
 
-  def print_help
-    puts "usage: fullpath *[relative-paths] [-c]"
-    puts
-    puts "  Prints the fullpath of the paths"
-    puts "  If no paths are given as args, it will read them from stdin"
-    puts
-    puts "  If there is only one path, the trailing newline is omitted"
-    puts
-    puts "  The -c flag will copy the results into your pasteboard"
+  def print_help(oustream:PrintStream)
+    outstream.puts "usage: fullpath *[relative-paths] [-c]"
+    outstream.puts ""
+    outstream.puts "  Prints the fullpath of the paths"
+    outstream.puts "  If no paths are given as args, it will read them from stdin"
+    outstream.puts ""
+    outstream.puts "  If there is only one path, the trailing newline is omitted"
+    outstream.puts ""
+    outstream.puts "  The -c flag will copy the results into your pasteboard"
   end
 
   def help?
@@ -60,8 +67,8 @@ class Fullpath
     @copy_output
   end
 
-  def read_lines
-    reader = BufferedReader.new InputStreamReader.new System.in
+  def read_lines(instream:InputStream)
+    reader = BufferedReader.new InputStreamReader.new instream
     lines  = []
     loop do
       line = reader.readLine
@@ -82,15 +89,15 @@ argv.add("a")
 argv.add("b")
 argv.add("")
 argv.add("c")
-Fullpath.new(dir, argv).call
+Fullpath.new(dir, argv, System.in, System.out).call
 
 argv = ArrayList.new
 argv.add("-h")
-Fullpath.new(dir, argv).call
+Fullpath.new(dir, argv, System.in, System.out).call
 
 argv = ArrayList.new
-Fullpath.new(dir, argv).call
+Fullpath.new(dir, argv, System.in, System.out).call
 
 argv = ArrayList.new
 argv.add("a")
-Fullpath.new(dir, argv).call
+Fullpath.new(dir, argv, System.in, System.out).call
