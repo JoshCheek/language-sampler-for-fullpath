@@ -1,0 +1,3 @@
+#!/usr/bin/env jruby -S mirah
+
+puts "Hello, world"
