@@ -34,8 +34,10 @@ printHelp ifTrue(
 (paths size == 0) ifTrue(paths = readPaths)
 paths = paths map(index, arg, dir .. arg)
 
+stream := File standardOutput
+
 (paths size == 1) ifTrue(
-  paths first print
+  stream write(paths first)
 ) ifFalse (
-  paths foreach(index, path, path println)
+  paths foreach(path, stream write(path, "\n"))
 )
