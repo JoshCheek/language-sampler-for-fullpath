@@ -53,25 +53,25 @@ class Fullpath
     print_paths @outstream
   end
 
-  def print_paths(outstream:PrintStream)
+  def print_paths(stream:PrintStream)
     if @paths.size == 1
-      outstream.print "#{@dir}/#{@paths[0]}"
+      stream.print "#{@dir}/#{@paths[0]}"
     else
       @paths.each do |path|
-        outstream.puts "#{@dir}/#{path}"
+        stream.println "#{@dir}/#{path}"
       end
     end
   end
 
   def print_help(oustream:PrintStream)
-    outstream.puts "usage: fullpath *[relative-paths] [-c]"
-    outstream.puts ""
-    outstream.puts "  Prints the fullpath of the paths"
-    outstream.puts "  If no paths are given as args, it will read them from stdin"
-    outstream.puts ""
-    outstream.puts "  If there is only one path, the trailing newline is omitted"
-    outstream.puts ""
-    outstream.puts "  The -c flag will copy the results into your pasteboard"
+    outstream.println "usage: fullpath *[relative-paths] [-c]"
+    outstream.println ""
+    outstream.println "  Prints the fullpath of the paths"
+    outstream.println "  If no paths are given as args, it will read them from stdin"
+    outstream.println ""
+    outstream.println "  If there is only one path, the trailing newline is omitted"
+    outstream.println ""
+    outstream.println "  The -c flag will copy the results into your pasteboard"
   end
 
   def help?

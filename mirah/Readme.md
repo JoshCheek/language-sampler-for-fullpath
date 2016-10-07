@@ -44,4 +44,12 @@ wound up being simpler and faster. Also, I think I fucked up when I was
 using jruby and wound up running my mirah code with JRuby instead of Mirah,
 which led to confusion when it didn't work after I'd already seen it work.
 
+There is a weird bug where they translate `puts` to `System.out.println`,
+which makes sense probably, if called as a private method on self. But
+I was calling it on output streams. So it's super confusing to pritn to
+another process' standard input and have it show up in your own standard output.
+Fortunately it was quirky enough that I figured it out pretty quickly
+(figured it out b/c `print` did the right thing and `puts` did the wrong thing,
+which caused me to think about the difference).
+
 Anyway, I enjoyed it :)
