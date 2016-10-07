@@ -1,9 +1,11 @@
 #!/usr/bin/env io
 
-dir        := Directory currentWorkingDirectory .. "/"
-paths      := list()
-printHelp  := false
-copyOutput := false
+dir          := Directory currentWorkingDirectory .. "/"
+paths        := list()
+printHelp    := false
+copyOutput   := false
+
+List withoutBlanks := method(select(value, value != ""))
 
 // System args rest map(index, arg, dir .. arg) foreach(index, path, path println())
 System args rest foreach(index, arg,
@@ -17,6 +19,9 @@ System args rest foreach(index, arg,
     )
   )
 )
+
+paths = paths withoutBlanks
+(paths size == 0) ifTrue(paths = File standardInput readLines withoutBlanks)
 
 paths = paths map(index, arg, dir .. arg)
 
