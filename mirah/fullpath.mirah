@@ -1,6 +1,8 @@
 #!/usr/bin/env jruby -S mirah
 
 import java.util.ArrayList
+import java.io.BufferedReader
+import java.io.InputStreamReader
 
 class Fullpath
   def initialize(dir:String, argv:ArrayList)
@@ -24,6 +26,10 @@ class Fullpath
     if help?
       print_help
       return
+    end
+
+    if @paths.size == 0
+      @paths = read_lines
     end
 
     if @paths.size == 1
@@ -53,6 +59,17 @@ class Fullpath
   def copy?
     @copy_output
   end
+
+  def read_lines
+    reader = BufferedReader.new InputStreamReader.new System.in
+    lines  = []
+    loop do
+      line = reader.readLine
+      break if !line
+      lines << line
+    end
+    lines
+  end
 end
 
 dir = System.getProperty("user.dir")
@@ -69,6 +86,9 @@ Fullpath.new(dir, argv).call
 
 argv = ArrayList.new
 argv.add("-h")
+Fullpath.new(dir, argv).call
+
+argv = ArrayList.new
 Fullpath.new(dir, argv).call
 
 argv = ArrayList.new
