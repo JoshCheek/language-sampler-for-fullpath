@@ -119,7 +119,7 @@ file 'c/fullpath' => 'c/fullpath.c' do
   sh 'gcc', 'c/fullpath.c', '-o', 'c/fullpath'
 end
 
-# =====  C  =====
+# =====  Clojure  =====
 task default: :clojure
 clojure_jarfile = 'clojure/target/fullpath-0.1.0-SNAPSHOT-standalone.jar'
 
@@ -254,3 +254,12 @@ end
 # =====  IO  =====
 desc 'Test fullpath for IO'
 task(:io) { cucumber 'io' }
+
+# =====  Mirah  =====
+desc 'Build / Test fullpath for Mirah'
+task(mirah: 'mirah/fullpath') { cucumber 'mirah' }
+task 'mirah/fullpath' => 'mirah/fullpath.mirah' do
+  sh 'java', '-jar', 'mirah/mirah-0.2.1.jar',
+             '--dest', 'mirah',
+             'mirah/fullpath.mirah'
+end
