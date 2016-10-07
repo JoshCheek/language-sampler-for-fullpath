@@ -34,10 +34,19 @@ printHelp ifTrue(
 (paths size == 0) ifTrue(paths = readPaths)
 paths = paths map(index, arg, dir .. arg)
 
-stream := File standardOutput
-
-(paths size == 1) ifTrue(
-  stream write(paths first)
-) ifFalse (
-  paths foreach(path, stream write(path, "\n"))
+printPaths := method(paths, stream,
+  (paths size == 1) ifTrue(
+    stream write(paths first)
+  ) ifFalse (
+    paths foreach(path, stream write(path, "\n"))
+  )
 )
+
+copyOutput ifTrue(
+  copy := SystemCall clone setCommand("pbcopy")
+  copy asyncRun(copy command, copy arguments, copy environment)
+  printPaths(paths, copy stdin)
+  copy stdin close
+)
+
+printPaths(paths, File standardOutput)
