@@ -13,7 +13,7 @@ Language Sampler For Fullpath
 [Go](#go),
 [Haskell](#haskell),
 [Haxe](#haxe),
-[IO](#io),
+[IO](io),
 [Java](#java),
 [JavaScript](#javascript),
 [Julia](#julia),
