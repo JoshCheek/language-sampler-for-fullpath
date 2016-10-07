@@ -5,24 +5,14 @@ paths        := list()
 printHelp    := false
 copyOutput   := false
 
-List withoutBlanks := method(select(value, value != ""))
-
 // System args rest map(index, arg, dir .. arg) foreach(index, path, path println())
-System args rest foreach(index, arg,
-  (arg == "-h" or arg == "--help") ifTrue(
-    printHelp = true
-  ) ifFalse(
-    (arg == "-c" or arg == "--copy") ifTrue(
-      copyOutput = true
-    ) ifFalse (
-      paths append(arg)
-    )
-  )
+System args rest foreach(arg,
+  (arg == "-h" or arg == "--help") ifTrue(printHelp  = true) or
+  (arg == "-c" or arg == "--copy") ifTrue(copyOutput = true) or
+  (arg isEmpty)                    ifFalse(paths append(arg))
 )
 
-paths = paths withoutBlanks
-(paths size == 0) ifTrue(paths = File standardInput readLines withoutBlanks)
-
+(paths size == 0) ifTrue(paths = File standardInput readLines select(line, line isEmpty not))
 paths = paths map(index, arg, dir .. arg)
 
 (paths size == 1) ifTrue(
