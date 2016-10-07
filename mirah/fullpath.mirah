@@ -88,10 +88,12 @@ class Fullpath
 end
 
 dir = System.getProperty("user.dir")
+# # The real invocation... except I can't figure out how to get ARGV
+# # Looks like it might not be available:
+# # https://github.com/mirah/mirah/blob/722bb8c939866280b56fb5cc24421a895d40c6d1/TODO.md#end
+# Fullpath.new(dir, ARGV, System.in, System.out).call
 
-# The ARGV constant is only available when run through jruby
-# but it takes way longer when I do it that way
-# so just defining the constant for now
+# ===== invocations for testing =====
 argv = ArrayList.new
 argv.add("a")
 argv.add("b")
