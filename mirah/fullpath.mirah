@@ -40,7 +40,7 @@ class Fullpath
     end
 
     if @paths.size == 0
-      @paths = read_lines @instream
+      @paths = read_nonempty_lines  @instream
     end
 
     if copy?
@@ -82,13 +82,13 @@ class Fullpath
     @copy_output
   end
 
-  def read_lines(instream:InputStream)
+  def read_nonempty_lines (instream:InputStream)
     reader = BufferedReader.new InputStreamReader.new instream
     lines  = []
     loop do
       line = reader.readLine
-      break if !line
-      lines << line
+      break         if !line
+      lines << line if line != ""
     end
     lines
   end
