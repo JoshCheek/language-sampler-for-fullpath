@@ -43,10 +43,10 @@ printPaths := method(paths, stream,
 )
 
 copyOutput ifTrue(
-  copy := SystemCall clone setCommand("pbcopy")
-  copy asyncRun(copy command, copy arguments, copy environment)
-  printPaths(paths, copy stdin)
-  copy stdin close
+  prgm := SystemCall clone setCommand("pbcopy")
+  prgm asyncRun(prgm command, prgm arguments, prgm environment)
+  printPaths(paths, prgm stdin)
+  prgm stdin close
 )
 
 printPaths(paths, File standardOutput)
