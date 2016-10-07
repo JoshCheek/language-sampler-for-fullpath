@@ -4,8 +4,20 @@ import java.util.ArrayList
 
 class Fullpath
   def initialize(dir:String, argv:ArrayList)
-    @dir  = dir
-    @argv = argv
+    @dir         = dir
+    @argv        = argv
+    @print_help  = false
+    @copy_output = false
+    @paths       = ArrayList.new
+    argv.each do |arg|
+      if arg == "-h" || arg == "--help"
+        @print_help = true
+      elsif arg == "-c" || arg == "--copy"
+        @copy_output = true
+      elsif arg != ""
+        @paths.add arg
+      end
+    end
   end
 
   def call
@@ -19,10 +31,10 @@ class Fullpath
       puts
       puts "  The -c flag will copy the results into your pasteboard"
     else
-      if @argv.size == 1
-        print "#{@dir}/#{argv[0]}"
+      if @paths.size == 1
+        print "#{@dir}/#{@paths[0]}"
       else
-        @argv.each do |path|
+        @paths.each do |path|
           puts "#{@dir}/#{path}"
         end
       end
@@ -30,8 +42,11 @@ class Fullpath
   end
 
   def help?
-    @argv.each { |arg| return true if arg == "-h" || arg == "--help" }
-    false
+    @print_help
+  end
+
+  def copy?
+    @copy_output
   end
 end
 
@@ -43,6 +58,7 @@ dir = System.getProperty("user.dir")
 argv = ArrayList.new
 argv.add("a")
 argv.add("b")
+argv.add("")
 argv.add("c")
 Fullpath.new(dir, argv).call
 
