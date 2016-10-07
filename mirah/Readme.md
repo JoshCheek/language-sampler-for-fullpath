@@ -1,10 +1,18 @@
 [Mirah](http://www.mirah.org/)
 ==============================
 
-Install
+You can install like this:
 
 ```sh
 $ jruby -S gem install mirah
+```
+
+But there's also a jar you can download, which is quicker and removes the dependency on jruby.
+In that case, do:
+
+```sh
+$ java -jar mirah-0.2.1.jar fullpath.mirah
+$ java FullpathTopLevel xyz 123
 ```
 
 Run
@@ -24,20 +32,16 @@ lot by shifting between what I'd expect for Java and what I'd expect
 for Ruby. The [examples](https://github.com/mirah/mirah/tree/722bb8c939866280b56fb5cc24421a895d40c6d1/examples)
 were also helpful.
 
-I am stuck right now b/c I don't know how to get ARGV. I generally think
-Java's way of passing it as an arg to some main function is the right
-way to go. But in this case, it means that there isn't (AFAIK) anything
-in the enviornment I can get it off of, and since mirah doesn't set it,
-I don't know what to do now.
+I got pretty stuck trying ot figure out how to get access to ARGV.
+It would be really nice if they included it in the examples.
+Also, probably delete [https://github.com/mirah/mirah/blob/722bb8c939866280b56fb5cc24421a895d40c6d1/TODO.md#end](https://github.com/mirah/mirah/blob/722bb8c939866280b56fb5cc24421a895d40c6d1/TODO.md#end).
 
 Downloading the jar wound up being the easiest way to go, far better than
 executing like 3 processes or whatever (chruby in order to set jruby,
 jruby in order to invoke mirah, and then finally mirah). Not only is that
 confusing, but it just takes an ungodly amount of time. Using the jar directly
 wound up being simpler and faster. Also, I think I fucked up when I was
-using jruby and wound up running my mirah code with JRuby instead of Mirah >.<
-(this is the best explanation I have for why I was able to access ARGV earlier)
+using jruby and wound up running my mirah code with JRuby instead of Mirah,
+which led to confusion when it didn't work after I'd already seen it work.
 
-Anyway, I enjoyed it, but it seems abandoned at this point. Still, I'm hoping
-there's some way to access ARGV, b/c otherwise it's maybe unreasonable
-to include it in the list.
+Anyway, I enjoyed it :)

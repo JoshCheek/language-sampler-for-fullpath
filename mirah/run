@@ -2,5 +2,5 @@
 
 # chruby-exec jruby-9.1.2.0 -- jruby -S fullpath a b c
 java -jar mirah-0.2.1.jar fullpath.mirah &&
-  java FullpathTopLevel
+  java FullpathTopLevel xyz 123
 

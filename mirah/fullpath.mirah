@@ -1,14 +1,21 @@
 #!/usr/bin/env jruby -S mirah
 
 import java.util.ArrayList
+import java.util.List
 import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.io.PrintStream
 import java.io.InputStream
 import java.lang.Runtime
+import java.util.Arrays
+
+def self.main(argv:String[]):void
+  dir = System.getProperty("user.dir")
+  Fullpath.new(dir, Arrays.asList(argv), System.in, System.out).call
+end
 
 class Fullpath
-  def initialize(dir:String, argv:ArrayList, instream:InputStream, outstream:PrintStream)
+  def initialize(dir:String, argv:List, instream:InputStream, outstream:PrintStream)
     @dir         = dir
     @instream    = instream
     @outstream   = outstream
@@ -86,29 +93,3 @@ class Fullpath
     lines
   end
 end
-
-dir = System.getProperty("user.dir")
-# # The real invocation... except I can't figure out how to get ARGV
-# # Looks like it might not be available:
-# # https://github.com/mirah/mirah/blob/722bb8c939866280b56fb5cc24421a895d40c6d1/TODO.md#end
-# Fullpath.new(dir, ARGV, System.in, System.out).call
-
-# ===== invocations for testing =====
-argv = ArrayList.new
-argv.add("a")
-argv.add("b")
-argv.add("")
-argv.add("c")
-Fullpath.new(dir, argv, System.in, System.out).call
-
-argv = ArrayList.new
-argv.add("-h")
-Fullpath.new(dir, argv, System.in, System.out).call
-
-argv = ArrayList.new
-Fullpath.new(dir, argv, System.in, System.out).call
-
-argv = ArrayList.new
-argv.add("a")
-argv.add("-c")
-Fullpath.new(dir, argv, System.in, System.out).call
