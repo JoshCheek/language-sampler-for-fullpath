@@ -5,6 +5,7 @@ import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.io.PrintStream
 import java.io.InputStream
+import java.lang.Runtime
 
 class Fullpath
   def initialize(dir:String, argv:ArrayList, instream:InputStream, outstream:PrintStream)
@@ -33,6 +34,13 @@ class Fullpath
 
     if @paths.size == 0
       @paths = read_lines @instream
+    end
+
+    if copy?
+      process = Runtime.getRuntime.exec("pbcopy");
+      writer  = PrintStream.new process.getOutputStream
+      print_paths writer
+      writer.close
     end
 
     print_paths @outstream
@@ -100,4 +108,5 @@ Fullpath.new(dir, argv, System.in, System.out).call
 
 argv = ArrayList.new
 argv.add("a")
+argv.add("-c")
 Fullpath.new(dir, argv, System.in, System.out).call
