@@ -263,3 +263,17 @@ task 'mirah/fullpath' => 'mirah/fullpath.mirah' do
              '--dest', 'mirah',
              'mirah/fullpath.mirah'
 end
+
+# =====  ELISP  =====
+desc 'Build / Test fullpath for Emacs Lisp'
+task(emacs: 'emacs/fullpath') { cucumber 'emacs' }
+file 'emacs/fullpath' => 'emacs/fullpath.el' do
+  File.open(File.expand_path('./emacs/fullpath', __dir__), 'w') do |f|
+    f.write <<EOF
+#!/usr/bin/env bash
+base_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+emacs --script "$base_dir"/fullpath.el -- "$@"
+EOF
+  end
+  chmod '+x', 'emacs/fullpath'
+end
