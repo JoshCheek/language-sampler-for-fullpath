@@ -79,9 +79,10 @@ Probably next up: CoffeeScript, Fortran
 APL, ActionScript, Ada, Algol, AppleScript, Assembly (I've already got this partially working, but it's a pita -.-),
 Awk, Befunge, Brainfuck, C++, Cobol, CoffeeScript, ColdFusion, Coq, D, Dart,
 Delphi/Object Pascal, Dogescript, Eiffel, Erlang, F#, FORTRAN, Forth,
-Groovy, Idris, Ioke, J, LLVM, Lua, Modula-2, MoonScript, OCaml, Objective-C,
-Opal, Oz, Perl, Prolog, Pure Data, PureScript, R, Racket, Rebol, Rubinius Bytecode,
-Scala, Self, Smalltalk, SuperCollider, Tcl, TypeScript, VB.net / Visual Basic, VimL
+Groovy, Idris, Ioke, J, LLVM, Lua, Modula-2, MoonScript, Neko, Nim, Newspeak, OCaml, Objective-C,
+Opal, Oz, Perl, Prolog, Pure Data, PureScript, Qbasic, R, Racket, Rebol, Rubinius Bytecode,
+Scala, Self, Smalltalk, SuperCollider, Snobol, Tcl, TypeScript,
+Ubercode, Unicon, Umple, VB.net / Visual Basic, VimL, Zsh
 
 
 Languages
