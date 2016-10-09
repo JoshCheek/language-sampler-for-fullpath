@@ -218,6 +218,7 @@ end
 
 
 # =====  Crystal  =====
+task default: :crystal
 desc 'Build / Test fullpath for Crystal'
 task(crystal: 'crystal/fullpath') { cucumber 'crystal' }
 task 'crystal/fullpath' => 'crystal/fullpath.cr' do
@@ -228,10 +229,12 @@ end
 
 
 # =====  Julia  =====
+task default: :julia
 desc 'Test fullpath for Julia'
 task(:julia) { cucumber 'julia' }
 
 # =====  Scheme  =====
+task default: :scheme
 desc 'Build / Test fullpath for Scheme'
 task(scheme: 'scheme/fullpath') { cucumber 'scheme' }
 task 'scheme/fullpath' => 'scheme/fullpath.scm' do
@@ -239,6 +242,7 @@ task 'scheme/fullpath' => 'scheme/fullpath.scm' do
 end
 
 # =====  Swift  =====
+task default: :swift
 def self.macosx_sdk_path
   @macosx_sdk_path ||= `xcrun --show-sdk-path --sdk macosx`.chomp
 end
@@ -252,10 +256,12 @@ task 'swift/fullpath' => 'swift/fullpath.swift' do
 end
 
 # =====  IO  =====
+task default: :io
 desc 'Test fullpath for IO'
 task(:io) { cucumber 'io' }
 
 # =====  Mirah  =====
+task default: :mirah
 desc 'Build / Test fullpath for Mirah'
 task(mirah: 'mirah/fullpath') { cucumber 'mirah' }
 task 'mirah/fullpath' => 'mirah/fullpath.mirah' do
@@ -265,8 +271,9 @@ task 'mirah/fullpath' => 'mirah/fullpath.mirah' do
 end
 
 # =====  ELISP  =====
+task default: :elisp
 desc 'Build / Test fullpath for Emacs Lisp'
-task(emacs: 'emacs/fullpath') { cucumber 'emacs' }
+task(elisp: 'emacs/fullpath') { cucumber 'emacs' }
 file 'emacs/fullpath' => 'emacs/fullpath.el' do
   File.open(File.expand_path('./emacs/fullpath', __dir__), 'w') do |f|
     f.write <<EOF
