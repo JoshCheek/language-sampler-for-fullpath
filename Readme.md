@@ -9,6 +9,7 @@ Language Sampler For Fullpath
 [Common Lisp](#common-lisp),
 [Crystal](#crystal),
 [Elixir](#elixir),
+[Elisp](emacs),
 [Fish](#fish),
 [Go](#go),
 [Haskell](#haskell),
