@@ -1,3 +1,2 @@
 #!/usr/bin/env bash
-
-dart fullpath.dart a b c
+./fullpath a b c
