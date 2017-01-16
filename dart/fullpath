@@ -3,48 +3,37 @@ import "dart:io";
 
 class Fullpath {
   List<String>      args;
-  Directory         cwd;
+  String            cwd; // there is a directory class, but it isn't useful
   Stream<List<int>> instream;
   IOSink            outstream;
   Fullpath(this.args, this.cwd, this.instream, this.outstream);
 
   call() {
-    if(args.length == 0) {
+    if(args.isNotEmpty)
+      printPaths(args);
+    else
       instream
-        .map((bytes) {
-          var line = new String.fromCharCodes(bytes);
-          return line.replaceAll(new RegExp(r"\n$"), '');
-        })
+        .map((bytes) => new String.fromCharCodes(bytes))
+        .map(chomp)
         .toList()
         .then(printPaths);
-    } else
-      printPaths(args);
   }
 
   printPaths(paths) {
-    if(paths.length == 1) {
+    if(paths.length == 1)
       outstream.write(path(paths[0]));
-    } else {
-      for(var filename in paths) {
-        // this is kind of dumb, IMO, why even have this drectory class if it
-        // won't let me do useful things like talk about a child of the dir?
-        // This basically just casts it to a string and assumes the file separator
-        // is a slash, which it wouldn't be on Windows, for example
-        outstream.write(path(filename));
-        outstream.write("\n");
-      }
-    }
+    else
+      paths.forEach((filename) => outstream.write(path(filename)+"\n"));
   }
 
-  path(filename) {
-    return (cwd + "/" + filename).toString();
-        // normalizePath
-  }
+  // normalizePath
+  path(filename) => (cwd + "/" + filename).toString();
+  chomp(str) => str.replaceAll(new RegExp(r"\n$"), '');
 }
 
 main(List<String> args) {
-  var cwd = Directory.current.path;
-  new Fullpath(args, cwd, stdin, stdout).call();
+  var cwd = Directory.current.path.toString();
+  new Fullpath(args, cwd, stdin, stdout)();
 
   // print("*** Robot Stuffs ***");
   // var r = new Robot();
