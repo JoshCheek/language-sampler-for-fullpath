@@ -284,3 +284,8 @@ EOF
   end
   chmod '+x', 'emacs/fullpath'
 end
+
+# =====  Dart  =====
+task default: :dart
+desc 'Test fullpath in Dart'
+task(:dart) { cucumber 'dart' }
