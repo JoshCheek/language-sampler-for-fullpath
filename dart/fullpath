@@ -9,10 +9,20 @@ class Fullpath {
   Fullpath(this.args, this.cwd, this.instream, this.outstream);
 
   call() {
-    if(args.length == 1) {
-      outstream.write(path(args[0]));
+    if(args.length == 0) {
+      instream
+        .map((bytes) { return new String.fromCharCodes(bytes); })
+        .toList()
+        .then(printPaths);
+    } else
+      printPaths(args);
+  }
+
+  printPaths(paths) {
+    if(paths.length == 1) {
+      outstream.write(path(paths[0]));
     } else {
-      for(var filename in args) {
+      for(var filename in paths) {
         // this is kind of dumb, IMO, why even have this drectory class if it
         // won't let me do useful things like talk about a child of the dir?
         // This basically just casts it to a string and assumes the file separator
