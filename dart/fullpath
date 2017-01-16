@@ -1,7 +1,23 @@
 #!/usr/bin/env dart
 import "dart:io";
 
+main(List<String> args) {
+  var cwd = Directory.current.path.toString();
+  new Fullpath(args, cwd, stdin, stdout)();
+}
+
 class Fullpath {
+  String helpScreen = """
+usage: fullpath *[relative-paths] [-c]
+
+  Prints the fullpath of the paths
+  If no paths are given as args, it will read them from stdin
+
+  If there is only one path, the trailing newline is omitted
+
+  The -c flag will copy the results into your pasteboard
+""";
+
   List<String>      args;
   String            cwd; // there is a directory class, but it isn't useful
   Stream<List<int>> instream;
@@ -19,17 +35,16 @@ class Fullpath {
       else
         this.args.add(arg);
     });
-    this.args = filterBlanks(this.args);
   }
 
   call() {
     if(help)
-      outstream.write(helpScreen());
+      outstream.write(helpScreen);
     else if(args.isNotEmpty)
-      printPaths(args);
+      printPaths(filterBlanks(args));
     else
       instream
-        .map((bytes) => new String.fromCharCodes(bytes))
+        .map((bytes) => new String.fromCharCodes(bytes)) // stupid `new` keyword -.-
         .map(split)
         .toList()
         .then(flatten)
@@ -37,17 +52,20 @@ class Fullpath {
         .then(printPaths);
   }
 
-  filterBlanks(paths) => paths.toList(growable: true)..removeWhere((s) => s.isEmpty);
+  filterBlanks(paths) => paths.toList(growable: true)
+                             ..removeWhere((s) => s.isEmpty);
 
   printPaths(paths) {
     printPathsToStream(paths, outstream);
-    if(copy) {
-      Process.start('pbcopy', []).then((process) {
-        printPathsToStream(paths, process.stdin);
-        process.stdin.close();
-      });
-    }
+    if(copy) pbcopy((stream) {
+      printPathsToStream(paths, stream);
+    });
   }
+
+  pbcopy(cb) => Process.start('pbcopy', []).then((process) {
+    cb(process.stdin);
+    process.stdin.close();
+  });
 
   printPathsToStream(paths, stream) {
     if(paths.length == 1)
@@ -56,31 +74,15 @@ class Fullpath {
       paths.forEach((filename) => stream.write(path(filename)+"\n"));
   }
 
-  // normalizePath
-  path(filename) => (cwd + "/" + filename).toString();
+  path(filename) => "$cwd/$filename";
   split(str) => str.split(new RegExp(r"\n"));
+
+  // Sigh, if there's a better way than this, I don't know what it is
+  // I can't even use reduce b/c it doesn't take the inital argument
+  // Also note that this does not actually flatten, it flattens one level only.
   flatten(lists) {
-    var result = new List();
-    lists.forEach((list) => result.addAll(list));
+    var result = [];
+    lists.forEach(result.addAll);
     return result;
   }
-
-  helpScreen() => """
-usage: fullpath *[relative-paths] [-c]
-
-  Prints the fullpath of the paths
-  If no paths are given as args, it will read them from stdin
-
-  If there is only one path, the trailing newline is omitted
-
-  The -c flag will copy the results into your pasteboard
-""";
-}
-
-main(List<String> args) {
-  var cwd = Directory.current.path.toString();
-  new Fullpath(args, cwd, stdin, stdout)();
-
-  // print("*** Robot Stuffs ***");
-  // var r = new Robot();
 }
