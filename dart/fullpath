@@ -6,11 +6,23 @@ class Fullpath {
   String            cwd; // there is a directory class, but it isn't useful
   Stream<List<int>> instream;
   IOSink            outstream;
-  Fullpath(this.args, this.cwd, this.instream, this.outstream);
+  bool              help = false;
+  Fullpath(args, this.cwd, this.instream, this.outstream) {
+    this.args = new List();
+    args.forEach((arg) {
+      if(arg == "-h" || arg == "--help") {
+        help = true;
+      } else {
+        this.args.add(arg);
+      }
+    });
+    this.args = filterBlanks(this.args);
+  }
 
   call() {
-    args = filterBlanks(args);
-    if(args.isNotEmpty)
+    if(help)
+      outstream.write(helpScreen());
+    else if(args.isNotEmpty)
       printPaths(args);
     else
       instream
@@ -39,6 +51,17 @@ class Fullpath {
     lists.forEach((list) => result.addAll(list));
     return result;
   }
+
+  helpScreen() => """
+usage: fullpath *[relative-paths] [-c]
+
+  Prints the fullpath of the paths
+  If no paths are given as args, it will read them from stdin
+
+  If there is only one path, the trailing newline is omitted
+
+  The -c flag will copy the results into your pasteboard
+""";
 }
 
 main(List<String> args) {
