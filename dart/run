@@ -1,2 +1,2 @@
 #!/usr/bin/env bash
-./fullpath a b c
+./fullpath a b '' c

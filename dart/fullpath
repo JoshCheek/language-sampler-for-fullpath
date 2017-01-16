@@ -9,15 +9,20 @@ class Fullpath {
   Fullpath(this.args, this.cwd, this.instream, this.outstream);
 
   call() {
+    args = filterBlanks(args);
     if(args.isNotEmpty)
       printPaths(args);
     else
       instream
         .map((bytes) => new String.fromCharCodes(bytes))
-        .map(chomp)
+        .map(split)
         .toList()
+        .then(flatten)
+        .then(filterBlanks)
         .then(printPaths);
   }
+
+  filterBlanks(paths) => paths.toList(growable: true)..removeWhere((s) => s.isEmpty);
 
   printPaths(paths) {
     if(paths.length == 1)
@@ -28,7 +33,12 @@ class Fullpath {
 
   // normalizePath
   path(filename) => (cwd + "/" + filename).toString();
-  chomp(str) => str.replaceAll(new RegExp(r"\n$"), '');
+  split(str) => str.split(new RegExp(r"\n"));
+  flatten(lists) {
+    var result = new List();
+    lists.forEach((list) => result.addAll(list));
+    return result;
+  }
 }
 
 main(List<String> args) {
