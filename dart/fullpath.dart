@@ -1,28 +1,19 @@
-class Robot {
-  int x, y;
-  Robot([this.x=0, this.y=0]);
-  String get location => "($x,$y)";
+import "dart:io";
 
-  moveRight() { x++; }
-  moveLeft()  { x--; }
-  moveUp()    { y++; }
-  moveDown()  { y--; }
+class Fullpath {
+  List<String>      argv;
+  Stream<List<int>> instream;
+  IOSink            stdout;
+  Fullpath(this.argv, this.instream, this.stdout);
+
+  call() {
+    this.stdout.write(this.argv.toString());
+  }
 }
 
-main() {
-  print("*** Robot Stuffs ***");
-  var r = new Robot();
-  print("Robot starts at: " + r.location);
+main(List<String> args) {
+  new Fullpath(args, stdin, stdout).call();
 
-  r.moveRight();
-  r.moveRight();
-  r.moveRight.call();
-  (){ r.moveRight(); }();
-  var m = r.moveRight;
-  m();
-  r ..moveRight()
-    ..moveRight();
-
-  print("---");
-  print("Robot ends at: " + r.location);
+  // print("*** Robot Stuffs ***");
+  // var r = new Robot();
 }
