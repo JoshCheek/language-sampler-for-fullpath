@@ -8,6 +8,7 @@ Language Sampler For Fullpath
 [Clojure](#clojure),
 [Common Lisp](#common-lisp),
 [Crystal](#crystal),
+[Dart](dart),
 [Elixir](#elixir),
 [Elisp](emacs),
 [Fish](#fish),
