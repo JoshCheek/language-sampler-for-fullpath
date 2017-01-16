@@ -11,7 +11,10 @@ class Fullpath {
   call() {
     if(args.length == 0) {
       instream
-        .map((bytes) { return new String.fromCharCodes(bytes); })
+        .map((bytes) {
+          var line = new String.fromCharCodes(bytes);
+          return line.replaceAll(new RegExp(r"\n$"), '');
+        })
         .toList()
         .then(printPaths);
     } else
