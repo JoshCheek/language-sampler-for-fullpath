@@ -7,7 +7,10 @@ class Fullpath {
   Fullpath(this.argv, this.instream, this.stdout);
 
   call() {
-    this.stdout.write(this.argv.toString());
+    for(var filename in this.argv) {
+      this.stdout.write(filename);
+      this.stdout.write("\n");
+    }
   }
 }
 
