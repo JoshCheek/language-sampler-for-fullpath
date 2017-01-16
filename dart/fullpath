@@ -7,14 +7,17 @@ class Fullpath {
   Stream<List<int>> instream;
   IOSink            outstream;
   bool              help = false;
+  bool              copy = false;
+
   Fullpath(args, this.cwd, this.instream, this.outstream) {
     this.args = new List();
     args.forEach((arg) {
-      if(arg == "-h" || arg == "--help") {
+      if(arg == "-h" || arg == "--help")
         help = true;
-      } else {
+      else if(arg == "-c" || arg == "--copy")
+        copy = true;
+      else
         this.args.add(arg);
-      }
     });
     this.args = filterBlanks(this.args);
   }
@@ -37,10 +40,20 @@ class Fullpath {
   filterBlanks(paths) => paths.toList(growable: true)..removeWhere((s) => s.isEmpty);
 
   printPaths(paths) {
+    printPathsToStream(paths, outstream);
+    if(copy) {
+      Process.start('pbcopy', []).then((process) {
+        printPathsToStream(paths, process.stdin);
+        process.stdin.close();
+      });
+    }
+  }
+
+  printPathsToStream(paths, stream) {
     if(paths.length == 1)
-      outstream.write(path(paths[0]));
+      stream.write(path(paths[0]));
     else
-      paths.forEach((filename) => outstream.write(path(filename)+"\n"));
+      paths.forEach((filename) => stream.write(path(filename)+"\n"));
   }
 
   // normalizePath
