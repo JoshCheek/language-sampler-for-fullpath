@@ -3,7 +3,6 @@ function! <SID>ConvertCurrentLineToFullpath()
   let basename = getline(".")
   let fullpath = dirname."/".basename
   call setline(".", fullpath)
-  :.print
   " :setline(".", expand('%:p'))
   " :.!ruby -ne 'p $_'
 
@@ -19,4 +18,4 @@ endfunction
 "   :norm yyp
 "   +1
 " endwhile
-" :%print
+:%print

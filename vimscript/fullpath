@@ -15,6 +15,7 @@ command+=(-es)             # ex mode + silent batch mode
 # done | vim -es '+%print' '+:q!' /dev/stdin
 
 
+
 for arg in "$@"; do
   echo "$arg"
-done | vim -T dumb -N -u NONE -n -es -c 'set nomore' '+source fullpath.vim' '+:q!' /dev/stdin
+done | vim -T dumb -N -u NONE -n -es -c 'set nomore' "+source $(dirname "$0")/fullpath.vim" '+:q!' /dev/stdin
