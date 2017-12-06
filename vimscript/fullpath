@@ -16,10 +16,5 @@ command+=(-es)             # ex mode + silent batch mode
 
 
 for arg in "$@"; do
-  echo $arg
+  echo "$arg"
 done | vim -T dumb -N -u NONE -n -es -c 'set nomore' '+source fullpath.vim' '+:q!' /dev/stdin
-
-# "${command[@]}" '+%print' '+:q!'
-
-# vim -E -s -c "let g:html_no_progress=1" -c "syntax on" -c "set ft=c" -c "runtime syntax/2html.vim" -cwqa myfile.c
-
