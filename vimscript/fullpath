@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+
+# Args mostly drawn from here: https://stackoverflow.com/questions/23235112/how-to-run-a-series-of-vim-commands-from-command-prompt
+# command=(ruby -e 'p ARGV, $stdin.read' vim)
+command=(vim)
+command+=(-T dumb)         # avoids errors in case the terminal detection goes wrong
+command+=(-N)              # noompatible mode
+command+=(-u NONE)         # do not load vimrc / plugins
+command+=(-n)              # no swapfile
+command+=(-c 'set nomore') # suppress the more-prompt when the screen is filled
+command+=(-es)             # ex mode + silent batch mode
+
+# for arg in "$@"; do
+#   echo $arg
+# done | vim -es '+%print' '+:q!' /dev/stdin
+
+
+for arg in "$@"; do
+  echo $arg
+done | vim -T dumb -N -u NONE -n -es -c 'set nomore' '+source fullpath.vim' '+:q!' /dev/stdin
+
+# "${command[@]}" '+%print' '+:q!'
+
+# vim -E -s -c "let g:html_no_progress=1" -c "syntax on" -c "set ft=c" -c "runtime syntax/2html.vim" -cwqa myfile.c
+
