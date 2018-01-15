@@ -78,13 +78,21 @@ Potential Future Languages
 
 Probably next up: CoffeeScript, Fortran
 
-APL, ActionScript, Ada, Algol, AppleScript, Assembly (I've already got this partially working, but it's a pita -.-),
-Awk, Befunge, Brainfuck, C++, Cobol, CoffeeScript, ColdFusion, Coq, D, Dart,
-Delphi/Object Pascal, Dogescript, Eiffel, F#, FORTRAN, Forth,
-Groovy, Idris, Ioke, J, LLVM, Lua, Modula-2, MoonScript, Neko, Nim, Newspeak, OCaml, Objective-C,
-Opal, Oz, Perl, Prolog, Pure Data, PureScript, Qbasic, R, Racket, Rebol, Rubinius Bytecode,
+APL, ActionScript, Ada, Algol, AppleScript,
+Awk, C++, Cobol, CoffeeScript, ColdFusion, Coq, D,
+Delphi/Object Pascal, Dogescript, Eiffel, F#, Forth,
+Groovy, Idris, J, LLVM, Lua, Modula-2, MoonScript, Neko, Nim, Newspeak, OCaml, Objective-C,
+Opal, Oz, Perl, Plpgsql, Prolog, Pure Data, PureScript, Qbasic, R, Racket, Rebol, Rubinius Bytecode,
 Scala, Self, Smalltalk, SuperCollider, Snobol, Tcl, TypeScript,
-Ubercode, Unicon, Umple, VB.net / Visual Basic, VimL, Zsh
+Ubercode, Unicon, Umple, VB.net / Visual Basic, Zsh
+
+Languages I've tried and given up on
+------------------------------------
+
+Assembly (due to calling out to other executables, IIRC),
+FORTRAN (due to the insane pain of needing to know the memory sizes of everything in advance),
+VimL (no good way to pass it args, couldn't figure out how to print the document without a trailing newline).
+
 
 
 Languages
