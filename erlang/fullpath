@@ -7,20 +7,28 @@ main(Args) ->
     Args == [] ->
       RawLine  = io:get_line(""),
       LineNoNl = re:replace(RawLine, "\n$", "", [global,{return,list}]),
-      print_path(Cwd, [LineNoNl]);
+      Paths    = [LineNoNl],
+      print_path(Cwd, Paths, trailing_str(Paths));
     true ->
-      print_paths(Cwd, Args)
+      print_paths(Cwd, Args, trailing_str(Args))
   end.
 
-print_paths(_, []) ->
+print_paths(_, [], _) ->
   init:stop();
 
-print_paths(Cwd, [Path|Rest]) ->
-  print_path(Cwd, Path),
-  print_paths(Cwd, Rest).
+print_paths(Cwd, [Path|Rest], Nl) ->
+  print_path(Cwd, Path, Nl),
+  print_paths(Cwd, Rest, Nl).
 
-print_path(Cwd, Path) ->
-  io:format("~s/~s", [Cwd, Path]).
+print_path(Cwd, Path, TrailingStr) ->
+  io:format("~s/~s~s", [Cwd, Path, TrailingStr]).
+
+trailing_str([]) -> "";
+trailing_str([_|Rest]) ->
+  if
+    [] == Rest -> "";
+    true       -> "\n"
+  end.
 
 % main(_) ->
 %   usage().
