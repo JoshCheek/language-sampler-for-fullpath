@@ -3,7 +3,14 @@
 %%! -smp enable -sname factorial -mnesia debug verbose
 main(Args) ->
   {ok, Cwd} = file:get_cwd(),
-  print_paths(Cwd, Args).
+  if
+    Args == [] ->
+      RawLine  = io:get_line(""),
+      LineNoNl = re:replace(RawLine, "\n$", "", [global,{return,list}]),
+      print_path(Cwd, [LineNoNl]);
+    true ->
+      print_paths(Cwd, Args)
+  end.
 
 print_paths(_, []) ->
   init:stop();
