@@ -3,17 +3,37 @@
 %%! -smp enable -sname factorial -mnesia debug verbose
 main(Args) ->
   {ok, Cwd} = file:get_cwd(),
+  {_DoCopy, RelativePaths} = parse_args(Args),
   if
-    Args == [] ->
-      Line  = strip_newline(io:get_line("")),
-      Paths = filter_blanks([Line]);
+    RelativePaths == [] ->
+      Lines = readlines([]),
+      Paths = filter_blanks(Lines);
     true ->
-      Paths = filter_blanks(Args)
+      Paths = filter_blanks(RelativePaths)
   end,
   print_paths(Cwd, Paths, trailing_str(Paths)).
 
-strip_newline(eof)  -> eof;
-strip_newline(Line) -> re:replace(Line, "\n$", "", [global,{return,list}]).
+parse_args(Args) ->
+  do_parse_args(Args, false, []).
+
+do_parse_args([], DoCopy, RelativePaths) ->
+  { DoCopy,
+    filter_blanks(lists:reverse(RelativePaths))
+  };
+do_parse_args(["-c"|Rest], _DoCopy, RelativePaths) ->
+  do_parse_args(Rest, true, RelativePaths);
+do_parse_args([Path|Rest], DoCopy, RelativePaths) ->
+  do_parse_args(Rest, DoCopy, [Path|RelativePaths]).
+
+
+readlines(AlreadyRead) ->
+  case strip_newline(io:get_line("")) of
+    {error} -> lists:reverse(AlreadyRead);
+    {ok, Line} -> readlines([Line|AlreadyRead])
+  end.
+
+strip_newline(eof)  -> {error};
+strip_newline(Line) -> {ok, re:replace(Line, "\n$", "", [global,{return,list}])}.
 
 filter_blanks([])          -> [];
 filter_blanks([eof|Rest])  -> filter_blanks(Rest);
