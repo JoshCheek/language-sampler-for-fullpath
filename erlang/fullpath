@@ -1,7 +1,5 @@
 #!/usr/bin/env escript
-%% -*- erlang -*-
 main(Args) ->
-  {ok, Cwd} = file:get_cwd(),
   {Help, Copy, RelativePaths} = parse_args(Args),
   if
     Help ->
@@ -14,6 +12,8 @@ main(Args) ->
       io:format("~n"),
       io:format("  The -c flag will copy the results into your pasteboard~n");
     true ->
+      {ok, Cwd} = file:get_cwd(),
+
       if
         RelativePaths == [] ->
           Lines = readlines([]),
@@ -22,17 +22,21 @@ main(Args) ->
           Paths = filter_blanks(RelativePaths)
       end,
 
-      % I have no idea what these options correspond to,
-      % I just finally found an example that worked
+      % I have no idea what these options correspond to
       STDOUT = erlang:open_port({fd, 0, 1}, [out, {line, 256}]),
       if
         Copy ->
           Ports = [
-            open_port({spawn, "/usr/bin/pbcopy"}, [stream, out, hide, exit_status]),
-            STDOUT
+            STDOUT,
+            open_port(
+              {spawn, "pbcopy"},
+              [stream, out, hide, exit_status]
+            )
           ];
         true ->
-          Ports = [STDOUT]
+          Ports = [
+           STDOUT
+          ]
       end,
       print_paths(Cwd, Paths, trailing_str(Paths), Ports),
       close_ports(Ports),
@@ -55,12 +59,12 @@ do_parse_args([    Path|Rest], Help, Copy, Paths) -> do_parse_args(Rest, Help, C
 
 readlines(AlreadyRead) ->
   case strip_newline(io:get_line("")) of
-    {error} -> lists:reverse(AlreadyRead);
-    {ok, Line} -> readlines([Line|AlreadyRead])
+    eof  -> lists:reverse(AlreadyRead);
+    Line -> readlines([Line|AlreadyRead])
   end.
 
-strip_newline(eof)  -> {error};
-strip_newline(Line) -> {ok, re:replace(Line, "\n$", "", [global,{return,list}])}.
+strip_newline(eof)  -> eof;
+strip_newline(Line) -> re:replace(Line, "\n$", "", [global,{return,list}]).
 
 filter_blanks([])          -> [];
 filter_blanks([eof|Rest])  -> filter_blanks(Rest);
