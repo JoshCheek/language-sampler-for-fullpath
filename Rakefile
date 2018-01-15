@@ -36,6 +36,11 @@ file 'elixir/fullpath' do # TODO: if we declare deps, can avoid rebuilding every
   cd('elixir') { sh 'mix', 'escript.build' }
 end
 
+# =====  Erlang  =====
+task default: :erlang
+desc 'Test fullpath in Erlang'
+task(:erlang) { cucumber 'erlang' }
+
 
 # =====  Common Lisp  =====
 task default: :cl

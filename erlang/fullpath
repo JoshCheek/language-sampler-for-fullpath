@@ -1,0 +1,23 @@
+#!/usr/bin/env escript
+%% -*- erlang -*-
+%%! -smp enable -sname factorial -mnesia debug verbose
+main(Args) ->
+  {ok, Cwd} = file:get_cwd(),
+  print_paths(Cwd, Args).
+
+print_paths(_, []) ->
+  init:stop();
+
+print_paths(Cwd, [Path|Rest]) ->
+  print_path(Cwd, Path),
+  print_paths(Cwd, Rest).
+
+print_path(Cwd, Path) ->
+  io:format("~s/~s", [Cwd, Path]).
+
+% main(_) ->
+%   usage().
+
+% usage() ->
+%   io:format("usage: factorial integer\n"),
+%   halt(1).
