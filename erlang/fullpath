@@ -5,47 +5,30 @@ main(Args) ->
   {ok, Cwd} = file:get_cwd(),
   if
     Args == [] ->
-      RawLine  = io:get_line(""),
-      LineNoNl = re:replace(RawLine, "\n$", "", [global,{return,list}]),
-      Paths    = filter_blanks([LineNoNl]),
-      print_path(Cwd, Paths, trailing_str(Paths));
+      Line  = strip_newline(io:get_line("")),
+      Paths = filter_blanks([Line]);
     true ->
-      Paths = filter_blanks(Args),
-      print_paths(Cwd, Paths, trailing_str(Paths))
-  end.
+      Paths = filter_blanks(Args)
+  end,
+  print_paths(Cwd, Paths, trailing_str(Paths)).
 
-filter_blanks([]) -> [];
-filter_blanks([Path|Rest]) ->
-  if
-    "" == Path ->
-      filter_blanks(Rest);
-    true ->
-      [Path | filter_blanks(Rest)]
-  end.
+strip_newline(eof)  -> eof;
+strip_newline(Line) -> re:replace(Line, "\n$", "", [global,{return,list}]).
+
+filter_blanks([])          -> [];
+filter_blanks([eof|Rest])  -> filter_blanks(Rest);
+filter_blanks([""|Rest])   -> filter_blanks(Rest);
+filter_blanks([Path|Rest]) -> [Path | filter_blanks(Rest)].
 
 print_paths(_, [], _) ->
   init:stop();
-
 print_paths(Cwd, [Path|Rest], Nl) ->
   print_path(Cwd, Path, Nl),
   print_paths(Cwd, Rest, Nl).
 
 print_path(Cwd, Path, TrailingStr) ->
-  if
-    "" == Path -> noop;
-    true -> io:format("~s/~s~s", [Cwd, Path, TrailingStr])
-  end.
+  io:format("~s/~s~s", [Cwd, Path, TrailingStr]).
 
-trailing_str([]) -> "";
-trailing_str([_|Rest]) ->
-  if
-    [] == Rest -> "";
-    true       -> "\n"
-  end.
-
-% main(_) ->
-%   usage().
-
-% usage() ->
-%   io:format("usage: factorial integer\n"),
-%   halt(1).
+trailing_str([])  -> "";
+trailing_str([_]) -> "";
+trailing_str(_)   -> "\n".
