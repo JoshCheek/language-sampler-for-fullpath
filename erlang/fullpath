@@ -2,41 +2,55 @@
 %% -*- erlang -*-
 main(Args) ->
   {ok, Cwd} = file:get_cwd(),
-  {DoCopy, RelativePaths} = parse_args(Args),
+  {Help, Copy, RelativePaths} = parse_args(Args),
   if
-    RelativePaths == [] ->
-      Lines = readlines([]),
-      Paths = filter_blanks(Lines);
+    Help ->
+      io:format("usage: fullpath *[relative-paths] [-c]~n"),
+      io:format("~n"),
+      io:format("  Prints the fullpath of the paths~n"),
+      io:format("  If no paths are given as args, it will read them from stdin~n"),
+      io:format("~n"),
+      io:format("  If there is only one path, the trailing newline is omitted~n"),
+      io:format("~n"),
+      io:format("  The -c flag will copy the results into your pasteboard~n");
     true ->
-      Paths = filter_blanks(RelativePaths)
-  end,
+      if
+        RelativePaths == [] ->
+          Lines = readlines([]),
+          Paths = filter_blanks(Lines);
+        true ->
+          Paths = filter_blanks(RelativePaths)
+      end,
 
-  % I have no idea what these options correspond to,
-  % I just finally found an example that worked
-  STDOUT = erlang:open_port({fd, 0, 1}, [out, {line, 256}]),
-  if
-    DoCopy ->
-      Ports = [
-        open_port({spawn, "/usr/bin/pbcopy"}, [stream, out, hide, exit_status]),
-        STDOUT
-      ];
-    true ->
-      Ports = [STDOUT]
-  end,
-  print_paths(Cwd, Paths, trailing_str(Paths), Ports),
-  close_ports(Ports),
-  init:stop().
+      % I have no idea what these options correspond to,
+      % I just finally found an example that worked
+      STDOUT = erlang:open_port({fd, 0, 1}, [out, {line, 256}]),
+      if
+        Copy ->
+          Ports = [
+            open_port({spawn, "/usr/bin/pbcopy"}, [stream, out, hide, exit_status]),
+            STDOUT
+          ];
+        true ->
+          Ports = [STDOUT]
+      end,
+      print_paths(Cwd, Paths, trailing_str(Paths), Ports),
+      close_ports(Ports),
+      init:stop()
+  end.
 
 close_ports([]) -> null;
 close_ports([Port|Rest]) ->
   Port ! {self(), close},
   close_ports(Rest).
 
-parse_args(Args) -> do_parse_args(Args, false, []).
-do_parse_args([             ], Copy, Paths) -> {Copy, filter_blanks(lists:reverse(Paths))};
-do_parse_args([    "-c"|Rest],    _, Paths) -> do_parse_args(Rest, true, Paths);
-do_parse_args(["--copy"|Rest],    _, Paths) -> do_parse_args(Rest, true, Paths);
-do_parse_args([    Path|Rest], Copy, Paths) -> do_parse_args(Rest, Copy, [Path|Paths]).
+parse_args(Args) -> do_parse_args(Args, false, false, []).
+do_parse_args([             ], Help, Copy, Paths) -> {Help, Copy, filter_blanks(lists:reverse(Paths))};
+do_parse_args([    "-c"|Rest], Help,    _, Paths) -> do_parse_args(Rest, Help, true, Paths);
+do_parse_args(["--copy"|Rest], Help,    _, Paths) -> do_parse_args(Rest, Help, true, Paths);
+do_parse_args([    "-h"|Rest],    _, Copy, Paths) -> do_parse_args(Rest, true, Copy, Paths);
+do_parse_args(["--help"|Rest],    _, Copy, Paths) -> do_parse_args(Rest, true, Copy, Paths);
+do_parse_args([    Path|Rest], Help, Copy, Paths) -> do_parse_args(Rest, Help, Copy, [Path|Paths]).
 
 
 readlines(AlreadyRead) ->
