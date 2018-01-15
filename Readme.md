@@ -76,13 +76,30 @@ $ rake -T
 Potential Future Languages
 --------------------------
 
-Probably next up: CoffeeScript, Fortran
+Up next, if I want to fill out the alphabet:
+
+* A{da,ctionScript,ppleScript}
+* Lua
+* Nim
+* O{Caml,z}
+* QTScript
+* T{uring,ypeScript}
+* Ubercode
+* Visual Basic
+* W{yvern,olfram Language}
+* X{++}
+* Yoix
+* Z{sh,eno,PL}
+
+Probably next up: CoffeeScript
 
 APL, ActionScript, Ada, Algol, AppleScript,
 Awk, C++, Cobol, CoffeeScript, ColdFusion, Coq, D,
 Delphi/Object Pascal, Dogescript, Eiffel, F#, Forth,
-Groovy, Idris, J, LLVM, Lua, Modula-2, MoonScript, Neko, Nim, Newspeak, OCaml, Objective-C,
-Opal, Oz, Perl, Plpgsql, Prolog, Pure Data, PureScript, Qbasic, R, Racket, Rebol, Rubinius Bytecode,
+Groovy, Idris, J, LLVM, Lua, Modula-2, MoonScript,
+Neko, Nim, Newspeak, OCaml, Objective-C,
+Opal, Oz, Perl, Plpgsql, Prolog, Pure Data, PureScript,
+Qbasic, R, Racket, Rebol, Rubinius Bytecode,
 Scala, Self, Smalltalk, SuperCollider, Snobol, Tcl, TypeScript,
 Ubercode, Unicon, Umple, VB.net / Visual Basic, Zsh
 
