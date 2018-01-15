@@ -1,9 +1,8 @@
 #!/usr/bin/env escript
 %% -*- erlang -*-
-%%! -smp enable -sname factorial -mnesia debug verbose
 main(Args) ->
   {ok, Cwd} = file:get_cwd(),
-  {_DoCopy, RelativePaths} = parse_args(Args),
+  {DoCopy, RelativePaths} = parse_args(Args),
   if
     RelativePaths == [] ->
       Lines = readlines([]),
@@ -11,19 +10,33 @@ main(Args) ->
     true ->
       Paths = filter_blanks(RelativePaths)
   end,
-  print_paths(Cwd, Paths, trailing_str(Paths)).
 
-parse_args(Args) ->
-  do_parse_args(Args, false, []).
+  % I have no idea what these options correspond to,
+  % I just finally found an example that worked
+  STDOUT = erlang:open_port({fd, 0, 1}, [out, {line, 256}]),
+  if
+    DoCopy ->
+      Ports = [
+        open_port({spawn, "/usr/bin/pbcopy"}, [stream, out, hide, exit_status]),
+        STDOUT
+      ];
+    true ->
+      Ports = [STDOUT]
+  end,
+  print_paths(Cwd, Paths, trailing_str(Paths), Ports),
+  close_ports(Ports),
+  init:stop().
 
-do_parse_args([], DoCopy, RelativePaths) ->
-  { DoCopy,
-    filter_blanks(lists:reverse(RelativePaths))
-  };
-do_parse_args(["-c"|Rest], _DoCopy, RelativePaths) ->
-  do_parse_args(Rest, true, RelativePaths);
-do_parse_args([Path|Rest], DoCopy, RelativePaths) ->
-  do_parse_args(Rest, DoCopy, [Path|RelativePaths]).
+close_ports([]) -> null;
+close_ports([Port|Rest]) ->
+  Port ! {self(), close},
+  close_ports(Rest).
+
+parse_args(Args) -> do_parse_args(Args, false, []).
+do_parse_args([             ], Copy, Paths) -> {Copy, filter_blanks(lists:reverse(Paths))};
+do_parse_args([    "-c"|Rest],    _, Paths) -> do_parse_args(Rest, true, Paths);
+do_parse_args(["--copy"|Rest],    _, Paths) -> do_parse_args(Rest, true, Paths);
+do_parse_args([    Path|Rest], Copy, Paths) -> do_parse_args(Rest, Copy, [Path|Paths]).
 
 
 readlines(AlreadyRead) ->
@@ -40,14 +53,17 @@ filter_blanks([eof|Rest])  -> filter_blanks(Rest);
 filter_blanks([""|Rest])   -> filter_blanks(Rest);
 filter_blanks([Path|Rest]) -> [Path | filter_blanks(Rest)].
 
-print_paths(_, [], _) ->
-  init:stop();
-print_paths(Cwd, [Path|Rest], Nl) ->
-  print_path(Cwd, Path, Nl),
-  print_paths(Cwd, Rest, Nl).
+print_paths(_, [], _, _) ->
+  null;
+print_paths(Cwd, [Path|Rest], TrailingStr, Ports) ->
+  ToPrint = io_lib:format("~s/~s~s", [Cwd, Path, TrailingStr]),
+  print_path(ToPrint, Ports),
+  print_paths(Cwd, Rest, TrailingStr, Ports).
 
-print_path(Cwd, Path, TrailingStr) ->
-  io:format("~s/~s~s", [Cwd, Path, TrailingStr]).
+print_path(_, []) -> null;
+print_path(ToPrint, [Port|Ports]) ->
+  Port ! {self(), {command, ToPrint}},
+  print_path(ToPrint, Ports).
 
 trailing_str([])  -> "";
 trailing_str([_]) -> "";
