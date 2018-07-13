@@ -10,37 +10,19 @@ import (
 	"strings"
 )
 
-type Invocation struct {
-	fullpaths []string
-	doHelp    bool
-	doCopy    bool
-}
-
 func main() {
-	invocation := parseArgs(os.Args, os.Stdin)
-	doMain(invocation, os.Stdout)
-}
-
-func doMain(invocation Invocation, outstream io.Writer) {
-	if invocation.doHelp {
-		printHelp(outstream)
+	var fullpaths []string = fullpaths(rejectFlags(os.Args[1:]), os.Stdin)
+	if doHelp(os.Args) {
+		printHelp(os.Stdout)
 	} else {
-		pathsString := join(invocation.fullpaths, "\n")
-		if 1 < len(invocation.fullpaths) {
+		pathsString := join(fullpaths, "\n")
+		if 1 < len(fullpaths) {
 			pathsString += "\n"
 		}
-		fmt.Fprint(outstream, pathsString)
-		if invocation.doCopy {
+		fmt.Fprint(os.Stdout, pathsString)
+		if doCopy(os.Args) {
 			copyToClipboard(pathsString)
 		}
-	}
-}
-
-func parseArgs(argv []string, instream io.Reader) Invocation {
-	return Invocation{
-		fullpaths: fullpaths(rejectFlags(argv[1:]), instream),
-		doHelp:    doHelp(argv),
-		doCopy:    doCopy(argv),
 	}
 }
 
