@@ -151,6 +151,12 @@ desc 'Test fullpath in JavaScript'
 task(:javascript) { cucumber 'javascript' }
 task js: :javascript
 
+# =====  CoffeeScript  =====
+task default: :coffeescript
+
+desc 'Test fullpath in CoffeeScript'
+task(:coffeescript) { cucumber 'coffeescript' }
+task coffee: :coffeescript
 
 # =====  PHP  =====
 task default: :php
