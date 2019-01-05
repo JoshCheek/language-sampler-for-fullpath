@@ -1,0 +1,15 @@
+{
+  "name": "fullpath",
+  "version": "1.0.0",
+  "description": "CoffeeScript ============",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "coffeescript": "^2.3.2"
+  }
+}
