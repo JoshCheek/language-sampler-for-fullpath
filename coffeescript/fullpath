@@ -1,0 +1,2 @@
+#!/usr/bin/env bash
+npx coffee "$(dirname "$0")"/fullpath.coffee "$@"
