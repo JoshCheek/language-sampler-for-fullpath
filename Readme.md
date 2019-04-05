@@ -78,7 +78,7 @@ Potential Future Languages
 
 Up next, if I want to fill out the alphabet:
 
-* A{da,ctionScript,ppleScript}
+* A{da,ctionScript,ppleScript,ts}
 * Lua
 * Nim
 * O{Caml,z}
