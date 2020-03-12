@@ -1,0 +1,21 @@
+#!/usr/bin/env lua
+
+local lfs = require("lfs")
+local cwd = lfs.currentdir()
+local sep = "/"
+
+function join(dir, entry)
+  return dir .. sep .. entry
+end
+
+if #arg == 0 then
+  print("zero")
+else
+  io.write(join(cwd, arg[1]))
+  if #arg > 1 then
+    io.write("\n")
+  end
+  for entry = 2, #arg do
+    print(join(cwd, arg[entry]))
+  end
+end

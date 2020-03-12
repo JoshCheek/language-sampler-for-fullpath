@@ -305,3 +305,9 @@ task(:dart) { cucumber 'dart' }
 task default: :vimscript
 desc 'Test fullpath in vimscript'
 task(:vimscript) { cucumber 'vimscript' }
+
+# =====  Lua  =====
+task default: :lua
+
+desc 'Test fullpath in Lua'
+task(:lua) { cucumber 'lua' }

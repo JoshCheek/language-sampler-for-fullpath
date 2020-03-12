@@ -749,6 +749,42 @@ $ julia
 ```
 
 
+### [Lua](https://www.lua.org/)
+
+Install (I did this a while ago b/c I use hammerspoon, but I believe this is how I installed it)
+
+```sh
+$ brew install lua
+$ brew install luarocks
+```
+
+Install dependencies
+
+```sh
+luarocks install luafilesystem
+```
+
+
+`hello_world.lua`:
+
+```lua
+print("Hello World")
+```
+
+
+Interpret:
+
+```sh
+$ lua hello_world.lua
+```
+
+
+REPL
+
+```sh
+$ lua
+```
+
 
 <a href="http://www.wtfpl.net/"><img src="http://www.wtfpl.net/wp-content/uploads/2012/12/wtfpl.svg" height="20" alt="WTFPL" /></a> License
 -------------------------------------------------------------------------------------------------------------------------------------------
