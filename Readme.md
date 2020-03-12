@@ -762,6 +762,7 @@ Install dependencies
 
 ```sh
 luarocks install luafilesystem
+luarocks install luaposix
 ```
 
 
