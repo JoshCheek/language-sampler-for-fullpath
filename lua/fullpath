@@ -29,8 +29,27 @@ function printEach(eachFilename)
   end
 end
 
-if #arg == 0 then
+local showHelp = false
+local filenames = {}
+for i, arg in ipairs(arg) do
+  if arg == "-h" or arg == "--help" then
+    showHelp = true
+  else
+    table.insert(filenames, arg)
+  end
+end
+
+if showHelp then
+  print("usage: fullpath *[relative-paths] [-c]")
+  print()
+  print("  Prints the fullpath of the paths")
+  print("  If no paths are given as args, it will read them from stdin")
+  print()
+  print("  If there is only one path, the trailing newline is omitted")
+  print()
+  print("  The -c flag will copy the results into your pasteboard")
+elseif #filenames == 0 then
   printEach(io.lines())
 else
-  printEach(getEach(arg))
+  printEach(getEach(filenames))
 end
