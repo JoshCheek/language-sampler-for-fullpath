@@ -10,27 +10,26 @@ function join(dir, entry)
 end
 
 -- FIXME: local?
-function withIndex(getNext, index)
-  local element = getNext()
-  if element then
-    return index+1, element
+function getEach(t)
+  local i = 0
+  return function ()
+    i = i + 1
+    if i <= #t then return t[i] end
   end
 end
 
-function printEach(iteratorFn, memo, var)
-  for index, entry in iteratorFn, memo, var do
-    if index == 2 then
-      io.write("\n")
-    end
+function printEach(eachFilename)
+  local i = 0
+  for entry in eachFilename do
+    i = i + 1
+    if i == 2 then io.write("\n") end
     io.write(join(cwd, entry))
-    if index ~= 1 then
-      io.write("\n")
-    end
+    if i ~= 1 then io.write("\n") end
   end
 end
 
 if #arg == 0 then
-  printEach(withIndex, io.lines(), 0)
+  printEach(io.lines())
 else
-  printEach(ipairs(arg))
+  printEach(getEach(arg))
 end
