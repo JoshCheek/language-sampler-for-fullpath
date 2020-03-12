@@ -17,20 +17,20 @@ function withIndex(getNext, index)
   end
 end
 
-local fn, memo, var
-
-if #arg == 0 then
-  fn, memo, var = withIndex, io.lines(), 0
-else
-  fn, memo, var = ipairs(arg)
+function printEach(iteratorFn, memo, var)
+  for index, entry in iteratorFn, memo, var do
+    if index == 2 then
+      io.write("\n")
+    end
+    io.write(join(cwd, entry))
+    if index ~= 1 then
+      io.write("\n")
+    end
+  end
 end
 
-for index, entry in fn, memo, var do
-  if index == 2 then
-    io.write("\n")
-  end
-  io.write(join(cwd, entry))
-  if index ~= 1 then
-    io.write("\n")
-  end
+if #arg == 0 then
+  printEach(withIndex, io.lines(), 0)
+else
+  printEach(ipairs(arg))
 end
