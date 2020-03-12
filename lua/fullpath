@@ -4,18 +4,40 @@ local lfs = require("lfs")
 local cwd = lfs.currentdir()
 local sep = "/"
 
+-- FIXME: local?
 function join(dir, entry)
   return dir .. sep .. entry
 end
 
-if #arg == 0 then
-  print("zero")
-else
-  io.write(join(cwd, arg[1]))
-  if #arg > 1 then
-    io.write("\n")
-  end
-  for entry = 2, #arg do
-    print(join(cwd, arg[entry]))
+-- FIXME: local?
+function withIndex(getNext)
+  local index = 0
+  return function ()
+    local element = getNext()
+    if element then
+      index = index + 1
+      return index, element
+    end
   end
 end
+
+
+function printEach(getIterator)
+  for index, entry in getIterator() do
+    if index == 2 then
+      io.write("\n")
+    end
+    io.write(join(cwd, entry))
+    if index ~= 1 then
+      io.write("\n")
+    end
+  end
+end
+
+printEach(function()
+  if #arg == 0 then
+    return withIndex(io.lines())
+  else
+    return ipairs(arg)
+  end
+end)
