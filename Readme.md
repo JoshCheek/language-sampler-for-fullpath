@@ -49,10 +49,10 @@ $ brew install ruby-install
 $ brew install chruby
 
 # install the specific ruby
-$ ruby-install ruby 2.3.0
+$ ruby-install ruby 2.6.2
 
 # switch to it
-$ chruby use 2.3.0
+$ chruby use 2.6.2
 
 # now that you have Ruby, install the dependencies you need to run the tests
 $ gem install bundler
