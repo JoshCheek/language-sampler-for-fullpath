@@ -20,10 +20,12 @@ end
 function printEach(eachFilename)
   local i = 0
   for entry in eachFilename do
-    i = i + 1
-    if i == 2 then io.write("\n") end
-    io.write(join(cwd, entry))
-    if i ~= 1 then io.write("\n") end
+    if entry ~= "" then
+      i = i + 1
+      if i == 2 then io.write("\n") end
+      io.write(join(cwd, entry))
+      if i ~= 1 then io.write("\n") end
+    end
   end
 end
 
