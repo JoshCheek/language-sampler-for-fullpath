@@ -10,34 +10,27 @@ function join(dir, entry)
 end
 
 -- FIXME: local?
-function withIndex(getNext)
-  local index = 0
-  return function ()
-    local element = getNext()
-    if element then
-      index = index + 1
-      return index, element
-    end
+function withIndex(getNext, index)
+  local element = getNext()
+  if element then
+    return index+1, element
   end
 end
 
+local fn, memo, var
 
-function printEach(getIterator)
-  for index, entry in getIterator() do
-    if index == 2 then
-      io.write("\n")
-    end
-    io.write(join(cwd, entry))
-    if index ~= 1 then
-      io.write("\n")
-    end
-  end
+if #arg == 0 then
+  fn, memo, var = withIndex, io.lines(), 0
+else
+  fn, memo, var = ipairs(arg)
 end
 
-printEach(function()
-  if #arg == 0 then
-    return withIndex(io.lines())
-  else
-    return ipairs(arg)
+for index, entry in fn, memo, var do
+  if index == 2 then
+    io.write("\n")
   end
-end)
+  io.write(join(cwd, entry))
+  if index ~= 1 then
+    io.write("\n")
+  end
+end
