@@ -20,6 +20,7 @@ Language Sampler For Fullpath
 [JavaScript](#javascript),
 [Julia](#julia),
 [Kotlin](#kotlin),
+[Lua](#lua),
 [Mirah](mirah),
 [PHP](#php),
 [Python](#python),
