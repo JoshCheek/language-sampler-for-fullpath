@@ -17,39 +17,39 @@ local function getEach(table)
   end
 end
 
-function printEach(eachFilename)
+function printEach(eachFilename, streams)
   local i = 0
   for entry in eachFilename do
     if entry ~= "" then
       i = i + 1
-      if i == 2 then io.write("\n") end
-      io.write(join(cwd, entry))
-      if i ~= 1 then io.write("\n") end
+      for _, stream in pairs(streams) do
+        if i == 2 then stream.write("\n") end
+        stream.write(join(cwd, entry))
+        if i ~= 1 then stream.write("\n") end
+      end
     end
   end
 end
 
-local showHelp = false
-local filenames = {}
+local filenames, streams = {}, {io}
 for i, arg in ipairs(arg) do
   if arg == "-h" or arg == "--help" then
-    showHelp = true
+    print("usage: fullpath *[relative-paths] [-c]")
+    print()
+    print("  Prints the fullpath of the paths")
+    print("  If no paths are given as args, it will read them from stdin")
+    print()
+    print("  If there is only one path, the trailing newline is omitted")
+    print()
+    print("  The -c flag will copy the results into your pasteboard")
+  elseif arg == "-c" or arg == "--copy" then
   else
     table.insert(filenames, arg)
   end
 end
 
-if showHelp then
-  print("usage: fullpath *[relative-paths] [-c]")
-  print()
-  print("  Prints the fullpath of the paths")
-  print("  If no paths are given as args, it will read them from stdin")
-  print()
-  print("  If there is only one path, the trailing newline is omitted")
-  print()
-  print("  The -c flag will copy the results into your pasteboard")
-elseif #filenames == 0 then
-  printEach(io.lines())
+if #filenames == 0 then
+  printEach(io.lines(), streams)
 else
-  printEach(getEach(filenames))
+  printEach(getEach(filenames), streams)
 end
