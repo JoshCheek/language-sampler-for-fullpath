@@ -4,17 +4,16 @@ local lfs = require("lfs")
 local cwd = lfs.currentdir()
 local sep = "/"
 
--- FIXME: local?
-function join(dir, entry)
+local function join(dir, entry)
   return dir .. sep .. entry
 end
 
--- FIXME: local?
-function getEach(t)
-  local i = 0
-  return function ()
-    i = i + 1
-    if i <= #t then return t[i] end
+local function getEach(table)
+  local element
+  local getter, constant, state = ipairs(table)
+  return function()
+    state, element = getter(constant, state)
+    return element
   end
 end
 
