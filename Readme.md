@@ -1,7 +1,6 @@
 Language Sampler For Fullpath
 =============================
 
-<strong>
 [Bash](#bash),
 [C](#c),
 [C Sharp](#c-sharp),
@@ -28,7 +27,6 @@ Language Sampler For Fullpath
 [Rust](#rust),
 [Scheme](scheme),
 [Swift](swift)
-</strong>
 
 Fullpath is a program I initially wrote in Ruby
 (source is [here](https://github.com/JoshCheek/dotfiles/blob/3cabefef72d2d97639f213726b8cd2550740ea7b/bin/fullpath)).
@@ -108,8 +106,8 @@ Languages I've tried and given up on
 
 Assembly (due to calling out to other executables, IIRC),
 FORTRAN (due to the insane pain of needing to know the memory sizes of everything in advance),
-VimL (no good way to pass it args, couldn't figure out how to print the document without a trailing newline).
-
+VimL (no good way to pass it args, couldn't figure out how to print the document without a trailing newline),
+Factor (might have just gotten side-tracked, can't quite remember, it seems like a super interesting and decent language, I don't remember hitting any really hard issues, but I did make this tweet about difficulty abstracting: https://twitter.com/josh_cheek/status/1114854969679798272).
 
 
 Languages
