@@ -1,8 +1,13 @@
 #!/usr/bin/env csi -s
 
-(import posix)
-(use posix)
-(use srfi-1) ; filter
+(import
+  scheme
+  chicken.irregex
+  chicken.process         ; call-with-output-pipe
+  chicken.io              ; read-lines
+  chicken.file.posix      ; file-write port->fileno fileno/stdout
+  chicken.process-context ; current-directory command-line-arguments
+  srfi-1)                 ; filter
 
 (define (help-screen)
   (string-append
@@ -45,14 +50,6 @@
                      (string-empty?    potential))))
           potentials))
 
-(define (prepend-lines-to lines)
-  (let ((line (read-line)))
-    (if (eof-object? line)
-      lines
-      (prepend-lines-to (cons line lines)))))
-
-(define (read-lines)
-    (reverse (prepend-lines-to '())))
 
 (define (display-paths fileno dir paths)
   (if (= 1 (length paths))
@@ -68,8 +65,7 @@
     (call-with-output-pipe
       "pbcopy"
       (lambda (pipe) (display-paths (port->fileno pipe) dir paths))))
-  (display-paths fileno dir paths)
-  )
+  (display-paths fileno dir paths))
 
 (let* ((dir         (current-directory))
        (argv        (command-line-arguments))
