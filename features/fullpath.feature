@@ -129,6 +129,7 @@ Feature: fullpath
       The -c flag will copy the results into your pasteboard
 
     """
+    And the program ran successfully
 
   @not-implemented
   Scenario: Expands the path
