@@ -1,45 +1,40 @@
 #!/usr/bin/env ruby
 require 'open3'
 
-def self.relative_dirs(argv, stdin)
-  return argv if argv.any? # if we have args, they are considered relative paths
-  return stdin.read.lines  # otherwise assume we're piping paths through the program
-end
-
 def self.copy_program
-  return @copy_program if defined? @copy_program
-  @copy_program = %w[pbcopy xclip].find do |program_name|
-    _out, _err, status = Open3.capture3('which', program_name)
-    status.success?
+  %w[pbcopy xclip].find do |name|
+    `which #{name}`
+    $?.success?
   end
 end
 
 def self.copy_to_clipboard(str)
-  Open3.popen3 copy_program do |stdin, stdout, stderr, wait_thr|
-    stdin.write str
-  end
+  Open3.popen3(copy_program) { |stdin, *| stdin.write str }
 end
 
 if ARGV.include?('-h') || ARGV.include?('--help')
-  puts "usage: fullpath *[relative-paths] [-c]"
-  puts
-  puts "  Prints the fullpath of the paths"
-  puts "  If no paths are given as args, it will read them from stdin"
-  puts
-  puts "  If there is only one path, the trailing newline is omitted"
-  puts
-  puts "  The -c flag will copy the results into your pasteboard"
-  exit
+  puts <<~HELP
+  usage: fullpath *[relative-paths] [-c]
+
+    Prints the fullpath of the paths
+    If no paths are given as args, it will read them from stdin
+
+    If there is only one path, the trailing newline is omitted
+
+    The -c flag will copy the results into your pasteboard
+  HELP
+  exit true
 end
 
-# arg processing
+# Process args
 should_copy = ARGV.delete('-c') || ARGV.delete('--copy')
 
-# normalizing dirs
-absolute_dirs = relative_dirs(ARGV, $stdin).map(&:chomp).reject(&:empty?).map { |path| File.expand_path path }
+# Expand dirs
+ARGV.replace $stdin.readlines.map &:chomp if ARGV.empty?
+absolute_dirs = ARGV.reject(&:empty?).map { |path| File.expand_path path  }
 absolute_dirs.each { |dir| dir << "\n" } unless absolute_dirs.one?
-dir_string = absolute_dirs.join("")
+output = absolute_dirs.join("")
 
-# output
-print dir_string
-copy_to_clipboard dir_string if should_copy
+# Output
+print output
+copy_to_clipboard output if should_copy
